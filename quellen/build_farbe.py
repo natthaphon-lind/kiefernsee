@@ -76,6 +76,12 @@ c = SymCanvas(OUT, pagesize=(W, H))
 c.setTitle("Ausverkauf am Kiefernsee – Akt 1 (Prototyp)")
 c.setAuthor("Natthaphon Lind")
 PAGE = [1]
+FLIP = [False]
+
+
+def flip():
+    """Ganze Seite um 180° drehen: für die Spielerin / den Spieler gegenüber."""
+    c.saveState(); c.translate(W, H); c.rotate(180); FLIP[0] = True
 
 
 # ---------- Helfer ----------
@@ -108,7 +114,7 @@ def footer():
 
 def akte_tab(kind):
     """Randmarkierung zum schnellen Finden: Rot = schwarz, Blau = grau gestreift."""
-    right = PAGE[0] % 2 == 1
+    right = (PAGE[0] % 2 == 1) != FLIP[0]
     tw, th, ty = 26, 150, H - 210
     x = W - tw if right else 0
     CUR[0] = kind
@@ -130,7 +136,10 @@ def akte_tab(kind):
 
 
 def new_page():
-    CUR[0] = None; footer(); c.showPage(); PAGE[0] += 1
+    CUR[0] = None; footer()
+    if FLIP[0]:
+        c.restoreState(); FLIP[0] = False
+    c.showPage(); PAGE[0] += 1
 
 
 def qr(x, y, size, data, kind):
@@ -224,20 +233,19 @@ def title_page():
 RULES = [
     ("Ihr seid zwei Ermittler",
      "Einer übernimmt Akte Rot, der andere Akte Blau. Zu dritt oder zu viert bildet ihr zwei Teams."),
+    ("So sitzt ihr",
+     "Setzt euch gegenüber, das Buch liegt aufgeschlagen zwischen euch. Ab Seite 8 gehört jede linke "
+     "Seite Akte Rot, jede rechte Seite Akte Blau. Die blauen Seiten stehen für Rot auf dem Kopf – für "
+     "Blau stehen sie richtig herum. So lest ihr beide gleichzeitig und blättert gemeinsam weiter."),
     ("Die goldene Regel",
-     "Jeder liest nur Seiten mit seiner Randmarkierung: ◆ AKTE ROT (roter Rand) oder ● AKTE BLAU "
-     "(blauer Rand). Seiten ohne Markierung sind für beide. Ihr dürft euch alles vorlesen, "
-     "beschreiben und erzählen – aber ihr schaut nicht in die Seiten des anderen. Die Lösung entsteht "
-     "erst, wenn ihr redet."),
+     "Jeder liest nur seine eigene Seite. Ihr dürft euch alles vorlesen, beschreiben und erzählen – aber "
+     "ihr schaut nicht auf die Seite des anderen. Die Lösung entsteht erst, wenn ihr redet."),
     ("Zwei Sorten QR-Codes",
      "OFFLINE-QR: Der Text steckt im Code selbst. Handykamera drauf, fertig – auch ohne Internet. "
      "PORTAL-QR: führt zum geheimen Ermittlerportal. Das Kennwort steht im Brief der Kommissarin."),
-    ("Jeder Akt endet mit Fragen",
-     "Beantwortet sie gemeinsam. Prüft eure Antwort im Portal – oder ohne Internet über die "
-     "Code-Prüfung hinten im Buch."),
-    ("Hilfe in drei Stufen",
-     "Hängt ihr fest? Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. "
-     "Die Hinweise stehen hinten im Buch und im Portal."),
+    ("Fragen und Hilfe",
+     "Jeder Akt endet mit Fragen. Prüft eure Antworten im Portal oder mit der Code-Prüfung hinten im Buch. "
+     "Hängt ihr fest, helfen Hinweise in drei Stufen: Schubs, Richtung, Antwort."),
     ("Das Duell",
      "Euer Team startet mit 10 Punkten. Jeder falsche Code kostet 2 Punkte, jede Hinweisstufe 1 Punkt. "
      "Zusätzlich schreibt jeder nach jedem Akt geheim seinen Hauptverdacht auf den Ermittlerbogen. "
@@ -253,11 +261,12 @@ def rules_page():
         c.setFont("SansB", 12); c.drawString(ML + 32, y, h)
         y = text(ML + 32, y - 17, W - MR - ML - 32, t, "Serif", 10.4, 14.6) - 8
     y -= 4
-    c.setFillColorRGB(1, 0.95, 0.80); c.setStrokeColorRGB(0.85, 0.7, 0.4); c.roundRect(ML, y - 64, W - ML - MR, 64, 4, fill=1, stroke=1)
+    c.setFillColorRGB(1, 0.95, 0.80); c.setStrokeColorRGB(0.85, 0.7, 0.4); c.roundRect(ML, y - 78, W - ML - MR, 78, 4, fill=1, stroke=1)
     c.setFillGray(0); c.setFont("SansB", 10); c.drawString(ML + 12, y - 18, "Ihr braucht")
     text(ML + 12, y - 34, W - ML - MR - 24,
-         "Zwei Stifte, ein Handy mit Kamera, etwas Zeit – und gern ein Getränk. Tipp: Legt die "
-         "Ermittlerbogen-Seite zwischen euch, dort sammelt ihr gemeinsam.", "Serif", 9.8, 13.4)
+         "Zwei Stifte, ein Handy mit Kamera, etwas Zeit – und gern ein Getränk. Lieber per Handy? Jede Akte "
+         "gibt es auch im Ermittlerportal: Kennwort eingeben, Rot oder Blau wählen. So kann einer am Buch und "
+         "einer am Handy ermitteln – oder beide am Handy.", "Serif", 9.6, 13)
     new_page()
 
 
@@ -309,8 +318,8 @@ def task_page():
     y = doc_head("AKT 1  ·  FÜR BEIDE", "Was ist in dieser Nacht passiert?",
                  "Euer Auftrag von Hauptkommissarin Wendland")
     y = text(ML, y, W - ML - MR,
-             "So geht ihr vor: Jeder liest zuerst in Ruhe seine fünf Akten-Seiten (Rot: R-1 bis R-5, "
-             "Blau: B-1 bis B-5) und den Lageplan. Dann erzählt ihr euch gegenseitig, was ihr gefunden habt. "
+             "So geht ihr vor: Schaut euch zuerst gemeinsam den Lageplan an. Dann blättert ihr durch die fünf "
+             "Akten-Doppelseiten (Seite 8 bis 17): links Rot, rechts Blau. Jeder liest seine Seite und erzählt, was er gefunden hat. "
              "Achtung: Einige Spuren sehen wichtig aus und sind es nicht. Andere sehen harmlos aus und sind "
              "der Schlüssel.", "Serif", 10.6, 15) - 6
     for (k, qq, opts) in Q:
@@ -327,7 +336,7 @@ def task_page():
         y -= bh + 14
     text(ML, y - 4, W - ML - MR,
          "Habt ihr euch auf alle drei Antworten geeinigt? Dann prüft sie im Ermittlerportal oder auf der "
-         "Seite „Code-Prüfung“ (Seite 18). Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
+         "Seite „Code-Prüfung“ (Seite 19). Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
     new_page()
 
 
@@ -364,98 +373,54 @@ def cast_page():
 
 # ================= SEITE 6: Lageplan =================
 def map_page():
-    y = doc_head("FÜR BEIDE", "Lageplan Campingplatz am Kiefernsee", "Nicht maßstabsgetreu · Norden ist oben")
-    x0, y0, mw, mh = ML, 90, W - ML - MR, y - 100
-    fc(GRASS); c.setStrokeGray(0); c.setLineWidth(1.2); c.rect(x0, y0, mw, mh, fill=1, stroke=1)
-    c.setFillColorRGB(0.45, 0.65, 0.42)
-    random.seed(9)
-    for _ in range(26):
-        tx, ty = x0 + 10 + random.random() * 0.42 * mw, y0 + 10 + random.random() * (mh - 20)
-        c.circle(tx, ty, 4, fill=1, stroke=0)
-    X = lambda u: x0 + u * mw
-    Y = lambda v: y0 + v * mh
-    # See
-    p = c.beginPath()
-    pts = [(0.50, 0.97), (0.62, 0.99), (0.80, 0.98), (0.95, 0.94), (0.985, 0.80), (0.97, 0.62),
-           (0.90, 0.50), (0.78, 0.45), (0.64, 0.47), (0.54, 0.55), (0.50, 0.68), (0.48, 0.82)]
-    p.moveTo(X(pts[0][0]), Y(pts[0][1]))
-    for (u, v) in pts[1:]:
-        p.lineTo(X(u), Y(v))
-    p.close()
-    fc(LAKE); c.setStrokeColorRGB(0.2, 0.4, 0.6); c.setLineWidth(1); c.drawPath(p, fill=1, stroke=1)
-    c.setStrokeColorRGB(0.85, 0.93, 0.98); c.setLineWidth(0.8)
-    for k in range(6):
-        vv = 0.58 + k * 0.06
-        c.setDash(10, 12); c.line(X(0.58), Y(vv), X(0.9), Y(vv))
-    c.setDash()
-    c.setFont("SerifBI", 18); c.setFillColorRGB(0.15, 0.35, 0.55); c.drawCentredString(X(0.74), Y(0.74), "Kiefernsee"); c.setFillGray(0)
-    # Schilf
-    for (u, v) in [(0.88, 0.90), (0.91, 0.86), (0.94, 0.89), (0.90, 0.82), (0.94, 0.83), (0.86, 0.86)]:
-        for dx in (-4, 0, 4):
-            c.setLineWidth(1.1); c.setStrokeColorRGB(0.25, 0.45, 0.15); c.line(X(u) + dx, Y(v), X(u) + dx * 1.6, Y(v) + 13)
-    c.setFont("SansB", 8); c.drawString(X(0.80), Y(0.95) - 2, "Schilfgürtel")
-    c.setLineWidth(2.6); sc(ROT); cx, cy = X(0.90), Y(0.80) - 14
-    c.line(cx - 7, cy - 7, cx + 7, cy + 7); c.line(cx - 7, cy + 7, cx + 7, cy - 7)
-    fc(ROT); c.setFont("SansB", 8); c.drawString(cx + 10, cy - 3, "Fundort"); c.setFillGray(0); c.setStrokeGray(0)
-    # Steg
-    sx, sy = X(0.505), Y(0.72)
-    c.setFillColorRGB(0.55, 0.57, 0.6); c.setStrokeGray(0); c.setLineWidth(0.6); c.rect(sx, sy, 62, 10, fill=1, stroke=1)
-    c.setFillGray(0); c.setFont("SansB", 8.5); c.drawString(sx + 2, sy + 15, "Bootssteg")
-    for k, nm in enumerate(["Kevin", "Chantal"]):
-        bx = sx + 26 + k * 24
-        c.setFillColorRGB(*((0.98, 0.62, 0.70) if k else (1, 0.85, 0.35))); c.ellipse(bx - 9, sy - 13, bx + 9, sy - 2, fill=1, stroke=1)
-    # Badestrand
-    fc(SAND); c.setStrokeColorRGB(0.75, 0.62, 0.35)
-    p = c.beginPath(); p.moveTo(X(0.66), Y(0.465)); p.lineTo(X(0.84), Y(0.47)); p.lineTo(X(0.84), Y(0.41))
-    p.lineTo(X(0.66), Y(0.41)); p.close(); c.drawPath(p, fill=1, stroke=1)
-    random.seed(4); c.setFillColorRGB(0.7, 0.55, 0.3)
-    for _ in range(70):
-        c.circle(X(0.67 + random.random() * 0.16), Y(0.415 + random.random() * 0.045), 0.7, fill=1, stroke=0)
-    c.setFillGray(0); c.setFont("SansB", 8.5); c.drawCentredString(X(0.75), Y(0.385), "Badestrand")
+    y = doc_head("FÜR BEIDE", "Lageplan Campingplatz am Kiefernsee", "Luftbild der Polizeidrohne, Samstag, 26.09. · Norden ist oben")
+    side = W - ML - MR
+    photo("lageplan_beschriftet.jpg", ML, y - side, side, side, border=False)
+    text(ML, y - side - 20, side,
+         "Rita Schäfer wohnt auf Parzelle 3, gleich oberhalb vom Steg. Nova Sommer steht mit ihrem Van auf G2. "
+         "Die Wetterstation hängt an der Gaststätte Seeklause.", "Serif", 9.8, 13.4)
+    new_page()
 
-    def box(u, v, w_, h_, label, fill=1.0, size=7.6, bold=True):
-        col = {0.9: (0.98, 0.84, 0.62), 0.85: (0.80, 0.88, 0.96), 0.8: (0.95, 0.75, 0.72),
-               0.93: (0.99, 0.93, 0.6), 0.97: (1, 0.99, 0.95)}.get(fill, (1, 1, 1))
-        c.setFillColorRGB(*col); c.setStrokeGray(0); c.setLineWidth(0.8)
-        c.rect(X(u), Y(v), w_, h_, fill=1, stroke=1)
-        c.setFillGray(0); c.setFont("SansB" if bold else "Sans", size)
-        ls = label.split("\n")
-        for i, l in enumerate(ls):
-            c.drawCentredString(X(u) + w_ / 2, Y(v) + h_ / 2 + (len(ls) - 1) * 4.5 - i * 9 - 2.5, l)
 
-    box(0.06, 0.86, 92, 40, "Gaststätte\nSeeklause", 0.9)
-    c.setFont("Sans", 7); c.drawString(X(0.06), Y(0.86) - 10, "mit Wetterstation")
-    for k in range(4):
-        box(0.26 + k * 0.055, 0.88, 24, 22, f"C{k + 1}", 1.0, 8)
-    c.setFont("Sans", 7.5); c.drawString(X(0.26), Y(0.88) + 27, "Mietchalets")
-    # Parzellen am Steg
-    for k, n in enumerate([1, 2, 3, 4]):
-        box(0.39, 0.62 + k * 0.045, 30, 18, f"P{n}", 1.0, 7.5)
-    c.setFont("Sans", 7.5); c.drawString(X(0.33), Y(0.80) + 3, "Parzellen 1–4")
-    # Dauercamper-Feld
-    n = 5
-    for r in range(3):
-        for k in range(5):
-            box(0.06 + k * 0.065, 0.50 - r * 0.075, 30, 20, f"P{n}", 0.97, 7)
-            n += 1
-    c.setFont("SansB", 8.5); c.drawString(X(0.06), Y(0.58), "Dauercamper-Parzellen 5–19")
-    box(0.06, 0.68, 56, 26, "Sanitär 1", 0.85)
-    box(0.43, 0.40, 56, 26, "Sanitär 2", 0.85)
-    box(0.60, 0.26, 48, 24, "G1", 1.0); box(0.70, 0.26, 48, 24, "G2\nNova", 1.0)
-    c.setFont("Sans", 7.5); c.drawString(X(0.60), Y(0.26) + 30, "Gaststellplätze")
-    box(0.84, 0.22, 60, 30, "Spielplatz", 0.93)
-    box(0.42, 0.10, 64, 26, "Gasflaschen-\nlager", 0.85, 7)
-    box(0.06, 0.06, 72, 32, "Rezeption\n+ Kiosk", 0.8)
-    # Schranke + Zufahrt
-    c.setLineWidth(3); c.setStrokeGray(0); c.line(X(0.22), Y(0.08), X(0.30), Y(0.08))
-    c.setFont("SansB", 8); c.drawString(X(0.22), Y(0.08) - 12, "Schranke / Einfahrt")
-    c.setLineWidth(0.8); c.setDash(4, 3); c.setStrokeGray(0.45)
-    c.line(X(0.26), Y(0.0), X(0.26), Y(0.08)); c.line(X(0.26), Y(0.10), X(0.26), Y(0.24)); c.setDash()
-    # Kompass
-    nx, ny = X(0.955), Y(0.10)
-    c.setFillGray(0); p = c.beginPath(); p.moveTo(nx, ny + 16); p.lineTo(nx - 6, ny - 6); p.lineTo(nx, ny - 1)
-    p.lineTo(nx + 6, ny - 6); p.close(); c.drawPath(p, fill=1, stroke=0)
-    c.setFont("SansB", 10); c.drawCentredString(nx, ny + 20, "N")
+def seat_page():
+    y = doc_head("FÜR BEIDE", "So sitzt ihr", "Ab der nächsten Seite beginnen die Akten")
+    # Tisch von oben
+    tx, ty, tw, th = ML + 70, y - 400, W - ML - MR - 140, 280
+    c.setFillColorRGB(0.86, 0.78, 0.66); c.setStrokeColorRGB(0.6, 0.5, 0.38); c.setLineWidth(1.2)
+    c.roundRect(tx, ty, tw, th, 10, fill=1, stroke=1)
+    bx, by, bw, bh = W / 2 - 120, ty + 80, 240, 120
+    for k, (col, lab, flipped) in enumerate([(ROT, "AKTE ROT", False), (BLAU, "AKTE BLAU", True)]):
+        x = bx + k * bw / 2
+        c.setFillGray(1); c.setStrokeGray(0.5); c.rect(x, by, bw / 2, bh, fill=1, stroke=1)
+        fc(col); c.rect(x + (bw / 2 - 12 if k else 0), by + 30, 12, 60, fill=1, stroke=0)
+        c.saveState(); c.translate(x + bw / 4, by + bh / 2)
+        if flipped:
+            c.rotate(180)
+        fc(col); c.setFont("SansB", 12); c.drawCentredString(0, 6, lab)
+        c.setFillGray(0.5)
+        for i in range(4):
+            c.rect(-38, -10 - i * 9, 76, 3, fill=1, stroke=0)
+        c.restoreState()
+    c.setStrokeGray(0.3); c.setLineWidth(1.5); c.line(W / 2, by, W / 2, by + bh)
+    # Personen
+    for (py, col, lab, ly) in [(ty - 40, ROT, "Spieler/in ROT", ty - 78), (ty + th + 40, BLAU, "Spieler/in BLAU", ty + th + 72)]:
+        fc(col); c.circle(W / 2, py, 26, fill=1, stroke=0)
+        c.setFillGray(1); c.setFont("SansB", 15); c.drawCentredString(W / 2, py - 5, lab.split()[-1][0]); c.setFillGray(0)
+        c.setFont("SansB", 10); fc(col); c.drawCentredString(W / 2, ly, lab); c.setFillGray(0)
+    y = ty - 108
+    y = text(ML, y, W - ML - MR - 110,
+             "Linke Seite: Akte Rot, für Rot richtig herum. Rechte Seite: Akte Blau, für Blau richtig herum. "
+             "Blättert immer gemeinsam um. Ihr dürft vorlesen und erzählen, so viel ihr wollt – nur nicht "
+             "rüberschauen.\nLieber am Handy? Dann scannt den Portal-Code, gebt das Kennwort ein und wählt eure Akte.",
+             "Serif", 10.4, 14.6)
+    qr(W - MR - 84, ty - 190, 80, PORTAL, "portal")
+    new_page()
+
+
+def notes_page():
+    y = doc_head("FÜR BEIDE", "Notizen", "Platz für eure Gedanken – die Auflösung steht auf der nächsten Seite.")
+    for k in range(24):
+        y -= 24; c.setStrokeGray(0.7); c.setLineWidth(0.5); c.line(ML, y, W - MR, y)
     new_page()
 
 
@@ -653,7 +618,7 @@ PROTO = [
 
 
 def b1():
-    akte_tab("blau")
+    flip(); akte_tab("blau")
     y = doc_head("B-1  ·  AKTE BLAU", "Protokoll der Platzversammlung",
                  "Interessengemeinschaft der Dauercamper am Kiefernsee e. V. (in Gründung)")
     y = form_table(ML, y, W - ML - MR - 20, PROTO, lw=86, size=9.8, lead=13.4)
@@ -683,7 +648,7 @@ CHAT = [
 
 
 def b2():
-    akte_tab("blau")
+    flip(); akte_tab("blau")
     y = doc_head("B-2  ·  AKTE BLAU", "Chat „Kiefernsee Dauercamper“",
                  "Auszug aus der Gruppe, vom Handy von Angelika Wohlfahrt, Donnerstag bis Samstag")
     x0, w0 = ML + 40, W - ML - MR - 110
@@ -718,7 +683,7 @@ VOICE = ("SPRACHNACHRICHT · Abschrift\nVon: Holger Brandner · An: Dr. Kessler 
 
 
 def b3():
-    akte_tab("blau")
+    flip(); akte_tab("blau")
     y = doc_head("B-3  ·  AKTE BLAU", "Auswertung Smartphone des Opfers",
                  "Kriminaltechnik Seebrück · Gerät aus dem Tretboot")
     y = text(ML, y, W - ML - MR - 30,
@@ -755,7 +720,7 @@ def b3():
 
 
 def b4():
-    akte_tab("blau")
+    flip(); akte_tab("blau")
     y = doc_head("B-4  ·  AKTE BLAU", "Social Media: @nova.on.wheels",
                  "Gesichert vom Profil von Nova Sommer, Gast auf Stellplatz G2")
     y = text(ML, y, W - ML - MR - 30,
@@ -787,7 +752,7 @@ NOTES = [
 
 
 def b5():
-    akte_tab("blau")
+    flip(); akte_tab("blau")
     y = doc_head("B-5  ·  AKTE BLAU", "Das Schwarze Brett an der Rezeption",
                  "Fotografiert am Samstag, 26.09., 8:00 Uhr")
     # Foto der Pinnwand, auf Rahmen beschnitten; Zettel liegen auf dem Kork
@@ -858,7 +823,7 @@ def sheet_page():
 
 def section_text(a, b, cc):
     if (a, b, cc) == RIGHT:
-        return "Wendland nickt. Weiter zur Auflösung, S. 20."
+        return "Wendland nickt. Weiter zur Auflösung, S. 22."
     if a != RIGHT[0]:
         return "Wendland schüttelt den Kopf. Prüft Frage 1."
     if b != RIGHT[1]:
@@ -972,9 +937,14 @@ def solution_page():
     new_page()
 
 
-title_page(); rules_page(); letter_page(); task_page(); cast_page(); map_page()
-r1(); r2(); r3(); r4(); r5()
-b1(); b2(); b3(); b4(); b5()
-sheet_page(); code_page(); hints_page(); solution_page()
+title_page()                       # 1
+rules_page(); letter_page()        # 2 | 3
+task_page(); cast_page()           # 4 | 5
+map_page(); seat_page()            # 6 | 7
+for r, b in [(r1, b1), (r2, b2), (r3, b3), (r4, b4), (r5, b5)]:
+    r(); b()                       # 8 | 9 … 16 | 17
+sheet_page(); code_page()          # 18 | 19
+hints_page(); notes_page()         # 20 | 21
+solution_page()                    # 22
 c.save()
 print("Seiten:", PAGE[0] - 1)

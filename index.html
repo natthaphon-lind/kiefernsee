@@ -5,177 +5,172 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>[hidden]{display:none!important} body{margin:0}</style>
 <title>Ermittlerportal Kiefernsee</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <style>
-/* Layout: eine schmale Aktenspalte; Kopf wie ein Aktendeckel, darunter Karten nur für die drei Spuren */
-:root{
-  --bg:#e6e9ea; --paper:#fbfbf8; --ink:#1d2428; --muted:#5c676d; --line:#c5cccf;
-  --stamp:#a8322a; --blue:#2c5d8a; --red:#a8322a; --night:#13202b; --ok:#2f6b3a;
-  --f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif;
-  --f-body:"IBM Plex Sans",system-ui,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141a1e; --paper:#1e262b; --ink:#e4e8e9; --muted:#9aa6ac; --line:#34404a;
-  --stamp:#e0675d; --blue:#7fb0dc; --red:#e0675d; --night:#0b131a; --ok:#79c088; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#141a1e; --paper:#1e262b; --ink:#e4e8e9; --muted:#9aa6ac; --line:#34404a;
-  --stamp:#e0675d; --blue:#7fb0dc; --red:#e0675d; --night:#0b131a; --ok:#79c088; color-scheme:dark}
+:root{--bg:#e6e9ea;--paper:#fbfbf8;--ink:#1d2428;--muted:#5c676d;--line:#c5cccf;--stamp:#a8322a;--blue:#2c5d8a;--red:#a8322a;--night:#13202b;--ok:#2f6b3a;
+--f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif;--f-body:"IBM Plex Sans",system-ui,sans-serif;--f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a1e;--paper:#1e262b;--ink:#e4e8e9;--muted:#9aa6ac;--line:#34404a;--stamp:#e0675d;--blue:#7fb0dc;--red:#e0675d;--night:#0b131a;--ok:#79c088;color-scheme:dark}}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
-  padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 header{border-bottom:2px solid var(--ink);padding-bottom:12px;display:flex;flex-direction:column;gap:2px}
 .az{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
-h1{font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1.1;margin:0;text-wrap:balance}
-h2{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0;text-wrap:balance}
-.lab{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1.1;margin:0}
+h2{font-family:var(--f-display);font-weight:700;font-size:22px;margin:0}
+.lab{font-family:var(--f-display);font-size:12px;letter-spacing:.06em;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.stamp{align-self:flex-start;font-family:var(--f-display);font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--stamp);border:2px solid var(--stamp);padding:2px 10px;transform:rotate(-2deg);font-size:13px}
-.tag{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.1em;padding:1px 8px;border-radius:2px;color:var(--paper)}
-.tag.blau{background:var(--blue)} .tag.alle{background:var(--muted)}
+.card.rot{border-left:6px solid var(--red)} .card.blau{border-left:6px solid var(--blue)}
+.card p{margin:0}
+.stamp{align-self:flex-start;font-family:var(--f-display);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--stamp);border:2px solid var(--stamp);padding:2px 10px;transform:rotate(-2deg);font-size:13px}
+.tag{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.1em;padding:1px 8px;border-radius:2px;color:#fff}
+.tag.blau{background:var(--blue)} .tag.rot{background:var(--red)} .tag.alle{background:var(--muted)}
 label{font-weight:600;font-size:14px}
 input,select,button{font:inherit}
 input[type=text],select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--ink)}
 button{cursor:pointer;border:0;border-radius:3px;padding:10px 16px;background:var(--ink);color:var(--paper);font-family:var(--f-display);font-weight:700;letter-spacing:.06em;font-size:15px}
 button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.menu button{text-align:left;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:6px;font-family:var(--f-body);letter-spacing:0;font-weight:400}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.roles button{padding:28px 12px;font-size:22px;color:#fff;display:flex;flex-direction:column;gap:4px;align-items:center}
+.roles button span{font-family:var(--f-body);font-weight:400;font-size:13px;letter-spacing:0;opacity:.9}
+.roles .rot{background:var(--red)} .roles .blau{background:var(--blue)}
+.badge{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-radius:4px;color:#fff;font-family:var(--f-display);font-weight:700;letter-spacing:.1em;font-size:18px}
+.badge.rot{background:var(--red)} .badge.blau{background:var(--blue)}
+.badge button{background:rgba(255,255,255,.18);color:#fff;font-size:13px;padding:6px 10px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.menu button{text-align:left;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:2px;font-family:var(--f-body);letter-spacing:0;font-weight:400}
 .menu button b{font-family:var(--f-display);font-size:18px}
+.menu button.rot{border-left:5px solid var(--red)} .menu button.blau{border-left:5px solid var(--blue)}
+.menu button[aria-current="true"]{outline:2px solid var(--ink)}
+.navlab{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:-6px}
 .msg{font-family:var(--f-mono);font-size:14px;padding:10px 12px;border-left:4px solid var(--muted);background:var(--bg)}
 .msg.ok{border-color:var(--ok)} .msg.bad{border-color:var(--red)}
+dl.form{display:grid;grid-template-columns:minmax(110px,30%) 1fr;margin:0;border-top:1px solid var(--line)}
+dl.form dt{font-family:var(--f-display);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.05em;padding:8px 8px 8px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+dl.form dd{margin:0;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+dl.form dd p+p{margin-top:6px}
+@media (max-width:480px){dl.form{grid-template-columns:1fr} dl.form dt{border-bottom:0;padding-bottom:0} }
+.photo{margin:0;display:flex;flex-direction:column;gap:6px}
+.photo img,.frame img{display:block;width:100%;height:auto;border-radius:3px}
+.photo figcaption{font-size:12px;color:var(--muted)}
+ol.assv{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+ol.assv li{display:flex;flex-direction:column;border-bottom:1px solid var(--line);padding-bottom:8px;font-size:15px}
+ol.assv span{color:var(--muted);font-size:14px}
+ol.log{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-family:Georgia,serif;font-style:italic;color:#1a3a8c;background:#fffbe0;padding:14px;border-radius:3px}
+@media (prefers-color-scheme:dark){ol.log{background:#2b2a1c;color:#b9c9ff}}
+ol.log li{display:grid;grid-template-columns:52px 1fr;gap:8px}
+ol.log b{font-style:normal}
+.sig{font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:20px;color:#1a3a8c}
+.qa{display:flex;flex-direction:column;gap:8px;font-size:14px}
+.qa .f{font-weight:600}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:4px 8px;border-bottom:1px solid var(--line)}
+.voice{display:flex;flex-direction:column;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+details.voice summary{cursor:pointer;font-weight:600}
+audio{width:100%}
+.chat{background:#ece5d8;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+@media (prefers-color-scheme:dark){.chat{background:#2a2620}}
+.chat .day{text-align:center;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:6px 0}
+.bub{background:#fff;color:#1d2428;border-radius:8px;padding:6px 10px;max-width:86%;font-size:14px;position:relative}
+.bub.own{background:#d9f5c6;align-self:flex-end}
+.bub b{font-size:12px} .bub .t{float:right;font-size:11px;color:#6b7378;margin-left:10px}
 .story{display:grid;grid-template-columns:1fr;gap:14px}
-.frame{background:var(--night);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#eef2f4}
+.frame{background:var(--night);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#eef2f4;margin:0}
 .frame .top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}
 .bar{height:3px;background:rgba(255,255,255,.35);margin:8px 12px 0;border-radius:2px}
-.frame img{display:block;width:100%;height:auto}
-.voice{display:flex;flex-direction:column;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px}
-audio{width:100%}
+.frame img{border-radius:0}
 .cap{padding:10px 12px 14px;font-size:14px}
+ul.cast{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+ul.cast li{border-bottom:1px solid var(--line);padding-bottom:8px}
 .q{display:flex;flex-direction:column;gap:6px}
 .hints{display:flex;flex-direction:column;gap:10px}
 .hrow{display:flex;flex-wrap:wrap;gap:8px}
 .small{font-size:13px;color:var(--muted)}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:12px}
 footer{font-size:12px;color:var(--muted);text-align:center}
-@media (prefers-reduced-motion:no-preference){.card{animation:in .25s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
-  <header>
-    <span class="az">KRIPO SEEBRÜCK · AZ 31 JS 0926/BR · FALL KIEFERNSEE</span>
-    <h1>Ermittlerportal</h1>
-    <span class="small">Zugang nur für das Ermittlerteam. Bitte den Link nicht weitergeben.</span>
-  </header>
+<header><span class="az">KRIPO SEEBRÜCK · AZ 31 JS 0926/BR · FALL KIEFERNSEE</span><h1>Ermittlerportal</h1>
+<span class="small">Zugang nur für das Ermittlerteam. Bitte den Link nicht weitergeben.</span></header>
 
-  <section id="login" class="card">
-    <span class="stamp">Vertraulich</span>
-    <h2>Kennwort eingeben</h2>
-    <p style="margin:0">Das Kennwort steht im Brief von Hauptkommissarin Wendland, ganz unten.</p>
-    <form id="loginForm" style="display:flex;flex-direction:column;gap:10px">
-      <label for="pw">Kennwort</label>
-      <input id="pw" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. GRILLZANGE">
-      <button type="submit">Akte öffnen</button>
-      <div id="loginMsg" class="msg bad" hidden></div>
-    </form>
-  </section>
+<section id="login" class="card"><span class="stamp">Vertraulich</span><h2>Kennwort eingeben</h2>
+<p>Das Kennwort steht im Brief von Hauptkommissarin Wendland, ganz unten.</p>
+<form id="loginForm" style="display:flex;flex-direction:column;gap:10px"><label for="pw">Kennwort</label>
+<input id="pw" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. GRILLZANGE">
+<button type="submit">Akte öffnen</button><div id="loginMsg" class="msg bad" hidden></div></form></section>
 
-  <div id="app" hidden style="display:flex;flex-direction:column;gap:20px">
-    <nav class="menu" aria-label="Spuren">
-      <button data-view="voice"><span class="tag blau">NUR AKTE BLAU</span><b>Spur B-3</b><span class="small">Brandners letzte Sprachnachricht</span></button>
-      <button data-view="story"><span class="tag blau">NUR AKTE BLAU</span><b>Spur B-4</b><span class="small">Novas Story vom Freitagabend</span></button>
-      <button data-view="code"><span class="tag alle">GEMEINSAM</span><b>Code-Prüfung</b><span class="small">Akt 1 abschließen</span></button>
-      <button data-view="hints"><span class="tag alle">GEMEINSAM</span><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button>
-    </nav>
+<section id="role" class="card" hidden><h2>Welche Akte habt ihr?</h2>
+<p>Jeder wählt auf seinem eigenen Handy seine Farbe. Ihr seht dann nur eure eigene Akte – und die gemeinsamen Seiten.</p>
+<div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
+<button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
+<p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p></section>
 
-    <section id="v-voice" class="card" hidden>
-      <span class="lab">Spur B-3 · Asservat Nr. 3 · Smartphone des Opfers</span>
-      <h2>Sprachnachricht an Dr. Kessler</h2>
-      <p style="margin:0" class="small">Gesendet von Holger Brandner, Freitag, 25. September, 23:41 Uhr. Letzte Aktivität auf dem Handy. Ihr dürft sie Akte Rot vorspielen.</p>
-      <div class="voice">
-        <span class="mono small">Von: Holger Brandner · An: Dr. Kessler (Kanzlei) · Fr 23:41 · 0:19</span>
-        <audio controls preload="metadata" src="audio/sprachnachricht-b3.mp3">Euer Browser kann die Aufnahme nicht abspielen. Die Abschrift steht als Offline-Code in Spur B-3 im Buch.</audio>
-      </div>
-      <p class="small" style="margin:0">Hört genau hin: Wann hat er das gesagt, und was hatte er vor?</p>
-    </section>
-
-    <section id="v-story" class="card" hidden>
-      <span class="lab">Spur B-4 · Asservat Nr. 12 · gesichert vom Profil @nova.on.wheels</span>
-      <h2>Novas Story, Freitag, 25. September</h2>
-      <p style="margin:0" class="small">Nova Sommer hat ihre Story freiwillig zur Verfügung gestellt. Zwei Fotos, die Uhrzeiten stammen aus den Metadaten. Tippt auf ein Foto, um es groß zu sehen.</p>
-      <div class="story">
-        <figure class="frame" style="margin:0">
-          <div class="bar"></div>
-          <div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div>
-          <a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" width="1200" height="800" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor einem dunklen Holzgebäude steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a>
-          <figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption>
-        </figure>
-        <figure class="frame" style="margin:0">
-          <div class="bar"></div>
-          <div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div>
-          <a href="bilder/nova-0128.jpg" target="_blank" rel="noopener"><img src="bilder/nova-0128.jpg" width="1200" height="800" loading="lazy" alt="Nachtaufnahme am See: Ein kleiner weiß-brauner Hund springt durchs flache Wasser, es spritzt. Rechts unten der Rand des grauen Holzstegs."></a>
-          <figcaption class="cap">1:28 Uhr. Pepper muss natürlich noch mal vom Steg in den See springen. PLATSCH. 🙄🐶 Sorry an alle Nachbarn!!</figcaption>
-        </figure>
-      </div>
-      <p class="small" style="margin:0">Haltet fest, was ihr seht, und gebt es an Akte Rot weiter.</p>
-    </section>
-
-    <section id="v-code" class="card" hidden>
-      <span class="lab">Akt 1 · Was ist passiert?</span>
-      <h2>Code-Prüfung</h2>
-      <form id="codeForm" style="display:flex;flex-direction:column;gap:14px">
-        <div class="q"><label for="q1">Frage 1: Wo ist Holger Brandner ins Wasser gekommen?</label>
-          <select id="q1"><option value="">bitte wählen</option><option value="1">1 · am Badestrand</option><option value="2">2 · am Bootssteg</option><option value="3">3 · mitten auf dem See, aus dem Tretboot</option></select></div>
-        <div class="q"><label for="q2">Frage 2: In welchem Zeitraum ist es passiert?</label>
-          <select id="q2"><option value="">bitte wählen</option><option value="1">1 · zwischen 21:30 und 23:00 Uhr</option><option value="2">2 · zwischen 23:30 und 0:30 Uhr</option><option value="3">3 · zwischen 0:30 und 2:00 Uhr</option><option value="4">4 · nach 2:00 Uhr</option></select></div>
-        <div class="q"><label for="q3">Frage 3: Welcher Gegenstand des Opfers fehlt?</label>
-          <select id="q3"><option value="">bitte wählen</option><option value="1">1 · sein Handy</option><option value="2">2 · seine Brieftasche</option><option value="3">3 · seine rote Ledermappe</option><option value="4">4 · sein Autoschlüssel</option></select></div>
-        <button type="submit">Antwort prüfen</button>
-        <div id="codeMsg" class="msg" hidden></div>
-      </form>
-      <p class="small" style="margin:0">Ohne Internet? Im Buch auf der Seite „Code-Prüfung“ steht, wie ihr die Abschnittsnummer selbst berechnet.</p>
-    </section>
-
-    <section id="v-hints" class="card" hidden>
-      <span class="lab">Akt 1 · Hinweise</span>
-      <h2>Hilfe in drei Stufen</h2>
-      <p style="margin:0" class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt.</p>
-      <div class="hints" id="hintBox"></div>
-    </section>
-  </div>
-
-  <footer>Ein Spiel zum Buch „Ausverkauf am Kiefernsee“. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
+<div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
+<div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>
+<div id="confirm" class="confirm" hidden><span>Wirklich die Akte wechseln? Dann seht ihr die Seiten der anderen Farbe.</span>
+<button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
+<div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot"><button data-view="r1" class="rot"><b>R-1</b><span class="small">Bericht zum Leichenfund</span></button><button data-view="r2" class="rot"><b>R-2</b><span class="small">Asservatenverzeichnis</span></button><button data-view="r3" class="rot"><b>R-3</b><span class="small">Rundgangsprotokoll</span></button><button data-view="r4" class="rot"><b>R-4</b><span class="small">Vernehmung Rita Schäfer</span></button><button data-view="r5" class="rot"><b>R-5</b><span class="small">Wetterdaten und Notruf</span></button></nav></div>
+<div id="navBlau" hidden><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Blau"><button data-view="b1" class="blau"><b>B-1</b><span class="small">Protokoll der Versammlung</span></button><button data-view="b2" class="blau"><b>B-2</b><span class="small">Chat der Dauercamper</span></button><button data-view="b3" class="blau"><b>B-3</b><span class="small">Sprachnachricht</span></button><button data-view="b4" class="blau"><b>B-4</b><span class="small">Novas Story</span></button><button data-view="b5" class="blau"><b>B-5</b><span class="small">Schwarzes Brett</span></button></nav></div>
+<div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam"><button data-view="plan" class="alle"><b>Lageplan</b><span class="small">Luftbild</span></button><button data-view="cast" class="alle"><b>Personen</b><span class="small">Wer ist wer</span></button><button data-view="code" class="alle"><b>Code-Prüfung</b><span class="small">Akt 1 abschließen</span></button><button data-view="hints" class="alle"><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button></nav></div>
+<section id="v-r1" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-1 · Erster Angriff, Kriminalpolizei Seebrück</span><h2>Bericht zum Leichenfund</h2><dl class="form"><dt>Aktenzeichen</dt><dd><p>31 Js 0926/BR</p></dd><dt>Meldung</dt><dd><p>Samstag, 26.09., 06:44 Uhr, Notruf über Leitstelle (Anruferin: Rita Schäfer)</p></dd><dt>Fundort</dt><dd><p>Campingplatz am Kiefernsee, Nordostufer, Schilfgürtel. Wassertiefe ca. 60 cm.</p></dd><dt>Person</dt><dd><p>Holger Brandner, 58 J., wohnhaft Frankfurt am Main. Gast in Mietchalet 3.</p></dd><dt>Auffindesituation</dt><dd><p>Leiche in Bauchlage im Flachwasser, unmittelbar neben dem treibenden Tretboot „Chantal“. Bekleidung: Jeans, Hemd, Sakko, Lederslipper.</p></dd><dt>Verletzungen</dt><dd><p>Platzwunde am Hinterkopf, ca. 4 cm. Keine Abwehrverletzungen.</p></dd><dt>Rechtsmedizin (vorläufig)</dt><dd><p>Dr. A. Okonkwo: Tod durch Ertrinken. Die Kopfverletzung entstand vor dem Eintritt ins Wasser, das Opfer war vermutlich bewusstlos. In der Wunde: mehrere kleine Holzsplitter, Nadelholz, vermutlich Lärche, mit grauer Lasur.</p><p>Todeszeitpunkt nach Körpertemperatur: zwischen 22:00 und 2:00 Uhr. Wegen der Wassertemperatur nicht enger bestimmbar.</p></dd><dt>Tretboot „Chantal“</dt><dd><p>Kunststoff (PE), Baujahr 2025. Keine Beschädigungen, keine Blut- oder Haaranhaftungen. Die Ankerkette hängt nicht am Boot.</p></dd><dt>Bearbeitung</dt><dd><p>EKHK&#x27;in J. Wendland, KK Brüggemann</p></dd></dl><figure class="photo"><a href="bilder/fundort.jpg" target="_blank" rel="noopener"><img src="bilder/fundort.jpg" alt="Rosa Tretboot leer im Schilf, davor rot-weißes Absperrband" loading="lazy"></a><figcaption>Lichtbild 1: Fundort am Schilfgürtel, Sa 26.09., 07:10 Uhr (nach Bergung)</figcaption></figure></section><section id="v-r2" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-2 · Sichergestellte Gegenstände, Samstag, 26.09.</span><h2>Asservatenverzeichnis</h2><ol class="assv"><li><b class="mono">Nr. 1</b> <b>Brieftasche, Leder, schwarz</b><span>Fundort: am Körper, Innentasche Sakko</span><span>Inhalt: 240 € bar, 2 Kreditkarten, Ausweis</span></li><li><b class="mono">Nr. 2</b> <b>Ehering, Gold</b><span>Fundort: am Körper</span><span>Gravur „H. &amp; S. 1994“</span></li><li><b class="mono">Nr. 3</b> <b>Smartphone</b><span>Fundort: Tretboot, Sitzfläche</span><span>nass, aber funktionsfähig. Zur Auswertung (siehe Akte Blau)</span></li><li><b class="mono">Nr. 4</b> <b>Lesebrille</b><span>Fundort: Tretboot, Fußraum</span><span>–</span></li><li><b class="mono">Nr. 5</b> <b>Autoschlüssel (Mercedes)</b><span>Fundort: Mietchalet 3, Tisch</span><span>Fahrzeug steht auf Gästeparkplatz</span></li><li><b class="mono">Nr. 6</b> <b>Laptop</b><span>Fundort: Mietchalet 3, Reisetasche</span><span>passwortgeschützt</span></li><li><b class="mono">Nr. 7</b> <b>Reisetasche mit Kleidung</b><span>Fundort: Mietchalet 3</span><span>ordentlich gepackt</span></li><li><b class="mono">Nr. 8</b> <b>Kette mit Vorhängeschloss</b><span>Fundort: Bootssteg</span><span>gehört zum Tretboot „Chantal“. Schloss geöffnet, NICHT aufgebrochen (Lichtbild 2)</span></li></ol><p class="msg"><b>Vermerk:</b> Bargeld und Kreditkarten vollständig vorhanden. Ein Raubmord erscheint daher unwahrscheinlich. Mietchalet 3 war nicht abgeschlossen, keine Einbruchsspuren.</p><figure class="photo"><a href="bilder/asservat.jpg" target="_blank" rel="noopener"><img src="bilder/asservat.jpg" alt="Lose Kette und daneben ein geöffnetes, unbeschädigtes Vorhängeschloss auf grauen Holzbrettern, gelber Markierungsaufsteller" loading="lazy"></a><figcaption>Lichtbild 2: Asservat Nr. 8 auf dem Bootssteg, Sa 26.09., 07:25 Uhr</figcaption></figure></section><section id="v-r3" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-3 · Handschriftlich geführt von Sven Ruppert, Nacht von Freitag auf Samstag</span><h2>Rundgangsprotokoll Sicherheitsdienst</h2><p class="small mono">SICHERHEITSDIENST RUPPERT · Objekt: Camping Kiefernsee · Datum: 25./26.09.</p><ol class="log"><li><b>22:00</b><span>Schranke geschlossen. Nachtruhe beginnt.</span></li><li><b>22:47</b><span>Parzelle 14 (Kowalski): Schlagermusik deutlich zu laut. Ermahnt. Zweite Ermahnung diesen Monat!!</span></li><li><b>23:30</b><span>Bootssteg: beide Tretboote („Kevin“ + „Chantal“) angekettet. Alles in Ordnung. Steg noch leicht klebrig.</span></li><li><b>23:34</b><span>Igel bei Sanitär 1. Kein Handlungsbedarf.</span></li><li><b>0:30</b><span>Bootssteg: Boot „Chantal“ FEHLT!! Kette liegt auf dem Steg, Schloss offen, nicht beschädigt. Vermutlich vom Hausmeister nicht richtig abgeschlossen. → Meldung an Rezeption morgen früh.</span></li><li><b>1:15</b><span>Sanitär 2: Licht brennt, niemand drin. Ausgeschaltet. Stromverschwendung!!</span></li><li><b>2:00</b><span>Schranke: ohne Befund.</span></li><li><b>3:00</b><span>Rundgang beendet. Keine besonderen Vorkommnisse.</span></li></ol><p class="sig">S. Ruppert</p></section><section id="v-r4" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-4 · Samstag, 26.09., 07:30 Uhr, Rezeption. Vernehmung durch KK Brüggemann</span><h2>Vernehmung der Zeugin Rita Schäfer</h2><div class="qa mono"><p class="f"><b>F:</b> Frau Schäfer, Sie haben Herrn Brandner gefunden. Erzählen Sie bitte.</p><p class="a"><b>A:</b> Um 6:38. Ich fahr jeden Morgen die Brötchen aus, mit dem Lastenrad am Ufer lang. Da seh ich die Chantal im Schilf hängen. Und daneben im Wasser … den Herrn Brandner. Ich hab sofort die 110 angerufen.</p><p class="f"><b>F:</b> Ist Ihnen in der Nacht etwas aufgefallen?</p><p class="a"><b>A:</b> Ich wohn ja auf Parzelle 3, direkt am Steg. So gegen halb zwei hat&#x27;s da unten richtig laut PLATSCH gemacht. Ich hab noch gedacht: Jetzt ist einer reingefallen.</p><p class="f"><b>F:</b> Sind Sie nachsehen gegangen?</p><p class="a"><b>A:</b> Ich hatte schon die Lockenwickler drin. Da geh ich nicht mehr raus.</p><p class="f"><b>F:</b> Und vorher, so gegen Mitternacht?</p><p class="a"><b>A:</b> Da hab ich geschlafen. Ich schlaf ab zehn. Außer donnerstags, da kommt „Bauer sucht Frau“.</p><p class="f"><b>F:</b> Hatte Herr Brandner bei Ihnen Brötchen bestellt?</p><p class="a"><b>A:</b> Zwei Laugenbrezeln für Chalet 3. Die liegen jetzt noch in meinem Korb.</p></div><p class="small">Selbst gelesen, genehmigt, unterschrieben:</p><p class="sig">Rita Schäfer</p></section><section id="v-r5" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-5 · Wetterstation an der Gaststätte Seeklause, Nacht 25./26.09.</span><h2>Wetterdaten und Notruf</h2><div class="scroll"><table class="mono"><thead><tr><th>Uhrzeit</th><th>Temp. °C</th><th>Wind aus</th><th>km/h</th></tr></thead><tbody><tr><td>22:00</td><td>11,8</td><td>SW</td><td>14</td></tr><tr><td>23:00</td><td>11,2</td><td>SW</td><td>18</td></tr><tr><td>0:00</td><td>10,6</td><td>SW</td><td>22</td></tr><tr><td>1:00</td><td>10,1</td><td>SW</td><td>20</td></tr><tr><td>2:00</td><td>9,7</td><td>SW</td><td>16</td></tr><tr><td>3:00</td><td>9,4</td><td>W</td><td>12</td></tr><tr><td>4:00</td><td>9,0</td><td>W</td><td>9</td></tr><tr><td>5:00</td><td>8,8</td><td>W</td><td>6</td></tr><tr><td>6:00</td><td>8,6</td><td>W</td><td>5</td></tr></tbody></table></div><p class="small mono">Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.</p><details class="voice"><summary>Mitschnitt des Notrufs anzeigen</summary><div class="mono"><p>LEITSTELLE SEEBRÜCK · Notruf Sa 26.09. 06:44:12 · Anruferin: Rita Schäfer</p><p>„Hier ist die Rita vom Kiefernsee! Da liegt einer im Wasser, beim Schilf, das ist der Herr Brandner. Der bewegt sich nicht! Das Tretboot ist auch da, die Chantal. Bitte kommen Sie schnell!“</p><p>06:45 Rettungswagen und Streife alarmiert.</p></div></details></section><section id="v-b1" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-1 · Interessengemeinschaft der Dauercamper am Kiefernsee e. V. (in Gründung)</span><h2>Protokoll der Platzversammlung</h2><dl class="form"><dt>Ort / Zeit</dt><dd><p>Gaststätte Seeklause, Freitag, 25.09., 19:00 bis 21:30 Uhr</p></dd><dt>Anwesend</dt><dd><p>31 Dauercamper, Platzbetreiber Mark Böttcher, Herr Holger Brandner (Brandner Freizeit &amp; Resort GmbH), Hausmeister Marco Lenz, Sicherheitsdienst Sven Ruppert (am Eingang), Frau Nova Sommer (Gast)</p></dd><dt>TOP 1</dt><dd><p>Begrüßung durch Herrn Böttcher. Er möchte „mit 61 nicht mehr jeden Morgen Rasen mähen und Beschwerden lesen“.</p></dd><dt>TOP 2</dt><dd><p>Herr Brandner stellt das „Kiefernsee Glamping Resort“ vor: 40 Safarizelte, ein Saunafloß, die Dauerparzellen enden am 31.12.2027. Er holt den Vorvertrag aus seiner roten Ledermappe und sagt: „Hier fehlt nur noch eine Unterschrift.“</p></dd><dt>TOP 3</dt><dd><p>Aussprache, sehr lebhaft. Herr Kowalski: „Nur über meinen Grill.“ Frau Sommer fragt, ob es im Resort Steckdosen für Vans gibt. Herr Lenz fragt, ob das Personal übernommen wird. Herr Brandner: „Wir bringen unser eigenes Team mit.“ Herr Lenz verlässt kurz den Raum.</p></dd><dt>TOP 4</dt><dd><p>Abstimmung (nicht bindend): 0 dafür, 31 dagegen, 1 Enthaltung (Herr Ruppert, „aus dienstlichen Gründen neutral“).</p></dd><dt>Ende</dt><dd><p>21:30 Uhr. Herr Brandner verabschiedet sich mit der roten Mappe unter dem Arm: „Ich bin noch bis Sonntag in Chalet 3. Meine Tür steht offen.“</p></dd><dt>Sonstiges</dt><dd><p>Die Bowle war zu süß.</p></dd></dl><p class="sig">A. Wohlfahrt</p><p class="small">Angelika Wohlfahrt, Schriftführerin</p></section><section id="v-b2" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-2 · Auszug vom Handy von Angelika Wohlfahrt, Donnerstag bis Samstag</span><h2>Chat „Kiefernsee Dauercamper“</h2><div class="chat"><div class="day">DONNERSTAG, 24. SEPTEMBER</div><div class="bub"><b>Marco (Hausmeister)</b><span class="t">17:02</span><p>Steg ist frisch lasiert. Lärche, grau. Bis Freitagabend bitte NICHT betreten!! Auch nicht „nur kurz“, Siggi.</p></div><div class="bub"><b>Siggi P14</b><span class="t">17:05</span><p>Das mit den Fußspuren letztes Jahr war ich nicht.</p></div><div class="bub own"><b>Ich</b><span class="t">17:06</span><p>Doch.</p></div><div class="day">FREITAG, 25. SEPTEMBER</div><div class="bub own"><b>Ich</b><span class="t">12:30</span><p>Erinnerung: Heute 19 Uhr Versammlung in der Seeklause. Thema: Herr Brandner und seine „Glamping-Pläne“. Bitte zahlreich erscheinen!</p></div><div class="bub"><b>Siggi P14</b><span class="t">12:41</span><p>Ich bring meinen Grill mit. Als Argument.</p></div><div class="bub"><b>Siggi P14</b><span class="t">21:48</span><p>Habt ihr gesehen, wie der seine rote Mappe festhält? Wie ein Baby.</p></div><div class="bub own"><b>Ich</b><span class="t">21:49</span><p>Da ist der Vorvertrag drin. Wenn Mark unterschreibt, sind wir Ende 2027 alle weg.</p></div><div class="bub"><b>Mark (Platzbetreiber)</b><span class="t">21:52</span><p>Leute, ich hab noch nichts unterschrieben. Schlaft drüber. Ich auch.</p></div><div class="bub"><b>Sven (Security)</b><span class="t">23:05</span><p>Erinnerung: Ab 22 Uhr ist Nachtruhe. Parzelle 14, ich hör den Schlager bis zur Schranke.</p></div><div class="bub"><b>Siggi P14</b><span class="t">23:06</span><p>Das ist Kultur.</p></div><div class="day">SAMSTAG, 26. SEPTEMBER</div><div class="bub"><b>Rita P3</b><span class="t">06:52</span><p>POLIZEI IST SCHON DA. Am Schilf. Der Herr Brandner. Oh Gott.</p></div><div class="bub own"><b>Ich</b><span class="t">06:58</span><p>Was ist passiert??</p></div><div class="bub"><b>Mark (Platzbetreiber)</b><span class="t">07:03</span><p>Bitte alle auf euren Parzellen bleiben. Die Polizei will mit jedem sprechen.</p></div></div></section><section id="v-b3" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-3 · Kriminaltechnik Seebrück · Gerät aus dem Tretboot</span><h2>Sprachnachricht an Dr. Kessler</h2><p>Das Handy von Holger Brandner war nass, ließ sich aber auslesen. Die letzte Aktivität vor dem Tod ist eine Sprachnachricht an seinen Anwalt. Ihr dürft sie Akte Rot vorspielen.</p><div class="voice"><span class="mono small">Von: Holger Brandner · An: Dr. Kessler (Kanzlei) · Fr 23:41 · 0:19</span><audio controls preload="metadata" src="audio/sprachnachricht-b3.mp3">Euer Browser kann die Aufnahme nicht abspielen.</audio></div><details class="voice"><summary>Abschrift anzeigen</summary><p>„Kessler, ich bin&#x27;s. Die Versammlung war ein Zirkus, aber egal. Ich geh gleich noch runter zum Steg. Da will mir jemand was zeigen. Angeblich was über den Platz, das den Preis ordentlich drückt. Wenn das stimmt, unterschreibt Böttcher am Montag zu unseren Bedingungen. Ruf mich morgen früh an.“</p></details></section><section id="v-b4" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-4 · Gesichert vom Profil @nova.on.wheels, Gast auf Stellplatz G2</span><h2>Novas Story, Freitag, 25. September</h2><p>Frau Sommer postet fast jeden Abend eine „Story“ – kurze Fotos, die nach 24 Stunden wieder verschwinden. Wir haben sie vorher gesichert.</p><p class="msg">Aussage Nova Sommer, Samstag, 8:15 Uhr: „Ich mach jeden Abend ein paar Storys, das ist mein Job. Was drauf ist, sehen Sie ja selbst. Den Herrn Brandner fand ich ehrlich gesagt ganz okay. Er hat mir gesagt, für Vans gibt's im Resort eine Sonderspur.“</p><div class="story"><figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div><a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor einem dunklen Holzgebäude steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a><figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption></figure><figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div><a href="bilder/nova-0128.jpg" target="_blank" rel="noopener"><img src="bilder/nova-0128.jpg" loading="lazy" alt="Nachtaufnahme am See: Ein kleiner weiß-brauner Hund springt durchs flache Wasser, es spritzt. Rechts unten der Rand des grauen Holzstegs."></a><figcaption class="cap">1:28 Uhr. Pepper muss natürlich noch mal vom Steg in den See springen. PLATSCH. 🙄🐶 Sorry an alle Nachbarn!!</figcaption></figure></div><p class="small">Schaut genau hin: Uhrzeit, Ort, Licht, was passiert. Beschreibt es Akte Rot.</p></section><section id="v-b5" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-5 · Fotografiert am Samstag, 26.09., 8:00 Uhr</span><h2>Das Schwarze Brett an der Rezeption</h2><figure class="photo"><a href="bilder/brett.jpg" target="_blank" rel="noopener"><img src="bilder/brett.jpg" alt="Korkpinnwand mit sechs Zetteln: Bootsverleih, Wichtig, Brötchenservice, Gefunden, Nachtruhe, Vermisst" loading="lazy"></a><figcaption>Lichtbild: Spurensicherung Seebrück. Tippt auf das Foto, um es groß zu sehen.</figcaption></figure><details class="voice"><summary>BOOTSVERLEIH</summary><p>Tretboote „Kevin“ und „Chantal“ (neu, Kunststoff). Schlüssel an der Rezeption. Fahrten nur 9 bis 19 Uhr. Nachts sind die Boote angekettet!<br>– Marco</p></details><details class="voice"><summary>WICHTIG</summary><p>Die Holzbank am Badestrand wurde abgebaut (morsch). Am Strand gibt es jetzt nur noch Sand und Kunststoffliegen.<br>– Die Platzleitung</p></details><details class="voice"><summary>Brötchenservice</summary><p>Bestellschluss: 18 Uhr am Vortag. Wer später kommt, bekommt Knäckebrot.<br>– Rita</p></details><details class="voice"><summary>GEFUNDEN</summary><p>1 Grillzange. Abzuholen bei Siggi, Parzelle 14.<br>(Ist wahrscheinlich meine.)</p></details><details class="voice"><summary>NACHTRUHE 22–7 UHR</summary><p>Wird kontrolliert!!!<br>– Sicherheitsdienst S. Ruppert</p></details><details class="voice"><summary>VERMISST</summary><p>Wer hat meinen Gartenzwerg „Hubert“ gesehen? Rote Mütze, freundlicher Blick.<br>– Angelika, P7</p></details></section><section id="v-plan" class="card alle" hidden><span class="lab"><span class="tag alle">FÜR BEIDE</span> Luftbild der Polizeidrohne, Samstag, 26.09. · Norden ist oben</span><h2>Lageplan</h2><figure class="photo"><a href="bilder/lageplan.jpg" target="_blank" rel="noopener"><img src="bilder/lageplan.jpg" alt="Beschriftetes Luftbild des Campingplatzes am Kiefernsee" loading="lazy"></a><figcaption>Tippt auf den Plan, um ihn groß zu sehen.</figcaption></figure><p class="small">Rita Schäfer wohnt auf Parzelle 3, gleich oberhalb vom Steg. Nova Sommer steht mit ihrem Van auf G2. Die Wetterstation hängt an der Gaststätte Seeklause.</p></section><section id="v-cast" class="card alle" hidden><span class="lab"><span class="tag alle">FÜR BEIDE</span> Personenregister zum Fall</span><h2>Wer ist wer am Kiefernsee?</h2><ul class="cast"><li><b>Holger Brandner</b> <span class="small">58 Jahre</span><p>Das Opfer. Projektentwickler, „Brandner Freizeit &amp; Resort GmbH“. Wollte den Platz kaufen. Wohnte übers Wochenende in Mietchalet 3.</p></li><li><b>Mark Böttcher</b> <span class="small">61 Jahre</span><p>Platzbetreiber. Will verkaufen: „Ich mäh seit 30 Jahren Rasen und lese Beschwerden.“</p></li><li><b>Angelika Wohlfahrt</b> <span class="small">67 Jahre</span><p>Dauercamperin seit 1998, Parzelle 7. Sprecherin der Dauercamper und Schriftführerin. Weiß alles über jeden.</p></li><li><b>Siggi Kowalski</b> <span class="small">64 Jahre</span><p>Dauercamper, Parzelle 14. Grillmeister, Schlagerfan, Gegner jeder Veränderung.</p></li><li><b>Marco Lenz</b> <span class="small">45 Jahre</span><p>Hausmeister. Repariert alles, streicht alles, hat Schlüssel für alles.</p></li><li><b>Sven Ruppert</b> <span class="small">34 Jahre</span><p>Sicherheitsdienst. Nimmt die Nachtruhe sehr, sehr ernst.</p></li><li><b>Nova Sommer</b> <span class="small">26 Jahre</span><p>Gast mit Van auf Stellplatz G2. Vanlife-Influencerin (@nova.on.wheels), reist mit Hund Pepper.</p></li><li><b>Rita Schäfer</b> <span class="small">59 Jahre</span><p>Kiosk und Brötchendienst, Parzelle 3 direkt am Steg. Hat den Toten gefunden.</p></li></ul></section>
+<section id="v-code" class="card alle" hidden>
+<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Was ist passiert?</span><h2>Code-Prüfung</h2>
+<form id="codeForm" style="display:flex;flex-direction:column;gap:14px">
+<div class="q"><label for="q1">Frage 1: Wo ist Holger Brandner ins Wasser gekommen?</label>
+<select id="q1"><option value="">bitte wählen</option><option value="1">1 · am Badestrand</option><option value="2">2 · am Bootssteg</option><option value="3">3 · mitten auf dem See, aus dem Tretboot</option></select></div>
+<div class="q"><label for="q2">Frage 2: In welchem Zeitraum ist es passiert?</label>
+<select id="q2"><option value="">bitte wählen</option><option value="1">1 · zwischen 21:30 und 23:00 Uhr</option><option value="2">2 · zwischen 23:30 und 0:30 Uhr</option><option value="3">3 · zwischen 0:30 und 2:00 Uhr</option><option value="4">4 · nach 2:00 Uhr</option></select></div>
+<div class="q"><label for="q3">Frage 3: Welcher Gegenstand des Opfers fehlt?</label>
+<select id="q3"><option value="">bitte wählen</option><option value="1">1 · sein Handy</option><option value="2">2 · seine Brieftasche</option><option value="3">3 · seine rote Ledermappe</option><option value="4">4 · sein Autoschlüssel</option></select></div>
+<button type="submit">Antwort prüfen</button><div id="codeMsg" class="msg" hidden></div></form>
+<p class="small">Ohne Internet? Im Buch auf der Seite „Code-Prüfung“ (Seite 19) steht, wie ihr die Abschnittsnummer selbst berechnet.</p></section>
+<section id="v-hints" class="card alle" hidden>
+<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Hinweise</span><h2>Hilfe in drei Stufen</h2>
+<p class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt.</p>
+<div class="hints" id="hintBox"></div></section>
 </div>
-
+<footer>Ein Spiel zum Buch „Ausverkauf am Kiefernsee“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
+</div>
 <script>
 (function(){
-  var KEY="kiefernsee-fall1";
+  var KEY="kiefernsee-fall1", RKEY="kiefernsee-rolle";
   var $=function(id){return document.getElementById(id)};
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function set(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
   function norm(s){return (s||"").toUpperCase().replace(/[^A-ZÄÖÜ]/g,"")}
-  // Kennwort "TRETBOOT" nur als Prüfsumme hinterlegt
   function sum(s){var h=7;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))%1000003}return h}
   var PW=sum("TRETBOOT");
-  function open(){ $("login").hidden=true; $("app").hidden=false; show("voice",true) }
-  try{ if(localStorage.getItem(KEY)==="1"){ open() } }catch(e){}
-  $("loginForm").addEventListener("submit",function(e){
-    e.preventDefault();
-    if(sum(norm($("pw").value))===PW){ try{localStorage.setItem(KEY,"1")}catch(err){} open() }
-    else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
-  });
+  var VIEWS=Array.prototype.map.call(document.querySelectorAll("section[id^='v-']"),function(s){return s.id.slice(2)});
   function show(v,quiet){
-    ["voice","story","code","hints"].forEach(function(n){ $("v-"+n).hidden=(n!==v) });
+    VIEWS.forEach(function(n){ $("v-"+n).hidden=(n!==v) });
+    document.querySelectorAll("[data-view]").forEach(function(b){ b.setAttribute("aria-current", b.getAttribute("data-view")===v ? "true":"false") });
     if(!quiet){ $("v-"+v).scrollIntoView({behavior:"smooth",block:"start"}) }
   }
+  function setRole(r){
+    set(RKEY,r); $("role").hidden=true; $("app").hidden=false; $("confirm").hidden=true;
+    var b=$("badge"); b.className="badge "+r; $("badgeTxt").textContent= r==="rot" ? "◆ AKTE ROT" : "● AKTE BLAU";
+    $("navRot").hidden = r!=="rot"; $("navBlau").hidden = r!=="blau";
+    show(r==="rot"?"r1":"b1",true);
+  }
+  function afterLogin(){ $("login").hidden=true; var r=get(RKEY); if(r==="rot"||r==="blau"){ setRole(r) } else { $("role").hidden=false } }
+  if(get(KEY)==="1"){ afterLogin() }
+  $("loginForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    if(sum(norm($("pw").value))===PW){ set(KEY,"1"); afterLogin() }
+    else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
+  });
+  document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ setRole(b.getAttribute("data-role")) }) });
+  $("switch").addEventListener("click",function(){ $("confirm").hidden=false });
+  $("noSwitch").addEventListener("click",function(){ $("confirm").hidden=true });
+  $("yesSwitch").addEventListener("click",function(){ set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
   document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
 
-  // Code-Prüfung: gleiche Rechnung wie im Buch
   var RIGHT=[2,2,3];
   var WRONG=["Frage 1 passt noch nicht. Woher stammen die Splitter in der Wunde?",
              "Frage 1 stimmt. Frage 2 passt noch nicht. Hat das Platschen um 1:30 Uhr wirklich mit der Tat zu tun?",
@@ -186,24 +181,12 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     if(!a[0]||!a[1]||!a[2]){ m.className="msg bad"; m.textContent="Bitte alle drei Fragen beantworten."; return }
     var code=(a[0]-1)*16+(a[1]-1)*4+a[2];
     for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ m.className="msg bad"; m.textContent="Abschnitt "+code+": Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]; return } }
-    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch.";
+    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 22).";
   });
-
-  // Hinweise
   var H=[
-    ["Frage 1 · Der Ort",
-     "Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?",
-     "Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.",
-     "Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],
-    ["Frage 2 · Die Zeit",
-     "Wer hat den Steg in der Nacht gesehen? Und wann fehlte das Boot zum ersten Mal?",
-     "Brandner hat um 23:41 Uhr noch eine Sprachnachricht geschickt. Das Platschen um 1:30 Uhr hat eine harmlose Erklärung in Novas Story.",
-     "Antwort 2: zwischen 23:30 und 0:30 Uhr. Um 23:41 lebte er noch, um 0:30 war das Boot weg."],
-    ["Frage 3 · Der Gegenstand",
-     "Vergleicht, was Brandner am Abend bei sich hatte, mit dem, was die Polizei gefunden hat.",
-     "Das Versammlungsprotokoll nennt einen Gegenstand, der auf der Fundliste fehlt.",
-     "Antwort 3: die rote Ledermappe mit dem Vorvertrag."]
-  ];
+    ["Frage 1 · Der Ort","Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?","Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.","Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],
+    ["Frage 2 · Die Zeit","Wer hat den Steg in der Nacht gesehen? Und wann fehlte das Boot zum ersten Mal?","Brandner hat um 23:41 Uhr noch eine Sprachnachricht geschickt. Das Platschen um 1:30 Uhr hat eine harmlose Erklärung in Novas Story.","Antwort 2: zwischen 23:30 und 0:30 Uhr. Um 23:41 lebte er noch, um 0:30 war das Boot weg."],
+    ["Frage 3 · Der Gegenstand","Vergleicht, was Brandner am Abend bei sich hatte, mit dem, was die Polizei gefunden hat.","Das Versammlungsprotokoll nennt einen Gegenstand, der auf der Fundliste fehlt.","Antwort 3: die rote Ledermappe mit dem Vorvertrag."]];
   var box=$("hintBox");
   H.forEach(function(h,qi){
     var d=document.createElement("div"); d.className="card"; d.style.padding="14px";
@@ -211,11 +194,9 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     var row=document.createElement("div"); row.className="hrow"; d.appendChild(row);
     var out=document.createElement("div"); out.className="hints"; d.appendChild(out);
     [1,2,3].forEach(function(s){
-      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.id="h"+qi+"-"+s; b.textContent="Stufe "+s;
-      b.addEventListener("click",function(){
-        if(b.disabled) return; b.disabled=true; b.style.opacity=".5";
-        var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p);
-      });
+      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.textContent="Stufe "+s;
+      b.addEventListener("click",function(){ if(b.disabled) return; b.disabled=true; b.style.opacity=".5";
+        var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p) });
       row.appendChild(b);
     });
     box.appendChild(d);
