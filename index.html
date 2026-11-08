@@ -49,11 +49,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .menu button b{font-family:var(--f-display);font-size:18px}
 .msg{font-family:var(--f-mono);font-size:14px;padding:10px 12px;border-left:4px solid var(--muted);background:var(--bg)}
 .msg.ok{border-color:var(--ok)} .msg.bad{border-color:var(--red)}
-.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.story{display:grid;grid-template-columns:1fr;gap:14px}
 .frame{background:var(--night);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#eef2f4}
 .frame .top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}
 .bar{height:3px;background:rgba(255,255,255,.35);margin:8px 12px 0;border-radius:2px}
-.frame svg{display:block;width:100%;height:auto}
+.frame img{display:block;width:100%;height:auto}
+.voice{display:flex;flex-direction:column;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px}
+audio{width:100%}
 .cap{padding:10px 12px 14px;font-size:14px}
 .q{display:flex;flex-direction:column;gap:6px}
 .hints{display:flex;flex-direction:column;gap:10px}
@@ -87,49 +89,38 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 
   <div id="app" hidden style="display:flex;flex-direction:column;gap:20px">
     <nav class="menu" aria-label="Spuren">
+      <button data-view="voice"><span class="tag blau">NUR AKTE BLAU</span><b>Spur B-3</b><span class="small">Brandners letzte Sprachnachricht</span></button>
       <button data-view="story"><span class="tag blau">NUR AKTE BLAU</span><b>Spur B-4</b><span class="small">Novas Story vom Freitagabend</span></button>
       <button data-view="code"><span class="tag alle">GEMEINSAM</span><b>Code-Prüfung</b><span class="small">Akt 1 abschließen</span></button>
       <button data-view="hints"><span class="tag alle">GEMEINSAM</span><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button>
     </nav>
 
+    <section id="v-voice" class="card" hidden>
+      <span class="lab">Spur B-3 · Asservat Nr. 3 · Smartphone des Opfers</span>
+      <h2>Sprachnachricht an Dr. Kessler</h2>
+      <p style="margin:0" class="small">Gesendet von Holger Brandner, Freitag, 25. September, 23:41 Uhr. Letzte Aktivität auf dem Handy. Ihr dürft sie Akte Rot vorspielen.</p>
+      <div class="voice">
+        <span class="mono small">Von: Holger Brandner · An: Dr. Kessler (Kanzlei) · Fr 23:41 · 0:20</span>
+        <audio controls preload="metadata" src="audio/sprachnachricht-b3.mp3">Euer Browser kann die Aufnahme nicht abspielen. Die Abschrift steht als Offline-Code in Spur B-3 im Buch.</audio>
+      </div>
+      <p class="small" style="margin:0">Hört genau hin: Wann hat er das gesagt, und was hatte er vor?</p>
+    </section>
+
     <section id="v-story" class="card" hidden>
       <span class="lab">Spur B-4 · Asservat Nr. 12 · gesichert vom Profil @nova.on.wheels</span>
       <h2>Novas Story, Freitag, 25. September</h2>
-      <p style="margin:0" class="small">Nova Sommer hat ihre Story freiwillig zur Verfügung gestellt. Zwei Bilder, die Uhrzeiten stammen aus den Metadaten.</p>
+      <p style="margin:0" class="small">Nova Sommer hat ihre Story freiwillig zur Verfügung gestellt. Zwei Fotos, die Uhrzeiten stammen aus den Metadaten. Tippt auf ein Foto, um es groß zu sehen.</p>
       <div class="story">
         <figure class="frame" style="margin:0">
           <div class="bar"></div>
           <div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div>
-          <svg viewBox="0 0 320 300" role="img" aria-label="Nachtaufnahme: Bootssteg mit zwei angeketteten Tretbooten, im Hintergrund ein kleines Licht">
-            <rect width="320" height="300" fill="#13202b"/>
-            <circle cx="262" cy="52" r="16" fill="#f2efe0"/>
-            <circle cx="40" cy="40" r="1.4" fill="#fff"/><circle cx="120" cy="24" r="1.2" fill="#fff"/><circle cx="190" cy="60" r="1" fill="#fff"/><circle cx="300" cy="110" r="1.2" fill="#fff"/>
-            <path d="M0 150 Q60 128 120 140 T240 132 T320 140 V160 H0Z" fill="#0c151d"/>
-            <polygon points="20,150 32,110 44,150" fill="#0a1218"/><polygon points="40,150 54,100 68,150" fill="#0a1218"/><polygon points="250,146 262,112 274,146" fill="#0a1218"/>
-            <circle cx="96" cy="139" r="2.6" fill="#ffd36b"/><circle cx="96" cy="139" r="7" fill="#ffd36b" opacity=".18"/>
-            <rect x="0" y="158" width="320" height="142" fill="#1b3142"/>
-            <path d="M0 200 H320 M0 236 H320 M0 270 H320" stroke="#2a4a60" stroke-width="2" stroke-dasharray="14 18"/>
-            <rect x="0" y="214" width="170" height="14" fill="#6b6f72"/>
-            <g stroke="#4a4e51" stroke-width="2"><line x1="20" y1="214" x2="20" y2="228"/><line x1="60" y1="214" x2="60" y2="228"/><line x1="100" y1="214" x2="100" y2="228"/><line x1="140" y1="214" x2="140" y2="228"/></g>
-            <rect x="150" y="190" width="10" height="38" fill="#4a4e51"/>
-            <ellipse cx="205" cy="252" rx="34" ry="10" fill="#d9dde0"/><rect x="186" y="232" width="34" height="16" rx="5" fill="#c3c8cc"/>
-            <ellipse cx="205" cy="190" rx="30" ry="9" fill="#d9dde0"/><rect x="189" y="172" width="30" height="14" rx="5" fill="#c3c8cc"/>
-            <path d="M160 222 Q180 238 186 246 M160 210 Q176 196 190 186" stroke="#9aa0a4" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
-          </svg>
+          <a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" width="1200" height="800" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor einem dunklen Holzgebäude steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a>
           <figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption>
         </figure>
         <figure class="frame" style="margin:0">
           <div class="bar"></div>
           <div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div>
-          <svg viewBox="0 0 320 300" role="img" aria-label="Nachtaufnahme mit Handylicht: ein Hund springt vom Steg ins Wasser, Spritzer">
-            <rect width="320" height="300" fill="#101a23"/>
-            <rect x="0" y="150" width="320" height="150" fill="#1b3142"/>
-            <rect x="0" y="176" width="200" height="16" fill="#7a7e81"/>
-            <circle cx="70" cy="120" r="80" fill="#ffffff" opacity=".07"/>
-            <g fill="#e8e2d2"><ellipse cx="236" cy="168" rx="22" ry="11"/><circle cx="258" cy="158" r="9"/><rect x="214" y="160" width="6" height="16" rx="3" transform="rotate(-30 217 168)"/></g>
-            <g fill="#cfe3f0" opacity=".9"><circle cx="232" cy="200" r="5"/><circle cx="250" cy="194" r="3"/><circle cx="216" cy="196" r="4"/><circle cx="262" cy="206" r="3"/><circle cx="240" cy="214" r="2.5"/></g>
-            <ellipse cx="238" cy="214" rx="40" ry="6" fill="none" stroke="#cfe3f0" stroke-width="2" opacity=".7"/>
-          </svg>
+          <a href="bilder/nova-0128.jpg" target="_blank" rel="noopener"><img src="bilder/nova-0128.jpg" width="1200" height="800" loading="lazy" alt="Nachtaufnahme am See: Ein kleiner weiß-brauner Hund springt durchs flache Wasser, es spritzt. Rechts unten der Rand des grauen Holzstegs."></a>
           <figcaption class="cap">1:28 Uhr. Pepper muss natürlich noch mal vom Steg in den See springen. PLATSCH. 🙄🐶 Sorry an alle Nachbarn!!</figcaption>
         </figure>
       </div>
@@ -171,7 +162,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
   // Kennwort "TRETBOOT" nur als Prüfsumme hinterlegt
   function sum(s){var h=7;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))%1000003}return h}
   var PW=sum("TRETBOOT");
-  function open(){ $("login").hidden=true; $("app").hidden=false; show("story",true) }
+  function open(){ $("login").hidden=true; $("app").hidden=false; show("voice",true) }
   try{ if(localStorage.getItem(KEY)==="1"){ open() } }catch(e){}
   $("loginForm").addEventListener("submit",function(e){
     e.preventDefault();
@@ -179,7 +170,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
   });
   function show(v,quiet){
-    ["story","code","hints"].forEach(function(n){ $("v-"+n).hidden=(n!==v) });
+    ["voice","story","code","hints"].forEach(function(n){ $("v-"+n).hidden=(n!==v) });
     if(!quiet){ $("v-"+v).scrollIntoView({behavior:"smooth",block:"start"}) }
   }
   document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
