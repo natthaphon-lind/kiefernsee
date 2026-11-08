@@ -164,10 +164,10 @@ footer{font-size:12px;color:var(--muted);text-align:center}
   function afterLogin(){
     $("login").hidden=true; var w=wanted(), r=get(RKEY);
     if(w && /^r\d/.test(w)){ r="rot" } else if(w && /^b\d/.test(w)){ r="blau" }
-    if(r==="rot"||r==="blau"){ setRole(r); if(w){ show(w,true) } } else { $("role").hidden=false }
+    if(r==="rot"||r==="blau"){ setRole(r); if(w){ show(w,true); setTimeout(function(){ $("v-"+w).scrollIntoView({block:"start"}) },150) } } else { $("role").hidden=false }
   }
   window.addEventListener("hashchange",function(){ if($("app").hidden) return; var w=wanted(); if(!w) return;
-    if(/^r\d/.test(w)&&get(RKEY)!=="rot") setRole("rot"); if(/^b\d/.test(w)&&get(RKEY)!=="blau") setRole("blau"); show(w,true) });
+    if(/^r\d/.test(w)&&get(RKEY)!=="rot") setRole("rot"); if(/^b\d/.test(w)&&get(RKEY)!=="blau") setRole("blau"); show(w) });
   if(get(KEY)==="1"){ afterLogin() }
   $("loginForm").addEventListener("submit",function(e){
     e.preventDefault();
