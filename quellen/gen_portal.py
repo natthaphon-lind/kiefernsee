@@ -180,7 +180,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .menu button b{font-family:var(--f-display);font-size:18px}
 .menu button.rot{border-left:5px solid var(--red)} .menu button.blau{border-left:5px solid var(--blue)}
 .menu button[aria-current="true"]{outline:2px solid var(--ink)}
-.navlab{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:-6px}
+.navlab{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .msg{font-family:var(--f-mono);font-size:14px;padding:10px 12px;border-left:4px solid var(--muted);background:var(--bg)}
 .msg.ok{border-color:var(--ok)} .msg.bad{border-color:var(--red)}
 dl.form{display:grid;grid-template-columns:minmax(110px,30%) 1fr;margin:0;border-top:1px solid var(--line)}
