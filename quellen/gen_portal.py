@@ -79,11 +79,15 @@ S["r4"] = card("r4", "R-4 · Samstag, 26.09., 07:30 Uhr, Rezeption. Vernehmung d
                f'<div class="qa mono">{qa}</div><p class="small">Selbst gelesen, genehmigt, unterschrieben:</p><p class="sig">Rita Schäfer</p>', "rot")
 
 wt = "".join(f"<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td></tr>" for a, b, c, d in B.WEATHER)
-notruf = "".join(f"<p>{E(p)}</p>" for p in B.NOTRUF.split("\n"))
+notruf = (f'<p class="small">{E(B.NOTRUF_HEAD)}</p>' + "".join(f"<p><b>{E(w)}:</b> {E(t)}</p>" for w, t in B.NOTRUF)
+          + f'<p class="small">{E(B.NOTRUF_FOOT)}</p>')
 S["r5"] = card("r5", "R-5 · Wetterstation an der Gaststätte Seeklause, Nacht 25./26.09.", "Wetterdaten und Notruf",
                f'<div class="scroll"><table class="mono"><thead><tr><th>Uhrzeit</th><th>Temp. °C</th><th>Wind aus</th><th>km/h</th></tr></thead>'
                f'<tbody>{wt}</tbody></table></div><p class="small mono">Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.</p>'
-               f'<details class="voice"><summary>Mitschnitt des Notrufs anzeigen</summary><div class="mono">{notruf}</div></details>', "rot")
+               '<h2 style="font-size:18px">Mitschnitt des Notrufs</h2>'
+               '<div class="voice"><span class="mono small">Leitstelle Seebrück · Sa 26.09. · 06:44 Uhr · 0:21</span>'
+               '<audio controls preload="metadata" src="audio/notruf-r5.mp3">Euer Browser kann die Aufnahme nicht abspielen.</audio></div>'
+               f'<details class="voice"><summary>Abschrift anzeigen</summary><div class="mono" style="font-size:14px;display:flex;flex-direction:column;gap:6px">{notruf}</div></details>', "rot")
 
 # ---------- BLAU ----------
 S["b1"] = card("b1", "B-1 · Interessengemeinschaft der Dauercamper am Kiefernsee e. V. (in Gründung)",
@@ -267,7 +271,14 @@ JS = r'''<script>
     $("navRot").hidden = r!=="rot"; $("navBlau").hidden = r!=="blau";
     show(r==="rot"?"r1":"b1",true);
   }
-  function afterLogin(){ $("login").hidden=true; var r=get(RKEY); if(r==="rot"||r==="blau"){ setRole(r) } else { $("role").hidden=false } }
+  function wanted(){ var h=(location.hash||"").slice(1); return VIEWS.indexOf(h)>=0 ? h : null }
+  function afterLogin(){
+    $("login").hidden=true; var w=wanted(), r=get(RKEY);
+    if(w && /^r\d/.test(w)){ r="rot" } else if(w && /^b\d/.test(w)){ r="blau" }
+    if(r==="rot"||r==="blau"){ setRole(r); if(w){ show(w,true) } } else { $("role").hidden=false }
+  }
+  window.addEventListener("hashchange",function(){ if($("app").hidden) return; var w=wanted(); if(!w) return;
+    if(/^r\d/.test(w)&&get(RKEY)!=="rot") setRole("rot"); if(/^b\d/.test(w)&&get(RKEY)!=="blau") setRole("blau"); show(w,true) });
   if(get(KEY)==="1"){ afterLogin() }
   $("loginForm").addEventListener("submit",function(e){
     e.preventDefault();
@@ -340,7 +351,8 @@ page = f'''<!doctype html>
 <p>Jeder wählt auf seinem eigenen Handy seine Farbe. Ihr seht dann nur eure eigene Akte – und die gemeinsamen Seiten.</p>
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
-<p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p></section>
+<p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p>
+<p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Den Ermittlerbogen für euren geheimen Verdacht, die Punkte fürs Duell und die Auflösung gibt es nur im Buch. Legt es beim Spielen immer mit auf den Tisch.</p></section>
 
 <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
 <div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>
@@ -348,6 +360,7 @@ page = f'''<!doctype html>
 <button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
 <div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot">{nav(ROT_NAV, "rot")}</nav></div>
 <div id="navBlau" hidden><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Blau">{nav(BLAU_NAV, "blau")}</nav></div>
+<p class="small" style="margin:0">📖 Ermittlerbogen, Punkte und Auflösung findet ihr im Buch.</p>
 <div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam">{nav(ALL_NAV, "alle")}</nav></div>
 {"".join(S[k] for k in ["r1","r2","r3","r4","r5","b1","b2","b3","b4","b5","plan","cast"])}
 {CODE}

@@ -147,7 +147,7 @@ def qr(x, y, size, data, kind):
     c.setFillGray(1); c.rect(x - 3, y - 3, size + 6, size + 6, fill=1, stroke=0); c.setFillGray(0)
     d = Drawing(size, size); d.add(w); renderPDF.draw(d, c, x, y)
     c.setFont("SansB", 7.5)
-    lab = "OFFLINE-QR · ohne Internet" if kind == "off" else "PORTAL-QR · Kennwort im Brief"
+    lab = "ERMITTLERPORTAL · Kennwort im Brief"
     c.drawCentredString(x + size / 2, y - 9, lab)
 
 
@@ -240,9 +240,10 @@ RULES = [
     ("Die goldene Regel",
      "Jeder liest nur seine eigene Seite. Ihr dürft euch alles vorlesen, beschreiben und erzählen – aber "
      "ihr schaut nicht auf die Seite des anderen. Die Lösung entsteht erst, wenn ihr redet."),
-    ("Zwei Sorten QR-Codes",
-     "OFFLINE-QR: Der Text steckt im Code selbst. Handykamera drauf, fertig – auch ohne Internet. "
-     "PORTAL-QR: führt zum geheimen Ermittlerportal. Das Kennwort steht im Brief der Kommissarin."),
+    ("Buch und Ermittlerportal",
+     "Das Buch ist eure Hauptakte: Hier stehen alle Spuren, euer Ermittlerbogen und die Auflösung. Das "
+     "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Code-Prüfung. Scannt dafür die QR-Codes "
+     "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin."),
     ("Fragen und Hilfe",
      "Jeder Akt endet mit Fragen. Prüft eure Antworten im Portal oder mit der Code-Prüfung hinten im Buch. "
      "Hängt ihr fest, helfen Hinweise in drei Stufen: Schubs, Richtung, Antwort."),
@@ -264,9 +265,9 @@ def rules_page():
     c.setFillColorRGB(1, 0.95, 0.80); c.setStrokeColorRGB(0.85, 0.7, 0.4); c.roundRect(ML, y - 78, W - ML - MR, 78, 4, fill=1, stroke=1)
     c.setFillGray(0); c.setFont("SansB", 10); c.drawString(ML + 12, y - 18, "Ihr braucht")
     text(ML + 12, y - 34, W - ML - MR - 24,
-         "Zwei Stifte, ein Handy mit Kamera, etwas Zeit – und gern ein Getränk. Lieber per Handy? Jede Akte "
-         "gibt es auch im Ermittlerportal: Kennwort eingeben, Rot oder Blau wählen. So kann einer am Buch und "
-         "einer am Handy ermitteln – oder beide am Handy.", "Serif", 9.6, 13)
+         "Zwei Stifte, ein Handy mit Kamera und Internet, etwas Zeit – und gern ein Getränk. Lieber per Handy? "
+         "Jede Akte gibt es auch im Ermittlerportal: Kennwort eingeben, Rot oder Blau wählen. Ermittlerbogen und "
+         "Auflösung gibt es aber nur hier im Buch.", "Serif", 9.6, 13)
     new_page()
 
 
@@ -293,13 +294,13 @@ def letter_page():
     c.setFont("Mono", 10); c.drawString(ML, y - 36, "Jutta Wendland, Erste Kriminalhauptkommissarin")
     stamp(W - MR - 90, y - 4, "VERTRAULICH", -8)
     yb = 118
-    c.setFillColorRGB(0.88, 0.92, 0.97); sc(BLAU); c.rect(ML, yb - 30, W - ML - MR, 82, fill=1, stroke=1)
+    c.setFillColorRGB(0.88, 0.92, 0.97); sc(BLAU); c.rect(ML, yb - 44, W - ML - MR, 104, fill=1, stroke=1)
     c.setFillGray(0); c.setFont("FormB", 9); c.drawString(ML + 12, yb + 34, "ZUGANG ERMITTLERPORTAL")
     c.setFont("Form", 9.4)
     c.drawString(ML + 12, yb + 18, "Scannen Sie den Code. Das Portal ist nur über diesen Link erreichbar.")
     c.drawString(ML + 12, yb + 4, "Bitte nicht weitergeben.")
     c.setFont("MonoB", 15); c.drawString(ML + 12, yb - 18, "Kennwort: TRETBOOT")
-    qr(W - MR - 86, yb - 24, 74, PORTAL, "portal")
+    qr(W - MR - 104, yb - 34, 92, PORTAL, "portal")
     new_page()
 
 
@@ -413,7 +414,7 @@ def seat_page():
              "Blättert immer gemeinsam um. Ihr dürft vorlesen und erzählen, so viel ihr wollt – nur nicht "
              "rüberschauen.\nLieber am Handy? Dann scannt den Portal-Code, gebt das Kennwort ein und wählt eure Akte.",
              "Serif", 10.4, 14.6)
-    qr(W - MR - 84, ty - 190, 80, PORTAL, "portal")
+    qr(W - MR - 104, ty - 200, 100, PORTAL, "portal")
     new_page()
 
 
@@ -564,10 +565,14 @@ def r4():
 WEATHER = [("22:00", "11,8", "SW", "14"), ("23:00", "11,2", "SW", "18"), ("0:00", "10,6", "SW", "22"),
            ("1:00", "10,1", "SW", "20"), ("2:00", "9,7", "SW", "16"), ("3:00", "9,4", "W", "12"),
            ("4:00", "9,0", "W", "9"), ("5:00", "8,8", "W", "6"), ("6:00", "8,6", "W", "5")]
-NOTRUF = ("LEITSTELLE SEEBRÜCK · Notruf Sa 26.09. 06:44:12 · Anruferin: Rita Schäfer\n"
-          "„Hier ist die Rita vom Kiefernsee! Da liegt einer im Wasser, beim Schilf, das ist der Herr Brandner. "
-          "Der bewegt sich nicht! Das Tretboot ist auch da, die Chantal. Bitte kommen Sie schnell!“\n"
-          "06:45 Rettungswagen und Streife alarmiert.")
+NOTRUF_HEAD = "LEITSTELLE SEEBRÜCK · Notruf Sa 26.09., 06:44:12 Uhr · Anruferin: Rita Schäfer · Dauer 0:21"
+NOTRUF = [
+    ("Leitstelle", "Notruf Leitstelle Seebrück. Wo genau ist der Notfallort?"),
+    ("Anruferin", "Hier ist die Rita vom Kiefernsee! Da liegt einer im Wasser, beim Schilf, das ist der Herr Brandner. "
+                  "Der bewegt sich nicht! Das Tretboot ist auch da, die Chantal. Bitte kommen Sie schnell!"),
+    ("Leitstelle", "Bleiben Sie, wo Sie sind, und gehen Sie nicht ins Wasser. Rettungswagen und Polizei sind unterwegs."),
+]
+NOTRUF_FOOT = "06:45 Uhr: Rettungswagen und Streife alarmiert."
 
 
 def r5():
@@ -589,12 +594,21 @@ def r5():
     y = text(ML, y - 8, W - ML - MR - 30,
              "Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.",
              "Mono", 9.2, 13) - 18
-    c.setStrokeGray(0); c.setLineWidth(1); c.rect(ML, y - 150, W - ML - MR - 30, 150, fill=0, stroke=1)
-    c.setFont("SansB", 12); c.drawString(ML + 14, y - 24, "Mitschnitt des Notrufs")
-    text(ML + 14, y - 44, 250,
-         "Die Leitstelle hat den Notruf von Rita Schäfer als Text gesichert. Scannt den Code mit der "
-         "Handykamera.", "Serif", 10.2, 14)
-    qr(W - MR - 30 - 130, y - 136, 112, NOTRUF, "off")
+    c.setFont("SansB", 12); c.drawString(ML, y, "Mitschnitt des Notrufs")
+    y -= 10
+    bw = W - ML - MR - 30
+    tw = bw - 130
+    body_h = max(sum(lines_h(t, "Mono", 9.2, tw - 90, 12.6) + 6 for _, t in NOTRUF) + 70, 168)
+    c.setFillColorRGB(0.95, 0.95, 0.93); c.setStrokeGray(0.6); c.setLineWidth(0.6)
+    c.rect(ML, y - body_h, bw, body_h, fill=1, stroke=1); c.setFillGray(0)
+    c.setFont("MonoB", 7.6); c.drawString(ML + 10, y - 16, NOTRUF_HEAD)
+    yy = y - 36
+    for who, t in NOTRUF:
+        c.setFont("MonoB", 9.2); c.drawString(ML + 10, yy, who + ":")
+        yy = text(ML + 96, yy, tw - 90, t, "Mono", 9.2, 12.6, gap=0) - 6
+    c.setFont("Mono", 8.2); c.setFillGray(0.35); c.drawString(ML + 10, y - body_h + 10, NOTRUF_FOOT); c.setFillGray(0)
+    qr(ML + bw - 114, y - 22 - 100, 100, PORTAL + "#r5", "portal")
+    c.setFont("SansB", 8.5); c.drawCentredString(ML + bw - 64, y - 22 - 100 - 22, "Original anhören")
     new_page()
 
 
@@ -689,7 +703,7 @@ def b3():
     y = text(ML, y, W - ML - MR - 30,
              "Das Handy von Holger Brandner war nass, ließ sich aber auslesen. Die letzte Aktivität vor dem "
              "Tod ist eine Sprachnachricht an seinen Anwalt. Die Technik hat sie abgeschrieben und als Code "
-             "gesichert. Die Original-Aufnahme liegt im Ermittlerportal.", "Serif", 10.6, 15) - 10
+             "gesichert. Die Aufnahme selbst liegt im Ermittlerportal.", "Serif", 10.6, 15) - 10
     px, pw, ph = ML + 10, 210, 380
     py = y - ph
     c.setFillGray(0.12); c.roundRect(px, py, pw, ph, 26, fill=1, stroke=0)
@@ -707,15 +721,19 @@ def b3():
         c.rect(px + 76 + k * 4, by + 23 - hgt / 2, 2, hgt, fill=1, stroke=0)
     c.setFont("Sans", 7); c.drawString(px + 76, by + 5, "0:19"); c.drawRightString(px + pw - 30, by + 5, "23:41 ✓✓")
     c.setFont("SansB", 7.5); c.setFillGray(0.4); c.drawCentredString(px + pw / 2, by + 60, "FREITAG"); c.setFillGray(0)
-    qx = px + pw + 50
-    c.setFont("SansB", 12); c.drawString(qx, y - 30, "Abschrift")
-    text(qx, y - 50, W - MR - 30 - qx, "Offline-Code: Handykamera drauf und lesen – laut vorlesen "
-         "ist ausdrücklich erlaubt.", "Serif", 10, 14)
-    qr(qx, y - 220, 120, VOICE, "off")
-    c.setFont("SansB", 12); c.drawString(qx, y - 262, "Anhören")
-    text(qx, y - 282, W - MR - 30 - qx, "Im Ermittlerportal unter „Spur B-3“. Ihr dürft sie Akte Rot "
-         "vorspielen.", "Serif", 10, 14)
-    qr(qx, y - 380, 70, PORTAL, "portal")
+    qx = px + pw + 30
+    qw = W - MR - 20 - qx
+    c.setFont("SansB", 12); c.drawString(qx, y - 30, "Abschrift der Technik")
+    c.setFillColorRGB(0.95, 0.95, 0.93); c.setStrokeGray(0.6); c.setLineWidth(0.6)
+    vt = VOICE.split("\n")[2]
+    vh = lines_h(vt, "Mono", 9, qw - 20, 12.4) + 44
+    c.rect(qx, y - 42 - vh, qw, vh, fill=1, stroke=1); c.setFillGray(0)
+    c.setFont("MonoB", 7.4); c.drawString(qx + 10, y - 58, "Fr 25.09. · 23:41 Uhr · 0:19")
+    text(qx + 10, y - 76, qw - 20, vt, "Mono", 9, 12.4, gap=0)
+    yq = y - 42 - vh - 30
+    c.setFont("SansB", 12); c.drawString(qx, yq, "Original anhören")
+    text(qx, yq - 18, qw - 108, "Im Ermittlerportal. Ihr dürft sie Akte Rot vorspielen.", "Serif", 10, 14)
+    qr(qx + qw - 100, yq - 112, 100, PORTAL + "#b3", "portal")
     new_page()
 
 
@@ -735,7 +753,7 @@ def b4():
          "1. Code scannen.\n2. Kennwort aus dem Brief eingeben.\n3. „Spur B-4“ öffnen und die beiden "
          "Fotos genau ansehen: Uhrzeit, Ort, Licht, was passiert.\nWas ihr seht, beschreibt ihr Akte Rot.",
          "Serif", 10.4, 14.6, gap=3)
-    qr(W - MR - 30 - 150, y - 186, 136, PORTAL, "portal")
+    qr(W - MR - 30 - 150, y - 186, 136, PORTAL + "#b4", "portal")
     new_page()
 
 
@@ -821,48 +839,75 @@ def sheet_page():
     new_page()
 
 
-def section_text(a, b, cc):
+def section_short(a, b, cc):
     if (a, b, cc) == RIGHT:
-        return "Wendland nickt. Weiter zur Auflösung, S. 22."
-    if a != RIGHT[0]:
-        return "Wendland schüttelt den Kopf. Prüft Frage 1."
-    if b != RIGHT[1]:
-        return "Wendland schüttelt den Kopf. Prüft Frage 2."
-    return "Wendland schüttelt den Kopf. Prüft Frage 3."
+        return ("Richtig!", "Weiter: Seite 22")
+    for k, (x, r) in enumerate(zip((a, b, cc), RIGHT), 1):
+        if x != r:
+            return ("Leider falsch.", f"Prüft Frage {k}")
+
+
+VALUES = [("Frage 1 · Wo?", [("am Badestrand", 0), ("am Bootssteg", 16), ("im Tretboot", 32)]),
+          ("Frage 2 · Wann?", [("21:30 – 23:00 Uhr", 0), ("23:30 – 0:30 Uhr", 4), ("0:30 – 2:00 Uhr", 8), ("nach 2:00 Uhr", 12)]),
+          ("Frage 3 · Was fehlt?", [("Handy", 1), ("Brieftasche", 2), ("rote Ledermappe", 3), ("Autoschlüssel", 4)])]
 
 
 def code_page():
-    y = doc_head("FÜR BEIDE", "Code-Prüfung Akt 1", "Mit Internet im Portal – ohne Internet hier im Buch")
-    y = text(ML, y, W - ML - MR - 150,
-             "Mit Handy: Scannt den Portal-Code und öffnet „Code-Prüfung“.\n"
-             "Ohne Handy: Zählt die Werte eurer drei Antworten zusammen. Das Ergebnis ist eure "
-             "Abschnittsnummer. Lest NUR diesen einen Abschnitt.", "Serif", 10.4, 14.6) - 2
-    qr(W - MR - 112, y + 18, 100, PORTAL, "portal")
-    cols = [("Frage 1", ["1 → 0", "2 → 16", "3 → 32"]), ("Frage 2", ["1 → 0", "2 → 4", "3 → 8", "4 → 12"]),
-            ("Frage 3", ["1 → 1", "2 → 2", "3 → 3", "4 → 4"])]
-    cw = 110
-    for k, (h, vals) in enumerate(cols):
-        x = ML + k * (cw + 14)
-        c.setFont("SansB", 10); c.drawString(x, y, h)
-        for i, v in enumerate(vals):
-            c.setFont("Mono", 10); c.drawString(x, y - 16 - i * 14, "Antwort " + v)
-    y -= 92
-    c.setFont("SansB", 10); c.drawString(ML, y, "Beispiel: Antworten 1 / 3 / 2 ergeben 0 + 8 + 2 = Abschnitt 10.")
-    y -= 14; rule(y, wd=1)
-    y -= 18
-    entries = {}
-    for a in (1, 2, 3):
-        for b in (1, 2, 3, 4):
-            for cc in (1, 2, 3, 4):
-                entries[(a - 1) * 16 + (b - 1) * 4 + cc] = section_text(a, b, cc)
-    colw = (W - ML - MR - 18) / 2
-    per = 24
+    y = doc_head("FÜR BEIDE", "Code-Prüfung Akt 1", "Mit Handy im Portal – ohne Handy hier in vier Schritten")
+    tw = W - ML - MR - 120
+
+    def step(n, title, yy):
+        fc(NIGHT); c.circle(ML + 9, yy + 4, 9, fill=1, stroke=0)
+        c.setFillGray(1); c.setFont("SansB", 10); c.drawCentredString(ML + 9, yy, str(n)); c.setFillGray(0)
+        c.setFont("SansB", 11); c.drawString(ML + 26, yy, title)
+        return yy - 18
+
+    y = step(1, "Antworten aussuchen", y)
+    y = text(ML + 26, y, tw - 26, "Einigt euch auf je eine Antwort zu den drei Fragen von Seite 4.", "Serif", 10, 13.6) - 4
+    y = step(2, "Wert jeder Antwort ablesen", y)
+    colw = (W - ML - MR - 26 - 20 - 112) / 3
+    top = y
+    qr(W - MR - 94, top - 94, 94, PORTAL + "#code", "portal")
+    for k, (h, vals) in enumerate(VALUES):
+        x = ML + 26 + k * (colw + 10)
+        c.setFillColorRGB(0.92, 0.94, 0.97); c.rect(x, top - 18, colw, 18, fill=1, stroke=0); c.setFillGray(0)
+        c.setFont("SansB", 9); c.drawString(x + 6, top - 13, h)
+        yy = top - 32
+        for i, (lab, v) in enumerate(vals, 1):
+            c.setFont("SansB", 9); c.drawString(x + 6, yy, f"{i}")
+            c.setFont("Serif", 9); c.drawString(x + 16, yy, lab)
+            c.setFont("MonoB", 10); c.drawRightString(x + colw - 6, yy, str(v))
+            c.setStrokeGray(0.85); c.setLineWidth(0.4); c.line(x + 4, yy - 4, x + colw - 4, yy - 4)
+            yy -= 15
+    y = top - 32 - 4 * 15 - 22
+    y = step(3, "Die drei Werte zusammenzählen", y)
+    bx = ML + 26
+    c.setStrokeGray(0); c.setLineWidth(1)
+    for i, lab in enumerate(["Frage 1", "Frage 2", "Frage 3"]):
+        x = bx + i * 92
+        c.rect(x, y - 26, 56, 26, fill=0, stroke=1)
+        c.setFont("Sans", 7); c.setFillGray(0.4); c.drawCentredString(x + 28, y - 36, lab); c.setFillGray(0)
+        c.setFont("SansB", 14); c.drawCentredString(x + 74, y - 18, "+" if i < 2 else "=")
+    x = bx + 3 * 92 - 4
+    c.setLineWidth(2); c.rect(x, y - 28, 70, 30, fill=0, stroke=1)
+    c.setFont("Sans", 7); c.setFillGray(0.4); c.drawCentredString(x + 35, y - 38, "euer Abschnitt"); c.setFillGray(0)
+    y -= 52
+    c.setFont("SerifI", 9.6); c.setFillGray(0.3)
+    c.drawString(bx, y, "Beispiel: am Badestrand (0) + nach 2:00 Uhr (12) + Handy (1) = 13 → ihr lest nur Abschnitt 13.")
+    c.setFillGray(0)
+    y -= 22
+    y = step(4, "Nur euren Abschnitt lesen", y)
+    cols, rows = 8, 6
+    gw = (W - ML - MR) / cols; gh = 34
     for k in range(48):
         n = k + 1
-        col = k // per; row = k % per
-        x = ML + col * (colw + 18); yy = y - row * 16.6
-        c.setFont("MonoB", 8.8); c.drawString(x, yy, f"{n:>2}")
-        c.setFont("Sans", 8); c.drawString(x + 22, yy, entries[n])
+        a_, b_, c_ = (k // 16) + 1, (k % 16) // 4 + 1, k % 4 + 1
+        h1, h2 = section_short(a_, b_, c_)
+        col, row = k % cols, k // cols
+        x = ML + col * gw; yy = y - row * gh
+        c.setStrokeGray(0.6); c.setLineWidth(0.5); c.rect(x, yy - gh, gw, gh, fill=0, stroke=1)
+        c.setFont("SansB", 11); c.drawString(x + 4, yy - 14, str(n))
+        c.setFont("Sans", 6.6); c.drawString(x + 4, yy - 23, h1); c.drawString(x + 4, yy - 31, h2)
     new_page()
 
 
@@ -925,14 +970,25 @@ def solution_page():
         fc(ROT); c.setFont("SansB", 12.5); c.drawString(ML, y, h); c.setFillGray(0)
         y = text(ML, y - 18, W - ML - MR - 10, t, "Serif", 10.4, 14.6) - 10
     y -= 4
-    fc(NIGHT); c.rect(ML, y - 176, W - ML - MR, 176, fill=1, stroke=0); c.setFillGray(1)
-    c.setFont("SansB", 12); c.drawString(ML + 16, y - 26, "Wendland legt die Akte zurück auf den Tisch.")
-    text(ML + 16, y - 48, W - ML - MR - 32,
-         "„Es war also kein Unfall. Jetzt will ich wissen, wer ihn am Steg erwartet hat. Das Schloss der Kette "
-         "war offen, nicht aufgebrochen – wer hatte einen Schlüssel? Wo ist die rote Mappe? Und wer stand um "
-         "23:12 Uhr mit einer Taschenlampe an der Rezeption? Schauen Sie sich Novas erstes Bild noch mal genau an.“\n"
-         "Weiter in Akt 2: Wer lügt?   ·   Ende des Prototyps.",
-         "SerifI", 10.6, 15, gray=1)
+    bh = y - 60
+    fc(NIGHT); c.rect(ML, y - bh, W - ML - MR, bh, fill=1, stroke=0); c.setFillGray(1)
+    c.setFont("SansB", 9); c.setFillColorRGB(1, 0.8, 0.35); c.drawString(ML + 16, y - 22, "WIE ES WEITERGEHT"); c.setFillGray(1)
+    c.setFont("SansB", 13); c.drawString(ML + 16, y - 40, "Wendland klappt die Akte zu.")
+    yy = text(ML + 16, y - 60, W - ML - MR - 32,
+              "„Gute Arbeit. Damit steht fest: Das war kein Unfall und kein Raub. Jemand hat Holger Brandner nachts "
+              "an den Steg gelockt – und ist mit der roten Mappe verschwunden. Drei Dinge lassen mich nicht los: "
+              "Wer hatte einen Schlüssel für das Kettenschloss? Wer lief um 23:12 Uhr mit der Taschenlampe vor der "
+              "Rezeption herum? Und was wollte jemand Brandner zeigen, das den Preis ‚ordentlich drückt‘? "
+              "Ab morgen früh spreche ich mit jedem Einzelnen auf diesem Platz. Einer von ihnen wird lügen.“",
+              "SerifI", 10.4, 14.6, gray=1) - 6
+    c.setFillGray(1); c.setFont("SansB", 10.5); c.drawString(ML + 16, yy, "Bevor ihr weiterspielt")
+    yy -= 18
+    for i, t in enumerate(["Jeder schreibt geheim seinen Hauptverdacht auf den Ermittlerbogen (Seite 18) und knickt die Ecke um.",
+                           "Tragt eure Punkte nach Akt 1 ein.",
+                           "Gönnt euch eine Pause. In Akt 2 „Wer lügt?“ nehmt ihr die Verdächtigen ins Verhör."], 1):
+        c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
+        yy = text(ML + 32, yy, W - ML - MR - 50, t, "Serif", 10, 13.6, gray=1, gap=4)
+    c.setFillGray(0.75); c.setFont("Sans", 8.5); c.drawString(ML + 16, y - bh + 14, "Ende des Prototyps · Akt 2 folgt")
     c.setFillGray(0)
     new_page()
 
