@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important} body{margin:0}</style>
+<title>Ermittlerportal Kiefernsee</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: eine schmale Aktenspalte; Kopf wie ein Aktendeckel, darunter Karten nur für die drei Spuren */
+:root{
+  --bg:#e6e9ea; --paper:#fbfbf8; --ink:#1d2428; --muted:#5c676d; --line:#c5cccf;
+  --stamp:#a8322a; --blue:#2c5d8a; --red:#a8322a; --night:#13202b; --ok:#2f6b3a;
+  --f-display:"Archivo Narrow","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141a1e; --paper:#1e262b; --ink:#e4e8e9; --muted:#9aa6ac; --line:#34404a;
+  --stamp:#e0675d; --blue:#7fb0dc; --red:#e0675d; --night:#0b131a; --ok:#79c088; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a1e; --paper:#1e262b; --ink:#e4e8e9; --muted:#9aa6ac; --line:#34404a;
+  --stamp:#e0675d; --blue:#7fb0dc; --red:#e0675d; --night:#0b131a; --ok:#79c088; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{border-bottom:2px solid var(--ink);padding-bottom:12px;display:flex;flex-direction:column;gap:2px}
+.az{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+h1{font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0;text-wrap:balance}
+.lab{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.stamp{align-self:flex-start;font-family:var(--f-display);font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--stamp);border:2px solid var(--stamp);padding:2px 10px;transform:rotate(-2deg);font-size:13px}
+.tag{display:inline-block;font-family:var(--f-display);font-weight:700;font-size:12px;letter-spacing:.1em;padding:1px 8px;border-radius:2px;color:var(--paper)}
+.tag.blau{background:var(--blue)} .tag.alle{background:var(--muted)}
+label{font-weight:600;font-size:14px}
+input,select,button{font:inherit}
+input[type=text],select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;background:var(--bg);color:var(--ink)}
+button{cursor:pointer;border:0;border-radius:3px;padding:10px 16px;background:var(--ink);color:var(--paper);font-family:var(--f-display);font-weight:700;letter-spacing:.06em;font-size:15px}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.menu button{text-align:left;background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:6px;font-family:var(--f-body);letter-spacing:0;font-weight:400}
+.menu button b{font-family:var(--f-display);font-size:18px}
+.msg{font-family:var(--f-mono);font-size:14px;padding:10px 12px;border-left:4px solid var(--muted);background:var(--bg)}
+.msg.ok{border-color:var(--ok)} .msg.bad{border-color:var(--red)}
+.story{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.frame{background:var(--night);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#eef2f4}
+.frame .top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:13px}
+.bar{height:3px;background:rgba(255,255,255,.35);margin:8px 12px 0;border-radius:2px}
+.frame svg{display:block;width:100%;height:auto}
+.cap{padding:10px 12px 14px;font-size:14px}
+.q{display:flex;flex-direction:column;gap:6px}
+.hints{display:flex;flex-direction:column;gap:10px}
+.hrow{display:flex;flex-wrap:wrap;gap:8px}
+.small{font-size:13px;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+footer{font-size:12px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:no-preference){.card{animation:in .25s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="az">KRIPO SEEBRÜCK · AZ 31 JS 0926/BR · FALL KIEFERNSEE</span>
+    <h1>Ermittlerportal</h1>
+    <span class="small">Zugang nur für das Ermittlerteam. Bitte den Link nicht weitergeben.</span>
+  </header>
+
+  <section id="login" class="card">
+    <span class="stamp">Vertraulich</span>
+    <h2>Kennwort eingeben</h2>
+    <p style="margin:0">Das Kennwort steht im Brief von Hauptkommissarin Wendland, ganz unten.</p>
+    <form id="loginForm" style="display:flex;flex-direction:column;gap:10px">
+      <label for="pw">Kennwort</label>
+      <input id="pw" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. GRILLZANGE">
+      <button type="submit">Akte öffnen</button>
+      <div id="loginMsg" class="msg bad" hidden></div>
+    </form>
+  </section>
+
+  <div id="app" hidden style="display:flex;flex-direction:column;gap:20px">
+    <nav class="menu" aria-label="Spuren">
+      <button data-view="story"><span class="tag blau">NUR AKTE BLAU</span><b>Spur B-4</b><span class="small">Novas Story vom Freitagabend</span></button>
+      <button data-view="code"><span class="tag alle">GEMEINSAM</span><b>Code-Prüfung</b><span class="small">Akt 1 abschließen</span></button>
+      <button data-view="hints"><span class="tag alle">GEMEINSAM</span><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button>
+    </nav>
+
+    <section id="v-story" class="card" hidden>
+      <span class="lab">Spur B-4 · Asservat Nr. 12 · gesichert vom Profil @nova.on.wheels</span>
+      <h2>Novas Story, Freitag, 25. September</h2>
+      <p style="margin:0" class="small">Nova Sommer hat ihre Story freiwillig zur Verfügung gestellt. Zwei Bilder, die Uhrzeiten stammen aus den Metadaten.</p>
+      <div class="story">
+        <figure class="frame" style="margin:0">
+          <div class="bar"></div>
+          <div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div>
+          <svg viewBox="0 0 320 300" role="img" aria-label="Nachtaufnahme: Bootssteg mit zwei angeketteten Tretbooten, im Hintergrund ein kleines Licht">
+            <rect width="320" height="300" fill="#13202b"/>
+            <circle cx="262" cy="52" r="16" fill="#f2efe0"/>
+            <circle cx="40" cy="40" r="1.4" fill="#fff"/><circle cx="120" cy="24" r="1.2" fill="#fff"/><circle cx="190" cy="60" r="1" fill="#fff"/><circle cx="300" cy="110" r="1.2" fill="#fff"/>
+            <path d="M0 150 Q60 128 120 140 T240 132 T320 140 V160 H0Z" fill="#0c151d"/>
+            <polygon points="20,150 32,110 44,150" fill="#0a1218"/><polygon points="40,150 54,100 68,150" fill="#0a1218"/><polygon points="250,146 262,112 274,146" fill="#0a1218"/>
+            <circle cx="96" cy="139" r="2.6" fill="#ffd36b"/><circle cx="96" cy="139" r="7" fill="#ffd36b" opacity=".18"/>
+            <rect x="0" y="158" width="320" height="142" fill="#1b3142"/>
+            <path d="M0 200 H320 M0 236 H320 M0 270 H320" stroke="#2a4a60" stroke-width="2" stroke-dasharray="14 18"/>
+            <rect x="0" y="214" width="170" height="14" fill="#6b6f72"/>
+            <g stroke="#4a4e51" stroke-width="2"><line x1="20" y1="214" x2="20" y2="228"/><line x1="60" y1="214" x2="60" y2="228"/><line x1="100" y1="214" x2="100" y2="228"/><line x1="140" y1="214" x2="140" y2="228"/></g>
+            <rect x="150" y="190" width="10" height="38" fill="#4a4e51"/>
+            <ellipse cx="205" cy="252" rx="34" ry="10" fill="#d9dde0"/><rect x="186" y="232" width="34" height="16" rx="5" fill="#c3c8cc"/>
+            <ellipse cx="205" cy="190" rx="30" ry="9" fill="#d9dde0"/><rect x="189" y="172" width="30" height="14" rx="5" fill="#c3c8cc"/>
+            <path d="M160 222 Q180 238 186 246 M160 210 Q176 196 190 186" stroke="#9aa0a4" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+          </svg>
+          <figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption>
+        </figure>
+        <figure class="frame" style="margin:0">
+          <div class="bar"></div>
+          <div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div>
+          <svg viewBox="0 0 320 300" role="img" aria-label="Nachtaufnahme mit Handylicht: ein Hund springt vom Steg ins Wasser, Spritzer">
+            <rect width="320" height="300" fill="#101a23"/>
+            <rect x="0" y="150" width="320" height="150" fill="#1b3142"/>
+            <rect x="0" y="176" width="200" height="16" fill="#7a7e81"/>
+            <circle cx="70" cy="120" r="80" fill="#ffffff" opacity=".07"/>
+            <g fill="#e8e2d2"><ellipse cx="236" cy="168" rx="22" ry="11"/><circle cx="258" cy="158" r="9"/><rect x="214" y="160" width="6" height="16" rx="3" transform="rotate(-30 217 168)"/></g>
+            <g fill="#cfe3f0" opacity=".9"><circle cx="232" cy="200" r="5"/><circle cx="250" cy="194" r="3"/><circle cx="216" cy="196" r="4"/><circle cx="262" cy="206" r="3"/><circle cx="240" cy="214" r="2.5"/></g>
+            <ellipse cx="238" cy="214" rx="40" ry="6" fill="none" stroke="#cfe3f0" stroke-width="2" opacity=".7"/>
+          </svg>
+          <figcaption class="cap">1:28 Uhr. Pepper muss natürlich noch mal vom Steg in den See springen. PLATSCH. 🙄🐶 Sorry an alle Nachbarn!!</figcaption>
+        </figure>
+      </div>
+      <p class="small" style="margin:0">Haltet fest, was ihr seht, und gebt es an Akte Rot weiter.</p>
+    </section>
+
+    <section id="v-code" class="card" hidden>
+      <span class="lab">Akt 1 · Was ist passiert?</span>
+      <h2>Code-Prüfung</h2>
+      <form id="codeForm" style="display:flex;flex-direction:column;gap:14px">
+        <div class="q"><label for="q1">Frage 1: Wo ist Holger Brandner ins Wasser gekommen?</label>
+          <select id="q1"><option value="">bitte wählen</option><option value="1">1 · am Badestrand</option><option value="2">2 · am Bootssteg</option><option value="3">3 · mitten auf dem See, aus dem Tretboot</option></select></div>
+        <div class="q"><label for="q2">Frage 2: In welchem Zeitraum ist es passiert?</label>
+          <select id="q2"><option value="">bitte wählen</option><option value="1">1 · zwischen 21:30 und 23:00 Uhr</option><option value="2">2 · zwischen 23:30 und 0:30 Uhr</option><option value="3">3 · zwischen 0:30 und 2:00 Uhr</option><option value="4">4 · nach 2:00 Uhr</option></select></div>
+        <div class="q"><label for="q3">Frage 3: Welcher Gegenstand des Opfers fehlt?</label>
+          <select id="q3"><option value="">bitte wählen</option><option value="1">1 · sein Handy</option><option value="2">2 · seine Brieftasche</option><option value="3">3 · seine rote Ledermappe</option><option value="4">4 · sein Autoschlüssel</option></select></div>
+        <button type="submit">Antwort prüfen</button>
+        <div id="codeMsg" class="msg" hidden></div>
+      </form>
+      <p class="small" style="margin:0">Ohne Internet? Im Buch auf der Seite „Code-Prüfung“ steht, wie ihr die Abschnittsnummer selbst berechnet.</p>
+    </section>
+
+    <section id="v-hints" class="card" hidden>
+      <span class="lab">Akt 1 · Hinweise</span>
+      <h2>Hilfe in drei Stufen</h2>
+      <p style="margin:0" class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt.</p>
+      <div class="hints" id="hintBox"></div>
+    </section>
+  </div>
+
+  <footer>Ein Spiel zum Buch „Ausverkauf am Kiefernsee“. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
+</div>
+
+<script>
+(function(){
+  var KEY="kiefernsee-fall1";
+  var $=function(id){return document.getElementById(id)};
+  function norm(s){return (s||"").toUpperCase().replace(/[^A-ZÄÖÜ]/g,"")}
+  // Kennwort "TRETBOOT" nur als Prüfsumme hinterlegt
+  function sum(s){var h=7;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))%1000003}return h}
+  var PW=sum("TRETBOOT");
+  function open(){ $("login").hidden=true; $("app").hidden=false; show("story",true) }
+  try{ if(localStorage.getItem(KEY)==="1"){ open() } }catch(e){}
+  $("loginForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    if(sum(norm($("pw").value))===PW){ try{localStorage.setItem(KEY,"1")}catch(err){} open() }
+    else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
+  });
+  function show(v,quiet){
+    ["story","code","hints"].forEach(function(n){ $("v-"+n).hidden=(n!==v) });
+    if(!quiet){ $("v-"+v).scrollIntoView({behavior:"smooth",block:"start"}) }
+  }
+  document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
+
+  // Code-Prüfung: gleiche Rechnung wie im Buch
+  var RIGHT=[2,2,3];
+  var WRONG=["Frage 1 passt noch nicht. Woher stammen die Splitter in der Wunde?",
+             "Frage 1 stimmt. Frage 2 passt noch nicht. Hat das Platschen um 1:30 Uhr wirklich mit der Tat zu tun?",
+             "Frage 1 und 2 stimmen. Frage 3 passt noch nicht. Was hatte Brandner bei der Versammlung in der Hand?"];
+  $("codeForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var a=[+$("q1").value,+$("q2").value,+$("q3").value], m=$("codeMsg"); m.hidden=false;
+    if(!a[0]||!a[1]||!a[2]){ m.className="msg bad"; m.textContent="Bitte alle drei Fragen beantworten."; return }
+    var code=(a[0]-1)*16+(a[1]-1)*4+a[2];
+    for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ m.className="msg bad"; m.textContent="Abschnitt "+code+": Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]; return } }
+    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch.";
+  });
+
+  // Hinweise
+  var H=[
+    ["Frage 1 · Der Ort",
+     "Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?",
+     "Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.",
+     "Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],
+    ["Frage 2 · Die Zeit",
+     "Wer hat den Steg in der Nacht gesehen? Und wann fehlte das Boot zum ersten Mal?",
+     "Brandner hat um 23:41 Uhr noch eine Sprachnachricht geschickt. Das Platschen um 1:30 Uhr hat eine harmlose Erklärung in Novas Story.",
+     "Antwort 2: zwischen 23:30 und 0:30 Uhr. Um 23:41 lebte er noch, um 0:30 war das Boot weg."],
+    ["Frage 3 · Der Gegenstand",
+     "Vergleicht, was Brandner am Abend bei sich hatte, mit dem, was die Polizei gefunden hat.",
+     "Das Versammlungsprotokoll nennt einen Gegenstand, der auf der Fundliste fehlt.",
+     "Antwort 3: die rote Ledermappe mit dem Vorvertrag."]
+  ];
+  var box=$("hintBox");
+  H.forEach(function(h,qi){
+    var d=document.createElement("div"); d.className="card"; d.style.padding="14px";
+    var t=document.createElement("b"); t.textContent=h[0]; d.appendChild(t);
+    var row=document.createElement("div"); row.className="hrow"; d.appendChild(row);
+    var out=document.createElement("div"); out.className="hints"; d.appendChild(out);
+    [1,2,3].forEach(function(s){
+      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.id="h"+qi+"-"+s; b.textContent="Stufe "+s;
+      b.addEventListener("click",function(){
+        if(b.disabled) return; b.disabled=true; b.style.opacity=".5";
+        var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p);
+      });
+      row.appendChild(b);
+    });
+    box.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>
