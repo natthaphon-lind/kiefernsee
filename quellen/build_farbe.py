@@ -702,8 +702,8 @@ def b3():
                  "Kriminaltechnik Seebrück · Gerät aus dem Tretboot")
     y = text(ML, y, W - ML - MR - 30,
              "Das Handy von Holger Brandner war nass, ließ sich aber auslesen. Die letzte Aktivität vor dem "
-             "Tod ist eine Sprachnachricht an seinen Anwalt. Die Technik hat sie abgeschrieben und als Code "
-             "gesichert. Die Aufnahme selbst liegt im Ermittlerportal.", "Serif", 10.6, 15) - 10
+             "Tod ist eine Sprachnachricht an seinen Anwalt. Die Technik hat sie abgeschrieben. "
+             "Die Aufnahme selbst liegt im Ermittlerportal.", "Serif", 10.6, 15) - 10
     px, pw, ph = ML + 10, 210, 380
     py = y - ph
     c.setFillGray(0.12); c.roundRect(px, py, pw, ph, 26, fill=1, stroke=0)
