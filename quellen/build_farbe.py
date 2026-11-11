@@ -853,7 +853,7 @@ VALUES = [("Frage 1 · Wo?", [("am Badestrand", 0), ("am Bootssteg", 16), ("im T
 
 
 def code_page():
-    y = doc_head("FÜR BEIDE", "Code-Prüfung Akt 1", "Mit Handy im Portal – ohne Handy hier in vier Schritten")
+    y = doc_head("FÜR BEIDE", "Code-Prüfung Akt 1", "Im Portal oder hier im Buch – in vier Schritten")
     tw = W - ML - MR - 120
 
     def step(n, title, yy):
