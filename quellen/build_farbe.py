@@ -142,12 +142,13 @@ def new_page():
     c.showPage(); PAGE[0] += 1
 
 
-def qr(x, y, size, data, kind):
+def qr(x, y, size, data, kind, show_pw=True):
     w = QrCodeWidget(data); w.barWidth = size; w.barHeight = size; w.barBorder = 2
     c.setFillGray(1); c.rect(x - 3, y - 3, size + 6, size + 6, fill=1, stroke=0); c.setFillGray(0)
     d = Drawing(size, size); d.add(w); renderPDF.draw(d, c, x, y)
     c.setFont("SansB", 7.5); c.drawCentredString(x + size / 2, y - 10, "ERMITTLERPORTAL")
-    c.setFont("Sans", 7.5); c.drawCentredString(x + size / 2, y - 19, "Kennwort: TRETBOOT")
+    if show_pw:
+        c.setFont("Sans", 7.5); c.drawCentredString(x + size / 2, y - 19, "Kennwort: TRETBOOT")
 
 
 def rule(y, x0=ML, x1=W - MR, wd=0.6, g=0):
@@ -295,17 +296,17 @@ def letter_page():
     qs = 92                      # QR-Größe
     bx0, bw0 = ML, W - ML - MR
     by0 = 60                     # Unterkante Rahmen
-    bh0 = qs + 12 + 22 + 12      # Rand oben + QR + Beschriftung + Rand unten
+    bh0 = qs + 12 + 14 + 12      # Rand oben + QR + Beschriftung + Rand unten
     c.setFillColorRGB(0.88, 0.92, 0.97); sc(BLAU); c.setLineWidth(1)
     c.rect(bx0, by0, bw0, bh0, fill=1, stroke=1)
-    qx, qy = bx0 + bw0 - 12 - qs, by0 + 12 + 22
+    qx, qy = bx0 + bw0 - 12 - qs, by0 + 12 + 14
     tx, top = bx0 + 12, by0 + bh0
     c.setFillGray(0); c.setFont("FormB", 9); c.drawString(tx, top - 22, "ZUGANG ERMITTLERPORTAL")
     c.setFont("Form", 9.4)
     c.drawString(tx, top - 40, "Scannen Sie den Code. Das Portal ist nur über diesen Link erreichbar.")
     c.drawString(tx, top - 54, "Bitte nicht weitergeben.")
     c.setFont("MonoB", 15); c.drawString(tx, top - 86, "Kennwort: TRETBOOT")
-    qr(qx, qy, qs, PORTAL, "portal")
+    qr(qx, qy, qs, PORTAL, "portal", show_pw=False)
     new_page()
 
 
