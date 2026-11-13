@@ -146,9 +146,8 @@ def qr(x, y, size, data, kind):
     w = QrCodeWidget(data); w.barWidth = size; w.barHeight = size; w.barBorder = 2
     c.setFillGray(1); c.rect(x - 3, y - 3, size + 6, size + 6, fill=1, stroke=0); c.setFillGray(0)
     d = Drawing(size, size); d.add(w); renderPDF.draw(d, c, x, y)
-    c.setFont("SansB", 7.5)
-    lab = "ERMITTLERPORTAL · Kennwort im Brief"
-    c.drawCentredString(x + size / 2, y - 9, lab)
+    c.setFont("SansB", 7.5); c.drawCentredString(x + size / 2, y - 10, "ERMITTLERPORTAL")
+    c.setFont("Sans", 7.5); c.drawCentredString(x + size / 2, y - 19, "Kennwort: TRETBOOT")
 
 
 def rule(y, x0=ML, x1=W - MR, wd=0.6, g=0):
@@ -293,14 +292,20 @@ def letter_page():
     c.setFont("SerifBI", 22); fc(INK); c.drawString(ML + 10, y - 16, "J. Wendland"); c.setFillGray(0)
     c.setFont("Mono", 10); c.drawString(ML, y - 36, "Jutta Wendland, Erste Kriminalhauptkommissarin")
     stamp(W - MR - 90, y - 4, "VERTRAULICH", -8)
-    yb = 118
-    c.setFillColorRGB(0.88, 0.92, 0.97); sc(BLAU); c.rect(ML, yb - 44, W - ML - MR, 104, fill=1, stroke=1)
-    c.setFillGray(0); c.setFont("FormB", 9); c.drawString(ML + 12, yb + 34, "ZUGANG ERMITTLERPORTAL")
+    qs = 92                      # QR-Größe
+    bx0, bw0 = ML, W - ML - MR
+    by0 = 60                     # Unterkante Rahmen
+    bh0 = qs + 12 + 22 + 12      # Rand oben + QR + Beschriftung + Rand unten
+    c.setFillColorRGB(0.88, 0.92, 0.97); sc(BLAU); c.setLineWidth(1)
+    c.rect(bx0, by0, bw0, bh0, fill=1, stroke=1)
+    qx, qy = bx0 + bw0 - 12 - qs, by0 + 12 + 22
+    tx, top = bx0 + 12, by0 + bh0
+    c.setFillGray(0); c.setFont("FormB", 9); c.drawString(tx, top - 22, "ZUGANG ERMITTLERPORTAL")
     c.setFont("Form", 9.4)
-    c.drawString(ML + 12, yb + 18, "Scannen Sie den Code. Das Portal ist nur über diesen Link erreichbar.")
-    c.drawString(ML + 12, yb + 4, "Bitte nicht weitergeben.")
-    c.setFont("MonoB", 15); c.drawString(ML + 12, yb - 18, "Kennwort: TRETBOOT")
-    qr(W - MR - 104, yb - 34, 92, PORTAL, "portal")
+    c.drawString(tx, top - 40, "Scannen Sie den Code. Das Portal ist nur über diesen Link erreichbar.")
+    c.drawString(tx, top - 54, "Bitte nicht weitergeben.")
+    c.setFont("MonoB", 15); c.drawString(tx, top - 86, "Kennwort: TRETBOOT")
+    qr(qx, qy, qs, PORTAL, "portal")
     new_page()
 
 
@@ -608,7 +613,7 @@ def r5():
         yy = text(ML + 96, yy, tw - 90, t, "Mono", 9.2, 12.6, gap=0) - 6
     c.setFont("Mono", 8.2); c.setFillGray(0.35); c.drawString(ML + 10, y - body_h + 10, NOTRUF_FOOT); c.setFillGray(0)
     qr(ML + bw - 114, y - 22 - 100, 100, PORTAL + "#r5", "portal")
-    c.setFont("SansB", 8.5); c.drawCentredString(ML + bw - 64, y - 22 - 100 - 22, "Original anhören")
+    c.setFont("SansB", 8.5); c.drawCentredString(ML + bw - 64, y - 22 - 100 - 34, "Original anhören")
     new_page()
 
 
