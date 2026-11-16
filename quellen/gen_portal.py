@@ -257,7 +257,8 @@ CODE = '''<section id="v-code" class="card alle" hidden>
 
 JS = r'''<script>
 (function(){
-  var KEY="kiefernsee-fall1", RKEY="kiefernsee-rolle";
+  var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
+  var KEY="kiefernsee-fall1"+SFX, RKEY="kiefernsee-rolle"+SFX;
   var $=function(id){return document.getElementById(id)};
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function set(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}

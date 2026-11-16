@@ -199,7 +199,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <script>
 (function(){
   var SUS=["Mark Böttcher", "Angelika Wohlfahrt", "Siggi Kowalski", "Marco Lenz", "Sven Ruppert", "Nova Sommer", "Rita Schäfer"], PORTAL="https://natthaphon-lind.github.io/kiefernsee/";
-  var GKEY="kiefernsee-spiel", RKEY="kiefernsee-rolle", ACT=1, START=10;
+  var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
+  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, ACT=1, START=10;
   var $=function(id){return document.getElementById(id)};
   function load(){try{var s=JSON.parse(localStorage.getItem(GKEY)||"null");if(s&&s.v===1)return s}catch(e){}return {v:1,ded:{},hints:{},solved:{},seal:{},blue:{}}}
   var G=load();
@@ -306,7 +307,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
   // Link aus Blaus QR-Code mit der normalen Kamera geöffnet
   function hashImport(){ var m=(location.hash||"").match(/^#k=([A-Z0-9]{6})$/i); if(!m) return;
-    if(role()==="rot"&&!$("app").hidden){ take(m[1]); history.replaceState(null,"",location.pathname+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
+    if(role()==="rot"&&!$("app").hidden){ take(m[1]); history.replaceState(null,"",location.pathname+location.search+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
   window.addEventListener("hashchange",hashImport);
   window.__kgame.hashImport=hashImport;
   refresh();
@@ -314,7 +315,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </script>
 <script>
 (function(){
-  var KEY="kiefernsee-fall1", RKEY="kiefernsee-rolle";
+  var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
+  var KEY="kiefernsee-fall1"+SFX, RKEY="kiefernsee-rolle"+SFX;
   var $=function(id){return document.getElementById(id)};
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function set(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}

@@ -68,7 +68,8 @@ def game_js(suspects, portal):
     return r'''<script>
 (function(){
   var SUS=''' + json.dumps(suspects, ensure_ascii=False) + r''', PORTAL=''' + json.dumps(portal) + r''';
-  var GKEY="kiefernsee-spiel", RKEY="kiefernsee-rolle", ACT=1, START=10;
+  var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
+  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, ACT=1, START=10;
   var $=function(id){return document.getElementById(id)};
   function load(){try{var s=JSON.parse(localStorage.getItem(GKEY)||"null");if(s&&s.v===1)return s}catch(e){}return {v:1,ded:{},hints:{},solved:{},seal:{},blue:{}}}
   var G=load();
@@ -175,7 +176,7 @@ def game_js(suspects, portal):
 
   // Link aus Blaus QR-Code mit der normalen Kamera geöffnet
   function hashImport(){ var m=(location.hash||"").match(/^#k=([A-Z0-9]{6})$/i); if(!m) return;
-    if(role()==="rot"&&!$("app").hidden){ take(m[1]); history.replaceState(null,"",location.pathname+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
+    if(role()==="rot"&&!$("app").hidden){ take(m[1]); history.replaceState(null,"",location.pathname+location.search+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
   window.addEventListener("hashchange",hashImport);
   window.__kgame.hashImport=hashImport;
   refresh();

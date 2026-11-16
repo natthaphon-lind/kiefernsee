@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Demo · Akt 1 zu zweit</title>
+<style>
+:root{--bg:#1b2329;--panel:#243038;--ink:#eef2f4;--muted:#9fb0b9;--red:#c2423a;--blue:#3a73a8;--gold:#f2c14e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.top{display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
+.top h1{font-size:18px;margin:0 12px 0 0;letter-spacing:.02em}
+button{font:inherit;font-weight:700;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;background:#3a4952;color:var(--ink)}
+button.go{background:var(--gold);color:#1b2329}
+button:disabled{opacity:.4;cursor:default}
+label{font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px}
+select{font:inherit;background:#3a4952;color:var(--ink);border:0;border-radius:6px;padding:6px 8px}
+.cap{margin:0 16px 10px;padding:12px 16px;background:var(--panel);border-radius:8px;min-height:64px;display:flex;gap:12px;align-items:center;font-size:17px;line-height:1.4}
+.who{flex:none;font-weight:800;font-size:12px;letter-spacing:.1em;padding:4px 10px;border-radius:4px;background:#55636b}
+.who.rot{background:var(--red)} .who.blau{background:var(--blue)} .who.beide{background:#6b5a2a}
+.stepno{flex:none;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+main{display:grid;grid-template-columns:minmax(300px,360px) 1fr minmax(300px,360px);gap:14px;padding:0 16px 14px;height:calc(100vh - 150px)}
+.phone{display:flex;flex-direction:column;gap:6px;min-height:0}
+.phone .lab{font-weight:800;letter-spacing:.12em;font-size:13px;text-align:center;padding:4px;border-radius:4px}
+.phone.rot .lab{background:var(--red)} .phone.blau .lab{background:var(--blue)}
+.frame{flex:1;border:10px solid #0d1215;border-radius:28px;overflow:hidden;background:#fff;min-height:0;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.phone.rot .frame{outline:3px solid var(--red)} .phone.blau .frame{outline:3px solid var(--blue)}
+iframe{width:100%;height:100%;border:0;display:block}
+.book{display:flex;flex-direction:column;gap:6px;min-height:0;min-width:0}
+.book .lab{text-align:center;font-size:13px;color:var(--muted);padding:4px}
+.book .img{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#11181c;border-radius:8px;overflow:hidden}
+.book img{max-width:100%;max-height:100%;object-fit:contain;transition:opacity .35s}
+@media (max-width:1100px){main{grid-template-columns:1fr 1fr}.book{display:none}}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>Demo · Akt 1 zu zweit</h1>
+<button id="play" class="go">▶ Ablauf vorspielen</button>
+<button id="pause" disabled>⏸ Pause</button>
+<button id="reset">↺ Zurücksetzen</button>
+<label>Tempo <select id="speed"><option value="1">normal</option><option value="0.6">schnell</option><option value="1.6">langsam</option></select></label>
+<label><input id="sound" type="checkbox" checked> Sprachnachrichten abspielen</label>
+</div>
+<div class="cap"><span id="stepno" class="stepno"></span><span id="who" class="who beide">DEMO</span><span id="capTxt">Links das Handy von Akte Rot, rechts das von Akte Blau, in der Mitte das aufgeschlagene Buch. Tippt auf „Ablauf vorspielen“ – oder spielt selbst mit beiden Handys.</span></div>
+<main>
+<div class="phone rot"><div class="lab">◆ HANDY AKTE ROT</div><div class="frame"><iframe id="fRot" src="index.html?slot=demorot" title="Handy Akte Rot"></iframe></div></div>
+<div class="book"><div class="lab" id="bookLab">Das Buch · Titel</div><div class="img"><img id="bookImg" src="demo/s-01.jpg" alt="Aufgeschlagene Doppelseite des Buchs"></div></div>
+<div class="phone blau"><div class="lab">● HANDY AKTE BLAU</div><div class="frame"><iframe id="fBlau" src="index.html?slot=demoblau" title="Handy Akte Blau"></iframe></div></div>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var R=$("fRot"), B=$("fBlau"), running=false, paused=false, stopFlag=false;
+  var SHEETS={1:"Titel",2:"Seiten 2 | 3",3:"Seiten 4 | 5",4:"Seiten 6 | 7",5:"Seiten 8 | 9",6:"Seiten 10 | 11",7:"Seiten 12 | 13",8:"Seiten 14 | 15",9:"Seiten 16 | 17",10:"Seiten 18 | 19",11:"Seiten 20 | 21",12:"Seite 22"};
+  function speed(){return +$("speed").value}
+  function sleep(ms){ms*=speed();return new Promise(function(res,rej){var t=0;(function tick(){if(stopFlag)return rej("stop");if(!paused)t+=100;if(t>=ms)return res();setTimeout(tick,100)})()})}
+  function cap(n,who,txt){$("stepno").textContent=n?("Schritt "+n):"";var w=$("who");w.className="who "+who;w.textContent={rot:"AKTE ROT",blau:"AKTE BLAU",beide:"BEIDE"}[who];$("capTxt").textContent=txt}
+  function book(n){var i=$("bookImg");i.style.opacity=0;setTimeout(function(){i.src="demo/s-"+("0"+n).slice(-2)+".jpg";$("bookLab").textContent="Das Buch · "+SHEETS[n];i.style.opacity=1},300)}
+  function doc(f){return f.contentWindow.document}
+  function el(f,sel){return doc(f).querySelector(sel)}
+  function flash(e){var o=e.style.outline,s=e.style.outlineOffset;e.style.outline="4px solid #f2c14e";e.style.outlineOffset="2px";setTimeout(function(){e.style.outline=o;e.style.outlineOffset=s},900)}
+  function into(f,e){var w=f.contentWindow,r=e.getBoundingClientRect();w.scrollTo({top:w.scrollY+r.top-90,behavior:"smooth"})}
+  async function click(f,sel){var e=el(f,sel);if(!e)return;into(f,e);await sleep(500);flash(e);await sleep(350);e.click()}
+  async function type(f,sel,txt){var e=el(f,sel);into(f,e);await sleep(400);flash(e);e.value="";for(var i=0;i<txt.length;i++){e.value+=txt[i];await sleep(110)}}
+  async function pick(f,sel,val){var e=el(f,sel);into(f,e);await sleep(350);flash(e);e.value=val;e.dispatchEvent(new Event("change"));await sleep(450)}
+  async function submit(f,sel){var e=el(f,sel+" button[type=submit]");flash(e);await sleep(350);el(f,sel).requestSubmit()}
+  async function view(f,id){await click(f,'[data-view="'+id+'"]');await sleep(500);var s=el(f,"#v-"+id);if(s)into(f,s)}
+  async function scrollIn(f,sel){var e=el(f,sel);if(e)into(f,e)}
+  async function audio(f){var a=el(f,"audio");if(!a)return;into(f,a);flash(a);
+    if(!$("sound").checked){await sleep(2500);return}
+    try{a.currentTime=0;await a.play()}catch(e){await sleep(3000);return}
+    await new Promise(function(res){var t=setInterval(function(){
+      if(a.ended||stopFlag){clearInterval(t);if(stopFlag)a.pause();res();return}
+      if(paused&&!a.paused)a.pause(); else if(!paused&&a.paused)a.play().catch(function(){});
+    },200)})}
+  function clearSlots(){["demorot","demoblau"].forEach(function(s){["kiefernsee-fall1","kiefernsee-rolle","kiefernsee-spiel"].forEach(function(k){try{localStorage.removeItem(k+"-"+s)}catch(e){}})})}
+  function reload(){return Promise.all([R,B].map(function(f){return new Promise(function(res){f.onload=function(){f.onload=null;res()};f.src=f.src.split("#")[0]})}))}
+
+  async function run(){
+    var n=0; function S(){return ++n}
+    cap(S(),"beide","Die beiden schlagen das Buch auf. Seite 2 erklärt die Regeln, auf Seite 3 steht der Brief der Kommissarin – mit dem Kennwort ganz unten."); book(2); await sleep(5000);
+    cap(S(),"beide","Jeder scannt den QR-Code im Brief und gibt das Kennwort TRETBOOT ein.");
+    await type(R,"#pw","TRETBOOT"); await submit(R,"#loginForm"); await type(B,"#pw","TRETBOOT"); await submit(B,"#loginForm"); await sleep(1200);
+    cap(S(),"beide","Jeder wählt seine Farbe. Ab jetzt sieht jedes Handy nur die eigene Akte und die gemeinsamen Seiten.");
+    await click(R,'[data-role="rot"]'); await click(B,'[data-role="blau"]'); await sleep(2200);
+    cap(S(),"beide","Seite 4: der Auftrag. Drei Fragen – Wo? Wann? Was fehlt? Daneben das Personenregister."); book(3); await sleep(5000);
+    cap(S(),"beide","Seite 6: der Lageplan. Seite 7 zeigt, wie man sitzt: gegenüber, das Buch dazwischen. Die blauen Seiten stehen für Rot auf dem Kopf."); book(4); await sleep(5500);
+    cap(S(),"rot","Seite 8, Akte R-1. Rot liest vor: „In der Kopfwunde stecken Holzsplitter – Lärche, mit grauer Lasur.“"); book(5); await view(R,"r1"); await sleep(2000); await scrollIn(R,"#v-r1 dd:nth-of-type(7)"); await sleep(4000);
+    cap(S(),"blau","Seite 9, Akte B-1. Blau erzählt: Bei der Versammlung hatte Brandner eine rote Ledermappe mit dem Vorvertrag dabei."); await view(B,"b1"); await sleep(5000);
+    cap(S(),"blau","Seite 11, Akte B-2, der Chat der Dauercamper: Marco hat am Donnerstag den Steg grau lasiert. Frage 1 klärt sich – die Splitter stammen vom Bootssteg!"); book(6); await view(B,"b2"); await sleep(6000);
+    cap(S(),"rot","Seite 10, Akte R-2: Auf der Fundliste fehlt die rote Mappe. Brieftasche mit 240 € und Handy sind noch da. Das ist Frage 3."); await view(R,"r2"); await sleep(5500);
+    cap(S(),"rot","Seite 12, Akte R-3, Rundgangsprotokoll: Um 23:30 waren beide Tretboote angekettet, um 0:30 fehlte die „Chantal“."); book(7); await view(R,"r3"); await sleep(5500);
+    cap(S(),"blau","Seite 13, Akte B-3: Blau spielt die Sprachnachricht vom Handy des Opfers ab. 23:41 Uhr – da lebte Brandner also noch."); await view(B,"b3"); await sleep(1200); await audio(B); await sleep(1500);
+    cap(S(),"rot","Seite 14, Akte R-4: Rita hat um 1:30 Uhr ein lautes Platschen gehört. War das die Tat?"); book(8); await view(R,"r4"); await sleep(5000);
+    cap(S(),"blau","Seite 15, Akte B-4: Novas Story um 1:28 Uhr – ihr Hund Pepper springt vom Steg ins Wasser. Das Platschen war eine falsche Fährte!"); await view(B,"b4"); await sleep(1500); await scrollIn(B,"#v-b4 .frame:nth-of-type(2)"); await sleep(5000);
+    cap(S(),"rot","Seite 16, Akte R-5: Wetterdaten und der Notruf von Rita um 6:44 Uhr. Der Südwestwind trieb das Boot ins Schilf."); book(9); await view(R,"r5"); await sleep(1500); await audio(R); await sleep(1200);
+    cap(S(),"beide","Seite 19: Die beiden einigen sich und prüfen in der Web-App. Erster Versuch – bei Frage 3 tippen sie auf die Brieftasche."); book(10); await view(R,"code");
+    await pick(R,"#q1","2"); await pick(R,"#q2","2"); await pick(R,"#q3","2"); await submit(R,"#codeForm"); await sleep(1000); await scrollIn(R,"#codeMsg"); await sleep(5500);
+    cap(S(),"blau","Falsch, 2 Punkte weg. Blau holt sich auf Seite 20 einen kleinen Tipp zu Frage 3 – das kostet 1 Punkt. Nur einer öffnet ihn und liest vor."); book(11); await view(B,"hints"); await sleep(800);
+    var hb=doc(B).querySelectorAll("#hintBox button"); if(hb[6]){ into(B,hb[6]); await sleep(600); flash(hb[6]); await sleep(400); hb[6].click() } await sleep(5500);
+    cap(S(),"beide","„Vergleicht, was Brandner dabeihatte, mit der Fundliste.“ Klar: die rote Mappe! Zweiter Versuch …"); await pick(R,"#q3","3"); await submit(R,"#codeForm"); await sleep(1000); await scrollIn(R,"#codeMsg"); await sleep(5000);
+    cap(S(),"beide","Richtig! Die Web-App zeigt es an. Seite 21 warnt mit STOPP – jetzt dürfen sie umblättern."); await sleep(4000);
+    cap(S(),"beide","Seite 22: die Auflösung von Akt 1. Ganz unten: Verdacht versiegeln."); book(12); await sleep(5000);
+    cap(S(),"rot","Jeder versiegelt geheim seinen Hauptverdacht. Rot tippt auf Siggi Kowalski …"); await view(R,"akt"); await pick(R,"#sus","2"); await click(R,"#sealBtn"); await sleep(1500); await click(R,"#sealYes"); await sleep(2500);
+    cap(S(),"blau","… Blau verdächtigt Marco Lenz. Nach dem Versiegeln kann niemand mehr etwas ändern."); await view(B,"akt"); await pick(B,"#sus","3"); await click(B,"#sealBtn"); await sleep(1500); await click(B,"#sealYes"); await sleep(1500); await scrollIn(B,"#blueGive"); await sleep(3500);
+    var code=(el(B,"#giveCode").textContent||"").trim();
+    cap(S(),"rot","Blau zeigt seinen Übergabe-Code. Am echten Handy scannt Rot den QR-Code – hier in der Demo tippen wir ihn ab: "+code); await scrollIn(R,"#redTake"); await sleep(1500); await type(R,"#codeIn",code); await click(R,"#codeTake"); await sleep(1200); await scrollIn(R,"#teamSum"); await sleep(3000);
+    cap(S(),"rot","Fertig! Rots Handy zeigt die Punkte nach Akt 1: 10 − 2 (falsche Prüfung) − 1 (Hinweis von Blau) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
+  }
+  $("play").addEventListener("click",async function(){
+    if(running)return; running=true; stopFlag=false; paused=false; $("play").disabled=true; $("pause").disabled=false;
+    clearSlots(); await reload();
+    try{ await run() }catch(e){}
+    running=false; $("play").disabled=false; $("pause").disabled=true; $("pause").textContent="⏸ Pause";
+  });
+  $("pause").addEventListener("click",function(){ paused=!paused; this.textContent=paused?"▶ Weiter":"⏸ Pause" });
+  $("reset").addEventListener("click",async function(){ stopFlag=true; paused=false; clearSlots(); await reload(); book(1);
+    cap(0,"beide","Zurückgesetzt. Tippt auf „Ablauf vorspielen“ – oder spielt selbst mit beiden Handys."); });
+})();
+</script>
+</body>
+</html>
