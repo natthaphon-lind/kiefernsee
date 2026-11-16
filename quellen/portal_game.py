@@ -39,7 +39,7 @@ def game_html(suspects):
 <p>Löscht auf diesem Handy alle Punkte, versiegelten Verdachte, die gewählte Akte und deinen Namen. Das Kennwort bleibt gespeichert.</p>
 <p class="small">Spielt ihr zu zweit von vorn, macht das bitte auf beiden Handys.</p>
 <button id="resetBtn" type="button" class="ghost">Spielstand löschen</button>
-<div id="resetAsk" class="confirm" hidden><span><b>Wirklich alles löschen?</b> Das lässt sich nicht rückgängig machen.</span>
+<div id="resetAsk" class="confirm" hidden><span><b>Wirklich ein neues Spiel starten?</b> Dann werden auf diesem Handy alle Punkte, alle versiegelten Verdachte, die gewählte Akte und dein Name gelöscht. Das lässt sich nicht rückgängig machen.</span>
 <button id="resetYes" type="button">Ja, löschen</button><button id="resetNo" type="button" class="ghost">Abbrechen</button></div>
 </section>'''
 
