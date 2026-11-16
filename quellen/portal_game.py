@@ -8,13 +8,13 @@ def game_html(suspects):
     opts = "".join(f'<option value="{i}">{E(n)}</option>' for i, n in enumerate(suspects))
     return f'''<section id="v-akt" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Abschluss</span><h2>Akt 1 abschließen</h2>
-<div id="aktLocked" class="msg">Zuerst löst ihr gemeinsam die <a href="#code">Code-Prüfung</a>. Danach versiegelt hier jeder seinen Hauptverdacht.</div>
+<div id="aktLocked" class="msg">Zuerst löst ihr gemeinsam <a href="#code">Akt 1</a> und prüft eure Antworten. Danach versiegelt hier jeder seinen Hauptverdacht.</div>
 <div id="aktOpen" hidden style="display:flex;flex-direction:column;gap:12px">
 <p>Wer steckt eurer Meinung nach hinter allem? Jeder wählt <b>geheim auf seinem eigenen Handy</b> einen Hauptverdacht. Zeigt dem anderen nicht euren Bildschirm.</p>
 <label for="sus">Mein Hauptverdacht nach Akt 1</label>
 <select id="sus"><option value="">bitte wählen</option>{opts}</select>
 <button id="sealBtn" type="button">Verdacht versiegeln</button>
-<div id="sealAsk" class="confirm" hidden><span><b>Sicher?</b> Nach dem Versiegeln kannst du deinen Verdacht für Akt 1 nicht mehr ändern. Auch Code-Prüfung und Hinweise für Akt 1 sind danach geschlossen.</span>
+<div id="sealAsk" class="confirm" hidden><span><b>Sicher?</b> Nach dem Versiegeln kannst du deinen Verdacht für Akt 1 nicht mehr ändern. Auch Prüfen und Hinweise für Akt 1 sind danach geschlossen.</span>
 <button id="sealYes" type="button">Ja, versiegeln</button><button id="sealNo" type="button" class="ghost">Abbrechen</button></div>
 </div>
 <div id="aktSealed" hidden style="display:flex;flex-direction:column;gap:12px">

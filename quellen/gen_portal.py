@@ -142,7 +142,7 @@ ROT_NAV = [("r1", "R-1", "Bericht zum Leichenfund"), ("r2", "R-2", "Asservatenve
            ("r4", "R-4", "Vernehmung Rita Schäfer"), ("r5", "R-5", "Wetterdaten und Notruf")]
 BLAU_NAV = [("b1", "B-1", "Protokoll der Versammlung"), ("b2", "B-2", "Chat der Dauercamper"), ("b3", "B-3", "Sprachnachricht"),
             ("b4", "B-4", "Novas Story"), ("b5", "B-5", "Schwarzes Brett")]
-ALL_NAV = [("plan", "Lageplan", "Luftbild"), ("cast", "Personen", "Wer ist wer"), ("code", "Code-Prüfung", "Akt 1 abschließen"),
+ALL_NAV = [("plan", "Lageplan", "Luftbild"), ("cast", "Personen", "Wer ist wer"), ("code", "Akt 1 lösen", "Antworten prüfen"),
            ("hints", "Hinweise", "Hilfe in drei Stufen"), ("akt", "Akt 1 abschließen", "Verdacht versiegeln"),
            ("neu", "Neues Spiel", "Spielstand löschen")]
 SUSPECTS = [n for n, _a, _d in B.CAST if n != "Holger Brandner"]
@@ -239,7 +239,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 """
 
 CODE = '''<section id="v-code" class="card alle" hidden>
-<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Was ist passiert?</span><h2>Code-Prüfung</h2>
+<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Was ist passiert?</span><h2>Antworten prüfen</h2>
 <form id="codeForm" style="display:flex;flex-direction:column;gap:14px">
 <div class="q"><label for="q1">Frage 1: Wo ist Holger Brandner ins Wasser gekommen?</label>
 <select id="q1"><option value="">bitte wählen</option><option value="1">1 · am Badestrand</option><option value="2">2 · am Bootssteg</option><option value="3">3 · mitten auf dem See, aus dem Tretboot</option></select></div>
@@ -248,7 +248,7 @@ CODE = '''<section id="v-code" class="card alle" hidden>
 <div class="q"><label for="q3">Frage 3: Welcher Gegenstand des Opfers fehlt?</label>
 <select id="q3"><option value="">bitte wählen</option><option value="1">1 · sein Handy</option><option value="2">2 · seine Brieftasche</option><option value="3">3 · seine rote Ledermappe</option><option value="4">4 · sein Autoschlüssel</option></select></div>
 <button type="submit">Antwort prüfen</button><div id="codeMsg" class="msg" hidden></div></form>
-<div id="codeLock" class="msg" hidden>Akt 1 ist auf diesem Handy versiegelt. Code-Prüfung und Hinweise sind geschlossen.</div>
+<div id="codeLock" class="msg" hidden>Akt 1 ist auf diesem Handy versiegelt. Prüfen und Hinweise sind geschlossen.</div>
 <p class="small">Jede falsche Antwort kostet euer Team 2 Punkte.</p>
 </section>
 <section id="v-hints" class="card alle" hidden>
@@ -369,7 +369,6 @@ page = f'''<!doctype html>
 <input id="pname" type="text" maxlength="20" autocomplete="given-name" placeholder="z. B. Lisa">
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
-<p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p>
 <p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Dort stehen alle Spuren, der Notizbogen und die Auflösung. Legt es beim Spielen immer mit auf den Tisch. Euren geheimen Verdacht und die Punkte führt ihr hier in der Web-App.</p>
 <p class="small"><b>Akte Rot ist die Spielleitung:</b> Am Ende jedes Akts übergibt Akte Blau den versiegelten Verdacht und die Punkte per QR-Code an Akte Rot.</p></section>
 

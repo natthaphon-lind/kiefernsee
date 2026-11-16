@@ -223,7 +223,7 @@ RULES = [
      "ihr schaut nicht auf die Seite des anderen. Die Lösung entsteht erst, wenn ihr redet."),
     ("Buch und Ermittlerportal",
      "Das Buch ist eure Hauptakte: Hier stehen alle Spuren, euer Ermittlerbogen und die Auflösung. Das "
-     "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Code-Prüfung. Scannt dafür die QR-Codes "
+     "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Prüfung eurer Antworten. Scannt dafür die QR-Codes "
      "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin. Jeder braucht dafür sein eigenes Handy."),
     ("Fragen und Hilfe",
      "Jeder Akt endet mit drei Fragen. Einigt euch auf die Antworten und prüft sie im Portal (Seite 19). "
