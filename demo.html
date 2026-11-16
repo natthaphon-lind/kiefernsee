@@ -68,7 +68,7 @@ iframe{width:100%;height:100%;border:0;display:block}
   async function submit(f,sel){var e=el(f,sel+" button[type=submit]");flash(e);await sleep(350);el(f,sel).requestSubmit()}
   async function view(f,id){await click(f,'[data-view="'+id+'"]');await sleep(500);var s=el(f,"#v-"+id);if(s)into(f,s)}
   async function scrollIn(f,sel){var e=el(f,sel);if(e)into(f,e)}
-  async function audio(f){var a=el(f,"audio");if(!a)return;into(f,a);flash(a);
+  async function audio(f,sec){var a=el(f,"#v-"+sec+" audio");if(!a)return;into(f,a);flash(a);
     if(!$("sound").checked){await sleep(2500);return}
     try{a.currentTime=0;await a.play()}catch(e){await sleep(3000);return}
     await new Promise(function(res){var t=setInterval(function(){
@@ -92,10 +92,10 @@ iframe{width:100%;height:100%;border:0;display:block}
     cap(S(),"blau","Seite 11, Akte B-2, der Chat der Dauercamper: Marco hat am Donnerstag den Steg grau lasiert. Frage 1 klärt sich – die Splitter stammen vom Bootssteg!"); book(6); await view(B,"b2"); await sleep(6000);
     cap(S(),"rot","Seite 10, Akte R-2: Auf der Fundliste fehlt die rote Mappe. Brieftasche mit 240 € und Handy sind noch da. Das ist Frage 3."); await view(R,"r2"); await sleep(5500);
     cap(S(),"rot","Seite 12, Akte R-3, Rundgangsprotokoll: Um 23:30 waren beide Tretboote angekettet, um 0:30 fehlte die „Chantal“."); book(7); await view(R,"r3"); await sleep(5500);
-    cap(S(),"blau","Seite 13, Akte B-3: Blau spielt die Sprachnachricht vom Handy des Opfers ab. 23:41 Uhr – da lebte Brandner also noch."); await view(B,"b3"); await sleep(1200); await audio(B); await sleep(1500);
+    cap(S(),"blau","Seite 13, Akte B-3: Blau spielt die Sprachnachricht vom Handy des Opfers ab. 23:41 Uhr – da lebte Brandner also noch."); await view(B,"b3"); await sleep(1200); await audio(B,"b3"); await sleep(1500);
     cap(S(),"rot","Seite 14, Akte R-4: Rita hat um 1:30 Uhr ein lautes Platschen gehört. War das die Tat?"); book(8); await view(R,"r4"); await sleep(5000);
     cap(S(),"blau","Seite 15, Akte B-4: Novas Story um 1:28 Uhr – ihr Hund Pepper springt vom Steg ins Wasser. Das Platschen war eine falsche Fährte!"); await view(B,"b4"); await sleep(1500); await scrollIn(B,"#v-b4 .frame:nth-of-type(2)"); await sleep(5000);
-    cap(S(),"rot","Seite 16, Akte R-5: Wetterdaten und der Notruf von Rita um 6:44 Uhr. Der Südwestwind trieb das Boot ins Schilf."); book(9); await view(R,"r5"); await sleep(1500); await audio(R); await sleep(1200);
+    cap(S(),"rot","Seite 16, Akte R-5: Wetterdaten und der Notruf von Rita um 6:44 Uhr. Der Südwestwind trieb das Boot ins Schilf."); book(9); await view(R,"r5"); await sleep(1500); await audio(R,"r5"); await sleep(1200);
     cap(S(),"beide","Seite 19: Die beiden einigen sich und prüfen in der Web-App. Erster Versuch – bei Frage 3 tippen sie auf die Brieftasche."); book(10); await view(R,"code");
     await pick(R,"#q1","2"); await pick(R,"#q2","2"); await pick(R,"#q3","2"); await submit(R,"#codeForm"); await sleep(1000); await scrollIn(R,"#codeMsg"); await sleep(5500);
     cap(S(),"blau","Falsch, 2 Punkte weg. Blau holt sich auf Seite 20 einen kleinen Tipp zu Frage 3 – das kostet 1 Punkt. Nur einer öffnet ihn und liest vor."); book(11); await view(B,"hints"); await sleep(800);
