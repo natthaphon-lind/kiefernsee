@@ -231,7 +231,7 @@ RULES = [
     ("Das Duell",
      "Euer Team startet mit 10 Punkten. Jeder Fehlversuch beim Prüfen kostet 2 Punkte, jede Hinweisstufe 1 Punkt – das "
      "Portal zählt automatisch mit. Nach jedem Akt versiegelt jeder im Portal geheim seinen Hauptverdacht. Akte Rot "
-     "ist die Spielleitung: Blau übergibt Verdacht und Punkte per QR-Code an Rot. Wer am Ende am frühesten richtig "
+     "ist die Spielleitung: Akte Blau übergibt Verdacht und Punkte per QR-Code an Akte Rot. Wer am Ende am frühesten richtig "
      "lag, gewinnt die Goldene Lupe vom Kiefernsee."),
 ]
 
@@ -953,7 +953,7 @@ def solution_page():
     yy -= 18
     qtop = yy + 12
     for i, t in enumerate(["Scannt den QR-Code: Jeder versiegelt geheim auf seinem Handy seinen Hauptverdacht.",
-                           "Blau zeigt danach seinen Übergabe-Code, Rot scannt ihn. Rots Handy zeigt eure Punkte nach Akt 1.",
+                           "Akte Blau zeigt danach den Übergabe-Code, Akte Rot scannt ihn. Das Handy von Akte Rot zeigt eure Punkte nach Akt 1.",
                            "Gönnt euch eine Pause. In Akt 2 „Wer lügt?“ nehmt ihr die Verdächtigen ins Verhör."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
         yy = text(ML + 32, yy, W - ML - MR - 50 - 130, t, "Serif", 10, 13.6, gray=1, gap=4)

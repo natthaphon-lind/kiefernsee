@@ -106,8 +106,8 @@ iframe{width:100%;height:100%;border:0;display:block}
     cap(S(),"rot","Jeder versiegelt geheim seinen Hauptverdacht. Rot tippt auf Siggi Kowalski …"); await view(R,"akt"); await pick(R,"#sus","2"); await click(R,"#sealBtn"); await sleep(1500); await click(R,"#sealYes"); await sleep(2500);
     cap(S(),"blau","… Blau verdächtigt Marco Lenz. Nach dem Versiegeln kann niemand mehr etwas ändern."); await view(B,"akt"); await pick(B,"#sus","3"); await click(B,"#sealBtn"); await sleep(1500); await click(B,"#sealYes"); await sleep(1500); await scrollIn(B,"#blueGive"); await sleep(3500);
     var code=(el(B,"#giveCode").textContent||"").trim();
-    cap(S(),"rot","Blau zeigt seinen Übergabe-Code. Am echten Handy scannt Rot den QR-Code – hier in der Demo tippen wir ihn ab: "+code); await scrollIn(R,"#redTake"); await sleep(1500); await type(R,"#codeIn",code); await click(R,"#codeTake"); await sleep(1200); await scrollIn(R,"#teamSum"); await sleep(3000);
-    cap(S(),"rot","Fertig! Rots Handy zeigt die Punkte nach Akt 1: 10 − 2 (falsche Prüfung) − 1 (Hinweis von Blau) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
+    cap(S(),"rot","Akte Blau zeigt den Übergabe-Code. Am echten Handy scannt Akte Rot den QR-Code – hier in der Demo tippen wir ihn ab: "+code); await scrollIn(R,"#redTake"); await sleep(1500); await type(R,"#codeIn",code); await click(R,"#codeTake"); await sleep(1200); await scrollIn(R,"#teamSum"); await sleep(3000);
+    cap(S(),"rot","Fertig! Das Handy von Akte Rot zeigt die Punkte nach Akt 1: 10 − 2 (falsche Prüfung) − 1 (Hinweis von Akte Blau) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
   }
   $("play").addEventListener("click",async function(){
     if(running)return; running=true; stopFlag=false; paused=false; $("play").disabled=true; $("pause").disabled=false;

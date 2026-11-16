@@ -367,7 +367,7 @@ page = f'''<!doctype html>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
 <p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p>
 <p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Dort stehen alle Spuren, der Notizbogen und die Auflösung. Legt es beim Spielen immer mit auf den Tisch. Euren geheimen Verdacht und die Punkte führt ihr hier in der Web-App.</p>
-<p class="small"><b>Akte Rot ist die Spielleitung:</b> Am Ende jedes Akts übergibt Blau seinen versiegelten Verdacht und seine Punkte per QR-Code an Rot.</p></section>
+<p class="small"><b>Akte Rot ist die Spielleitung:</b> Am Ende jedes Akts übergibt Akte Blau den versiegelten Verdacht und die Punkte per QR-Code an Akte Rot.</p></section>
 
 <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
 <div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>

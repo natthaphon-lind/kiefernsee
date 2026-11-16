@@ -21,14 +21,14 @@ def game_html(suspects):
 <div class="seal"><span class="sealIcon" aria-hidden="true">🔒</span><div><b>Verdacht für Akt 1 versiegelt</b><span id="sealTime" class="small"></span></div></div>
 <div id="blueGive" hidden style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
 <h3>An die Spielleitung übergeben</h3>
-<p class="small">Akte Rot ist die Spielleitung. Rot öffnet in der eigenen Web-App „Akt 1 abschließen“ und tippt auf „QR-Code scannen“. Der Code verrät euren Verdacht nicht.</p>
+<p class="small">Akte Rot ist die Spielleitung. Akte Rot öffnet in der eigenen Web-App „Akt 1 abschließen“ und tippt auf „QR-Code scannen“. Der Code verrät euren Verdacht nicht.</p>
 <div id="giveQr" class="qrbox"></div>
-<p class="small" style="margin:0">Scannen klappt nicht? Rot kann diesen Code eintippen:</p>
+<p class="small" style="margin:0">Scannen klappt nicht? Akte Rot kann diesen Code eintippen:</p>
 <p id="giveCode" class="mono bigcode"></p>
 <p class="small" id="giveDed"></p></div>
 <div id="redTake" hidden style="display:flex;flex-direction:column;gap:10px">
 <h3>Spielstand von Akte Blau einlesen</h3>
-<p class="small">Blau zeigt nach dem Versiegeln einen QR-Code. Scannt ihn hier in der Web-App, nicht mit der normalen Kamera.</p>
+<p class="small">Akte Blau zeigt nach dem Versiegeln einen QR-Code. Scannt ihn hier in der Web-App, nicht mit der normalen Kamera.</p>
 <button id="scanBtn" type="button">QR-Code scannen</button>
 <div id="scanBox" hidden class="scanbox"><video id="scanVid" playsinline muted></video><button id="scanStop" type="button" class="ghost">Abbrechen</button></div>
 <label for="codeIn">… oder Code eintippen</label>
@@ -93,7 +93,7 @@ def game_js(suspects, portal):
   function score(){
     var r=role(), el=$("scoreTxt"), sub=$("scoreSub"); if(!el) return;
     if(r==="rot"){ var b=G.blue[ACT]; var t=START-ded(ACT)-(b?b.d:0);
-      el.textContent=t+" Punkte"; sub.textContent=b?"Teamstand, Blau ist eingerechnet":"Teamstand · Abzüge von Blau kommen am Ende des Akts dazu"; }
+      el.textContent=t+" Punkte"; sub.textContent=b?"Teamstand, Akte Blau ist eingerechnet":"Teamstand · Abzüge von Akte Blau kommen am Ende des Akts dazu"; }
     else { el.textContent=(ded(ACT)?"−"+ded(ACT):"0")+" Punkte"; sub.textContent="Eure Abzüge auf diesem Handy · gehen am Ende an Akte Rot"; }
   }
 
@@ -145,7 +145,7 @@ def game_js(suspects, portal):
     if(role()!=="rot"){ return false }
     var p=dec(c); if(!p){ msg(false,"Dieser Code ist ungültig. Bitte noch einmal scannen oder genau abtippen."); return false }
     if(p.a!==ACT){ msg(false,"Dieser Code gehört zu Akt "+p.a+", nicht zu Akt "+ACT+"."); return false }
-    if(G.blue[ACT]){ msg(true,"Der Spielstand von Blau für Akt "+ACT+" ist schon gespeichert."); return true }
+    if(G.blue[ACT]){ msg(true,"Der Spielstand von Akte Blau für Akt "+ACT+" ist schon gespeichert."); return true }
     G.blue[ACT]={s:p.s,d:p.d}; save(); $("takeMsg").hidden=true; refresh(); return true
   }
   $("codeTake").addEventListener("click",function(){ take($("codeIn").value); $("codeIn").value="" });
