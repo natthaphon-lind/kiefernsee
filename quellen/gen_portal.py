@@ -249,10 +249,10 @@ CODE = '''<section id="v-code" class="card alle" hidden>
 <button type="submit">Antwort prüfen</button><div id="codeMsg" class="msg" hidden></div></form>
 <div id="codeLock" class="msg" hidden>Akt 1 ist auf diesem Handy versiegelt. Code-Prüfung und Hinweise sind geschlossen.</div>
 <p class="small">Jede falsche Antwort kostet euer Team 2 Punkte.</p>
-<p class="small">Lieber auf Papier? Im Buch auf Seite 19 steht, wie ihr die Abschnittsnummer selbst berechnet.</p></section>
+</section>
 <section id="v-hints" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Hinweise</span><h2>Hilfe in drei Stufen</h2>
-<p class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt. Sprecht euch ab, wer welche Stufe öffnet: Öffnen beide Handys dieselbe Stufe, zählt sie doppelt.</p>
+<p class="small">Stufe 1 ist ein kleiner Tipp, Stufe 2 ein großer Tipp, Stufe 3 verrät die Lösung. Jede geöffnete Stufe kostet euer Team einen Punkt. Sprecht euch ab, wer welche Stufe öffnet: Öffnen beide Handys dieselbe Stufe, zählt sie doppelt.</p>
 <div class="hints" id="hintBox"></div></section>'''
 
 JS = r'''<script>
@@ -323,9 +323,9 @@ JS = r'''<script>
     var row=document.createElement("div"); row.className="hrow"; d.appendChild(row);
     var out=document.createElement("div"); out.className="hints"; d.appendChild(out);
     [1,2,3].forEach(function(s){
-      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.textContent="Stufe "+s+" · −1";
+      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.textContent="Stufe "+s+" · "+["","Kleiner Tipp","Großer Tipp","Lösung"][s]+" · −1";
       var id=qi+"-"+s, G=window.__kgame;
-      function reveal(){ b.disabled=true; var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p) }
+      function reveal(){ b.disabled=true; var p=document.createElement("div"); p.className="msg"; p.textContent=["","Kleiner Tipp","Großer Tipp","Lösung"][s]+": "+h[s]; out.appendChild(p) }
       b.addEventListener("click",function(){ if(b.disabled) return; if(G&&!G.openHint(id)) return; reveal() });
       if(G&&G.hintOpened(id)){ setTimeout(reveal,0) }
       else if(G&&G.sealed()){ b.disabled=true }

@@ -226,10 +226,10 @@ RULES = [
      "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Code-Prüfung. Scannt dafür die QR-Codes "
      "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin. Jeder braucht dafür sein eigenes Handy."),
     ("Fragen und Hilfe",
-     "Jeder Akt endet mit Fragen. Prüft eure Antworten im Portal oder mit der Code-Prüfung hinten im Buch. "
-     "Hängt ihr fest, helfen Hinweise in drei Stufen: Schubs, Richtung, Antwort."),
+     "Jeder Akt endet mit drei Fragen. Einigt euch auf die Antworten und prüft sie im Portal (Seite 19). "
+     "Hängt ihr fest, helfen Hinweise in drei Stufen: kleiner Tipp, großer Tipp, Lösung."),
     ("Das Duell",
-     "Euer Team startet mit 10 Punkten. Jeder falsche Code kostet 2 Punkte, jede Hinweisstufe 1 Punkt – das "
+     "Euer Team startet mit 10 Punkten. Jeder Fehlversuch beim Prüfen kostet 2 Punkte, jede Hinweisstufe 1 Punkt – das "
      "Portal zählt automatisch mit. Nach jedem Akt versiegelt jeder im Portal geheim seinen Hauptverdacht. Akte Rot "
      "ist die Spielleitung: Blau übergibt Verdacht und Punkte per QR-Code an Rot. Wer am Ende am frühesten richtig "
      "lag, gewinnt die Goldene Lupe vom Kiefernsee."),
@@ -324,8 +324,8 @@ def task_page():
             yy -= 22
         y -= bh + 14
     text(ML, y - 4, W - ML - MR,
-         "Habt ihr euch auf alle drei Antworten geeinigt? Dann prüft sie im Ermittlerportal oder auf der "
-         "Seite „Code-Prüfung“ (Seite 19). Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
+         "Habt ihr euch auf alle drei Antworten geeinigt? Dann prüft sie im Ermittlerportal – "
+         "wie, steht auf Seite 19. Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
     new_page()
 
 
@@ -812,7 +812,7 @@ def sheet_page():
     c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 9); c.drawString(ML + 16, y - 22, "AKT 1 ABSCHLIESSEN")
     c.setFillGray(1); c.setFont("SansB", 13); c.drawString(ML + 16, y - 40, "Verdacht versiegeln und Punkte übergeben")
     yy = y - 60
-    for i, t in enumerate(["Löst zuerst die Code-Prüfung (Seite 19 oder im Portal).",
+    for i, t in enumerate(["Löst zuerst gemeinsam die drei Fragen (Seite 19).",
                            "Jeder öffnet „Akt 1 abschließen“ und versiegelt geheim seinen Hauptverdacht.",
                            "Blau zeigt seinen Übergabe-Code, Rot scannt ihn im Portal. Rots Handy zeigt eure Punkte."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
@@ -837,62 +837,43 @@ VALUES = [("Frage 1 · Wo?", [("am Badestrand", 0), ("am Bootssteg", 16), ("im T
           ("Frage 3 · Was fehlt?", [("Handy", 1), ("Brieftasche", 2), ("rote Ledermappe", 3), ("Autoschlüssel", 4)])]
 
 
+CHECK_Q = [("Frage 1 · Wo ist Brandner ins Wasser gekommen?", ["am Badestrand", "am Bootssteg", "mitten auf dem See, aus dem Tretboot"]),
+           ("Frage 2 · Wann ist es passiert?", ["zwischen 21:30 und 23:00 Uhr", "zwischen 23:30 und 0:30 Uhr",
+                                                "zwischen 0:30 und 2:00 Uhr", "nach 2:00 Uhr"]),
+           ("Frage 3 · Was fehlt?", ["sein Handy", "seine Brieftasche", "seine rote Ledermappe", "sein Autoschlüssel"])]
+
+
+def num_step(n, x, y, t, w, gray=0, size=11, lead=15):
+    fc(NIGHT) if not gray else c.setFillColorRGB(1, 0.8, 0.35)
+    c.circle(x + 11, y + 4, 11, fill=1, stroke=0)
+    c.setFillGray(1 if not gray else 0); c.setFont("SansB", 11); c.drawCentredString(x + 11, y, str(n)); c.setFillGray(0)
+    return text(x + 32, y + 8, w - 32, t, "Serif", size, lead, gray=gray, gap=0)
+
+
 def code_page():
-    y = doc_head("FÜR BEIDE", "Code-Prüfung Akt 1", "Im Portal oder hier im Buch – in vier Schritten")
-    tw = W - ML - MR - 120
-
-    def step(n, title, yy):
-        fc(NIGHT); c.circle(ML + 9, yy + 4, 9, fill=1, stroke=0)
-        c.setFillGray(1); c.setFont("SansB", 10); c.drawCentredString(ML + 9, yy, str(n)); c.setFillGray(0)
-        c.setFont("SansB", 11); c.drawString(ML + 26, yy, title)
-        return yy - 18
-
-    y = step(1, "Antworten aussuchen", y)
-    y = text(ML + 26, y, tw - 26, "Einigt euch auf je eine Antwort zu den drei Fragen von Seite 4.", "Serif", 10, 13.6) - 4
-    y = step(2, "Wert jeder Antwort ablesen", y)
-    colw = (W - ML - MR - 26 - 20 - 112) / 3
-    top = y
-    qr(W - MR - 94, top - 94, 94, PORTAL + "#code", "portal")
-    for k, (h, vals) in enumerate(VALUES):
-        x = ML + 26 + k * (colw + 10)
-        c.setFillColorRGB(0.92, 0.94, 0.97); c.rect(x, top - 18, colw, 18, fill=1, stroke=0); c.setFillGray(0)
-        c.setFont("SansB", 9); c.drawString(x + 6, top - 13, h)
-        yy = top - 32
-        for i, (lab, v) in enumerate(vals, 1):
-            c.setFont("SansB", 9); c.drawString(x + 6, yy, f"{i}")
-            c.setFont("Serif", 9); c.drawString(x + 16, yy, lab)
-            c.setFont("MonoB", 10); c.drawRightString(x + colw - 6, yy, str(v))
-            c.setStrokeGray(0.85); c.setLineWidth(0.4); c.line(x + 4, yy - 4, x + colw - 4, yy - 4)
-            yy -= 15
-    y = top - 32 - 4 * 15 - 22
-    y = step(3, "Die drei Werte zusammenzählen", y)
-    bx = ML + 26
-    c.setStrokeGray(0); c.setLineWidth(1)
-    for i, lab in enumerate(["Frage 1", "Frage 2", "Frage 3"]):
-        x = bx + i * 92
-        c.rect(x, y - 26, 56, 26, fill=0, stroke=1)
-        c.setFont("Sans", 7); c.setFillGray(0.4); c.drawCentredString(x + 28, y - 36, lab); c.setFillGray(0)
-        c.setFont("SansB", 14); c.drawCentredString(x + 74, y - 18, "+" if i < 2 else "=")
-    x = bx + 3 * 92 - 4
-    c.setLineWidth(2); c.rect(x, y - 28, 70, 30, fill=0, stroke=1)
-    c.setFont("Sans", 7); c.setFillGray(0.4); c.drawCentredString(x + 35, y - 38, "euer Abschnitt"); c.setFillGray(0)
-    y -= 52
-    c.setFont("SerifI", 9.6); c.setFillGray(0.3)
-    c.drawString(bx, y, "Beispiel: am Badestrand (0) + nach 2:00 Uhr (12) + Handy (1) = 13 → ihr lest nur Abschnitt 13.")
+    y = doc_head("FÜR BEIDE", "Akt 1 lösen", "Drei Fragen. Ein Scan. Fertig.")
+    for q, opts in CHECK_Q:
+        c.setFont("SansB", 12); c.setFillGray(0); c.drawString(ML, y, q); y -= 21
+        for o in opts:
+            c.setStrokeGray(0.2); c.setLineWidth(1); c.rect(ML + 4, y - 2, 11, 11, fill=0, stroke=1)
+            c.setFont("Serif", 11); c.drawString(ML + 24, y, o); y -= 19
+        y -= 14
+    y -= 8
+    bh = 180; bw = W - ML - MR
+    fc(NIGHT); c.rect(ML, y - bh, bw, bh, fill=1, stroke=0)
+    c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 9); c.drawString(ML + 18, y - 24, "SO GEHT'S")
+    c.setFillGray(1); c.setFont("SansB", 14); c.drawString(ML + 18, y - 44, "Einigt euch – dann scannen.")
+    yy = y - 70
+    for i, t in enumerate(["Kreuzt gemeinsam je eine Antwort an.",
+                           "Scannt den QR-Code und wählt dort dieselben Antworten aus.",
+                           "Bei „Richtig!“ geht es auf Seite 22 weiter. Bei „Leider falsch“ zeigt euch die Web-App, "
+                           "welche Frage noch nicht passt. Jeder Fehlversuch kostet 2 Punkte."], 1):
+        c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 11); c.drawString(ML + 18, yy, f"{i}.")
+        yy = text(ML + 36, yy, bw - 36 - 160, t, "Serif", 11, 15, gray=1, gap=5)
     c.setFillGray(0)
-    y -= 22
-    y = step(4, "Nur euren Abschnitt lesen", y)
-    cols, rows = 8, 6
-    gw = (W - ML - MR) / cols; gh = 34
-    for k in range(48):
-        n = k + 1
-        a_, b_, c_ = (k // 16) + 1, (k % 16) // 4 + 1, k % 4 + 1
-        h1, h2 = section_short(a_, b_, c_)
-        col, row = k % cols, k // cols
-        x = ML + col * gw; yy = y - row * gh
-        c.setStrokeGray(0.6); c.setLineWidth(0.5); c.rect(x, yy - gh, gw, gh, fill=0, stroke=1)
-        c.setFont("SansB", 11); c.drawString(x + 4, yy - 14, str(n))
-        c.setFont("Sans", 6.6); c.drawString(x + 4, yy - 23, h1); c.drawString(x + 4, yy - 31, h2)
+    qx, qy = ML + bw - 18 - 118, y - 26 - 118
+    c.setFillGray(1); c.roundRect(qx - 7, qy - 27, 132, 153, 4, fill=1, stroke=0); c.setFillGray(0)
+    qr(qx, qy, 118, PORTAL + "#code", "portal")
     new_page()
 
 
@@ -910,28 +891,32 @@ HINTS = [
 
 
 def hints_page():
-    y = doc_head("FÜR BEIDE", "Hinweise Akt 1", "Sucht in der Übersicht die Nummer und lest nur dieses eine Kästchen.")
-    c.setFont("SansB", 10); c.drawString(ML, y, "Übersicht")
-    y -= 16
-    for k, q in enumerate(["Frage 1", "Frage 2", "Frage 3"]):
-        nums = [h[0] for h in HINTS if h[1].startswith(q)]
-        c.setFont("Serif", 10.4)
-        c.drawString(ML, y, f"{q}:   Stufe 1 → Kästchen {nums[0]}    Stufe 2 → Kästchen {nums[1]}    Stufe 3 → Kästchen {nums[2]}")
-        y -= 16
-    y -= 10
-    colw = (W - ML - MR - 16) / 2
-    items = sorted(HINTS)
-    ys = [y, y]
-    for i, (n, lab, t) in enumerate(items):
-        col = i % 2
-        x = ML + col * (colw + 16)
-        hh = lines_h(t, "Serif", 9.6, colw - 52, 13) + 24
-        yy = ys[col]
-        c.setStrokeGray(0); c.setLineWidth(0.8); c.rect(x, yy - hh, colw, hh, fill=0, stroke=1)
-        fc(NIGHT); c.rect(x, yy - hh, 34, hh, fill=1, stroke=0)
-        c.setFillGray(1); c.setFont("SansB", 14); c.drawCentredString(x + 17, yy - hh / 2 - 5, str(n)); c.setFillGray(0)
-        text(x + 44, yy - 16, colw - 52, t, "Serif", 9.6, 13, gap=0)
-        ys[col] = yy - hh - 10
+    y = doc_head("FÜR BEIDE", "Ihr steckt fest?", "Kein Problem. Holt euch so viel Hilfe, wie ihr braucht.")
+    y -= 6
+    stufen = [("1", "Kleiner Tipp", "Zeigt euch, wo ihr genauer hinschauen solltet."),
+              ("2", "Großer Tipp", "Sagt euch, welche Spuren zusammengehören."),
+              ("3", "Lösung", "Verrät die Antwort auf diese eine Frage.")]
+    bw3 = (W - ML - MR - 24) / 3
+    for i, (n, t, d) in enumerate(stufen):
+        x = ML + i * (bw3 + 12)
+        c.setStrokeGray(0.75); c.setLineWidth(1); c.roundRect(x, y - 130, bw3, 130, 6, fill=0, stroke=1)
+        fc(NIGHT); c.circle(x + bw3 / 2, y - 34, 20, fill=1, stroke=0)
+        c.setFillGray(1); c.setFont("SansB", 18); c.drawCentredString(x + bw3 / 2, y - 40, n); c.setFillGray(0)
+        c.setFont("SansB", 13); c.drawCentredString(x + bw3 / 2, y - 76, f"Stufe {n}: {t}")
+        text(x + 14, y - 94, bw3 - 28, d, "Serif", 10.4, 14)
+    y -= 168
+    top = y
+    sw = W - ML - MR - 170
+    for i, t in enumerate(["Scannt den QR-Code und tippt bei der Frage, die klemmt, auf „Stufe 1“.",
+                           "Reicht das nicht, öffnet Stufe 2 – und erst ganz zum Schluss Stufe 3.",
+                           "Jede geöffnete Stufe kostet euer Team 1 Punkt. Die Web-App zählt automatisch mit."], 1):
+        y = num_step(i, ML, y, t, sw) - 14
+    qr(W - MR - 128, top - 112, 118, PORTAL + "#hints", "portal")
+    y = min(y, top - 150) - 10
+    c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, y - 58, W - ML - MR, 58, 6, fill=1, stroke=0); c.setFillGray(0)
+    c.setFont("SansB", 11); c.drawString(ML + 14, y - 22, "Tipp")
+    text(ML + 14, y - 38, W - ML - MR - 28,
+         "Sprecht euch ab, wer den Hinweis öffnet. Öffnen beide Handys dieselbe Stufe, kostet sie doppelt.", "Serif", 10.5, 14)
     new_page()
 
 
@@ -950,7 +935,7 @@ SOLUTION = [
 
 
 def solution_page():
-    y = doc_head("AUFLÖSUNG AKT 1", "Was in dieser Nacht passiert ist", "Erst lesen, wenn ihr den richtigen Code habt.")
+    y = doc_head("AUFLÖSUNG AKT 1", "Was in dieser Nacht passiert ist", "Erst lesen, wenn die Web-App „Richtig!“ zeigt.")
     for h, t in SOLUTION:
         fc(ROT); c.setFont("SansB", 12.5); c.drawString(ML, y, h); c.setFillGray(0)
         y = text(ML, y - 18, W - ML - MR - 10, t, "Serif", 10.4, 14.6) - 10
