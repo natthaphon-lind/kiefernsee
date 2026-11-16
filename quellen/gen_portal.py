@@ -2,6 +2,7 @@
 import sys, html, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_farbe as B  # baut nebenbei das PDF neu
+import portal_game as PG
 
 E = html.escape
 OUT = "/home/claude/kiefernsee/index.html"
@@ -141,7 +142,9 @@ ROT_NAV = [("r1", "R-1", "Bericht zum Leichenfund"), ("r2", "R-2", "Asservatenve
 BLAU_NAV = [("b1", "B-1", "Protokoll der Versammlung"), ("b2", "B-2", "Chat der Dauercamper"), ("b3", "B-3", "Sprachnachricht"),
             ("b4", "B-4", "Novas Story"), ("b5", "B-5", "Schwarzes Brett")]
 ALL_NAV = [("plan", "Lageplan", "Luftbild"), ("cast", "Personen", "Wer ist wer"), ("code", "Code-Prüfung", "Akt 1 abschließen"),
-           ("hints", "Hinweise", "Hilfe in drei Stufen")]
+           ("hints", "Hinweise", "Hilfe in drei Stufen"), ("akt", "Akt 1 abschließen", "Verdacht versiegeln"),
+           ("neu", "Neues Spiel", "Spielstand löschen")]
+SUSPECTS = [n for n, _a, _d in B.CAST if n != "Holger Brandner"]
 
 
 def nav(items, kind):
@@ -244,10 +247,12 @@ CODE = '''<section id="v-code" class="card alle" hidden>
 <div class="q"><label for="q3">Frage 3: Welcher Gegenstand des Opfers fehlt?</label>
 <select id="q3"><option value="">bitte wählen</option><option value="1">1 · sein Handy</option><option value="2">2 · seine Brieftasche</option><option value="3">3 · seine rote Ledermappe</option><option value="4">4 · sein Autoschlüssel</option></select></div>
 <button type="submit">Antwort prüfen</button><div id="codeMsg" class="msg" hidden></div></form>
+<div id="codeLock" class="msg" hidden>Akt 1 ist auf diesem Handy versiegelt. Code-Prüfung und Hinweise sind geschlossen.</div>
+<p class="small">Jede falsche Antwort kostet euer Team 2 Punkte.</p>
 <p class="small">Lieber auf Papier? Im Buch auf Seite 19 steht, wie ihr die Abschnittsnummer selbst berechnet.</p></section>
 <section id="v-hints" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Hinweise</span><h2>Hilfe in drei Stufen</h2>
-<p class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt.</p>
+<p class="small">Stufe 1 gibt einen Schubs, Stufe 2 die Richtung, Stufe 3 die Antwort. Jede geöffnete Stufe kostet euer Team einen Punkt. Sprecht euch ab, wer welche Stufe öffnet: Öffnen beide Handys dieselbe Stufe, zählt sie doppelt.</p>
 <div class="hints" id="hintBox"></div></section>'''
 
 JS = r'''<script>
@@ -270,12 +275,14 @@ JS = r'''<script>
     var b=$("badge"); b.className="badge "+r; $("badgeTxt").textContent= r==="rot" ? "◆ AKTE ROT" : "● AKTE BLAU";
     $("navRot").hidden = r!=="rot"; $("navBlau").hidden = r!=="blau";
     show(r==="rot"?"r1":"b1",true);
+    if(window.__kgame) window.__kgame.refresh();
   }
   function wanted(){ var h=(location.hash||"").slice(1); return VIEWS.indexOf(h)>=0 ? h : null }
   function afterLogin(){
     $("login").hidden=true; var w=wanted(), r=get(RKEY);
     if(w && /^r\d/.test(w)){ r="rot" } else if(w && /^b\d/.test(w)){ r="blau" }
     if(r==="rot"||r==="blau"){ setRole(r); if(w){ show(w,true); setTimeout(function(){ $("v-"+w).scrollIntoView({block:"start"}) },150) } } else { $("role").hidden=false }
+    if(window.__kgame) window.__kgame.hashImport();
   }
   window.addEventListener("hashchange",function(){ if($("app").hidden) return; var w=wanted(); if(!w) return;
     if(/^r\d/.test(w)&&get(RKEY)!=="rot") setRole("rot"); if(/^b\d/.test(w)&&get(RKEY)!=="blau") setRole("blau"); show(w) });
@@ -299,9 +306,11 @@ JS = r'''<script>
     e.preventDefault();
     var a=[+$("q1").value,+$("q2").value,+$("q3").value], m=$("codeMsg"); m.hidden=false;
     if(!a[0]||!a[1]||!a[2]){ m.className="msg bad"; m.textContent="Bitte alle drei Fragen beantworten."; return }
+    if(window.__kgame&&window.__kgame.sealed()){ m.className="msg"; m.textContent="Akt 1 ist schon versiegelt."; return }
     var code=(a[0]-1)*16+(a[1]-1)*4+a[2];
-    for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ m.className="msg bad"; m.textContent="Abschnitt "+code+": Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]; return } }
-    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 22).";
+    for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ if(window.__kgame) window.__kgame.wrong(); m.className="msg bad"; m.textContent="Abschnitt "+code+": Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]+" (−2 Punkte)"; return } }
+    if(window.__kgame) window.__kgame.right();
+    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 22). Danach versiegelt jeder unter „Akt 1 abschließen“ seinen Hauptverdacht.";
   });
   var H=[
     ["Frage 1 · Der Ort","Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?","Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.","Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],
@@ -314,9 +323,12 @@ JS = r'''<script>
     var row=document.createElement("div"); row.className="hrow"; d.appendChild(row);
     var out=document.createElement("div"); out.className="hints"; d.appendChild(out);
     [1,2,3].forEach(function(s){
-      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.textContent="Stufe "+s;
-      b.addEventListener("click",function(){ if(b.disabled) return; b.disabled=true; b.style.opacity=".5";
-        var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p) });
+      var b=document.createElement("button"); b.type="button"; b.className="ghost"; b.textContent="Stufe "+s+" · −1";
+      var id=qi+"-"+s, G=window.__kgame;
+      function reveal(){ b.disabled=true; var p=document.createElement("div"); p.className="msg"; p.textContent="Stufe "+s+": "+h[s]; out.appendChild(p) }
+      b.addEventListener("click",function(){ if(b.disabled) return; if(G&&!G.openHint(id)) return; reveal() });
+      if(G&&G.hintOpened(id)){ setTimeout(reveal,0) }
+      else if(G&&G.sealed()){ b.disabled=true }
       row.appendChild(b);
     });
     box.appendChild(d);
@@ -334,7 +346,7 @@ page = f'''<!doctype html>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
-<style>{CSS}</style>
+<style>{CSS}{PG.GAME_CSS}</style>
 </head>
 <body>
 <div class="wrap">
@@ -352,7 +364,8 @@ page = f'''<!doctype html>
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
 <p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p>
-<p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Den Ermittlerbogen für euren geheimen Verdacht, die Punkte fürs Duell und die Auflösung gibt es nur im Buch. Legt es beim Spielen immer mit auf den Tisch.</p></section>
+<p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Dort stehen alle Spuren, der Notizbogen und die Auflösung. Legt es beim Spielen immer mit auf den Tisch. Euren geheimen Verdacht und die Punkte führt ihr hier in der Web-App.</p>
+<p class="small"><b>Akte Rot ist die Spielleitung:</b> Am Ende jedes Akts übergibt Blau seinen versiegelten Verdacht und seine Punkte per QR-Code an Rot.</p></section>
 
 <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
 <div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>
@@ -360,13 +373,17 @@ page = f'''<!doctype html>
 <button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
 <div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot">{nav(ROT_NAV, "rot")}</nav></div>
 <div id="navBlau" hidden><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Blau">{nav(BLAU_NAV, "blau")}</nav></div>
-<p class="small" style="margin:0">📖 Ermittlerbogen, Punkte und Auflösung findet ihr im Buch.</p>
+<div class="score"><div><b id="scoreTxt">10 Punkte</b><div id="scoreSub" class="small"></div></div><span aria-hidden="true">🔍</span></div>
+<p class="small" style="margin:0">📖 Notizbogen und Auflösung findet ihr im Buch.</p>
 <div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam">{nav(ALL_NAV, "alle")}</nav></div>
 {"".join(S[k] for k in ["r1","r2","r3","r4","r5","b1","b2","b3","b4","b5","plan","cast"])}
 {CODE}
+{PG.game_html(SUSPECTS)}
 </div>
 <footer>Ein Spiel zum Buch „Ausverkauf am Kiefernsee“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
 </div>
+<script src="js/qrcode.js"></script>
+{PG.game_js(SUSPECTS, B.PORTAL)}
 {JS}
 </body>
 </html>
