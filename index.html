@@ -172,16 +172,13 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <h3>An die Spielleitung übergeben</h3>
 <p class="small">Akte Rot ist die Spielleitung. Akte Rot öffnet in der eigenen Web-App „Akt 1 abschließen“ und tippt auf „QR-Code scannen“. Der Code verrät euren Verdacht nicht.</p>
 <div id="giveQr" class="qrbox"></div>
-<p class="small" style="margin:0">Scannen klappt nicht? Akte Rot kann diesen Code eintippen:</p>
-<p id="giveCode" class="mono bigcode"></p>
 <p class="small" id="giveDed"></p></div>
 <div id="redTake" hidden style="display:flex;flex-direction:column;gap:10px">
 <h3>Spielstand von Akte Blau einlesen</h3>
-<p class="small">Akte Blau zeigt nach dem Versiegeln einen QR-Code. Scannt ihn hier in der Web-App, nicht mit der normalen Kamera.</p>
+<p class="small">Akte Blau zeigt nach dem Versiegeln einen QR-Code. Scannt ihn am besten hier in der Web-App.</p>
 <button id="scanBtn" type="button">QR-Code scannen</button>
 <div id="scanBox" hidden class="scanbox"><video id="scanVid" playsinline muted></video><button id="scanStop" type="button" class="ghost">Abbrechen</button></div>
-<label for="codeIn">… oder Code eintippen</label>
-<div style="display:flex;gap:8px"><input id="codeIn" type="text" autocomplete="off" autocapitalize="characters" placeholder="z. B. K7M-4QX" maxlength="8"><button id="codeTake" type="button">Übernehmen</button></div>
+<p class="small"><b>Scannen klappt hier nicht?</b> Dann scannt den Code einfach mit der normalen Kamera-App eures Handys – genau wie die QR-Codes im Buch. Der Spielstand wird trotzdem übernommen.</p>
 <div id="takeMsg" class="msg" hidden></div></div>
 <div id="teamSum" hidden class="msg ok"></div>
 </div>
@@ -256,7 +253,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
     if(r==="rot"){ $("aktSealed").hidden=false; if(!s){ $("aktSealed").querySelector(".seal").hidden=true } else { $("aktSealed").querySelector(".seal").hidden=false } }
     if(s&&r==="blau"){
       if(!s.code){ s.code=enc(ACT,s.s,ded(ACT)); save() }
-      $("giveCode").textContent=s.code.slice(0,3)+"-"+s.code.slice(3);
       $("giveDed").textContent="Übergeben werden: euer versiegelter Verdacht und eure Abzüge ("+(ded(ACT)?"−"+ded(ACT):"0")+" Punkte).";
       try{var q=qrcode(0,"M");q.addData(PORTAL+"#k="+s.code+(myName()?"&n="+encodeURIComponent(myName()):""));q.make();$("giveQr").innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){$("giveQr").textContent=""}
     }
@@ -279,18 +275,17 @@ button:disabled{opacity:.45;cursor:not-allowed}
   function msg(ok,t){var m=$("takeMsg");m.hidden=false;m.className="msg "+(ok?"ok":"bad");m.textContent=t}
   function take(c,n){
     if(role()!=="rot"){ return false }
-    var p=dec(c); if(!p){ msg(false,"Dieser Code ist ungültig. Bitte noch einmal scannen oder genau abtippen."); return false }
+    var p=dec(c); if(!p){ msg(false,"Dieser QR-Code gehört nicht zum Spiel. Bitte den Code von Akte Blau scannen."); return false }
     if(p.a!==ACT){ msg(false,"Dieser Code gehört zu Akt "+p.a+", nicht zu Akt "+ACT+"."); return false }
     if(G.blue[ACT]){ msg(true,"Der Spielstand von Akte Blau für Akt "+ACT+" ist schon gespeichert."); return true }
     G.blue[ACT]={s:p.s,d:p.d,n:(n||"").slice(0,20)}; save(); $("takeMsg").hidden=true; refresh(); return true
   }
-  $("codeTake").addEventListener("click",function(){ take($("codeIn").value); $("codeIn").value="" });
 
   var stream=null, raf=0;
   function stopScan(){ if(raf) cancelAnimationFrame(raf); raf=0; if(stream){stream.getTracks().forEach(function(t){t.stop()})} stream=null; $("scanBox").hidden=true; $("scanBtn").hidden=false }
-  function loadJsQR(cb){ if(window.jsQR) return cb(); var s=document.createElement("script"); s.src="js/jsQR.js"; s.onload=cb; s.onerror=function(){msg(false,"Der Scanner konnte nicht geladen werden. Bitte den Code eintippen.")}; document.head.appendChild(s) }
+  function loadJsQR(cb){ if(window.jsQR) return cb(); var s=document.createElement("script"); s.src="js/jsQR.js"; s.onload=cb; s.onerror=function(){msg(false,"Der Scanner konnte nicht geladen werden. Scannt den Code mit der normalen Kamera-App.")}; document.head.appendChild(s) }
   $("scanBtn").addEventListener("click",function(){
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ msg(false,"Dieses Handy erlaubt hier keinen Kamerazugriff. Bitte den Code eintippen."); return }
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ msg(false,"Dieses Handy erlaubt hier keinen Kamerazugriff. Scannt den Code mit der normalen Kamera-App."); return }
     loadJsQR(function(){
       navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(st){
         stream=st; var v=$("scanVid"); v.srcObject=st; v.setAttribute("playsinline",""); v.play(); $("scanBox").hidden=false; $("scanBtn").hidden=true;
@@ -300,7 +295,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
             var r=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height,{inversionAttempts:"dontInvert"});
             if(r&&r.data){ var m=r.data.match(/#k=([A-Z0-9]{6})(?:&n=([^&#]*))?/i); var c=m?m[1]:r.data, nn=""; try{nn=m&&m[2]?decodeURIComponent(m[2]):""}catch(e){} stopScan(); take(c,nn); return } }
           raf=requestAnimationFrame(tick) })();
-      }).catch(function(){ msg(false,"Kein Zugriff auf die Kamera. Bitte erlauben oder den Code eintippen.") });
+      }).catch(function(){ msg(false,"Kein Zugriff auf die Kamera. Scannt den Code einfach mit der normalen Kamera-App.") });
     });
   });
   $("scanStop").addEventListener("click",stopScan);

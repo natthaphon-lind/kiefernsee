@@ -105,7 +105,7 @@ iframe{width:100%;height:100%;border:0;display:block}
     cap(S(),"beide","Seite 22: die Auflösung von Akt 1. Ganz unten: Verdacht versiegeln."); book(12); await sleep(5000);
     cap(S(),"rot","Jeder versiegelt geheim seinen Hauptverdacht. Rot tippt auf Siggi Kowalski …"); await view(R,"akt"); await pick(R,"#sus","2"); await click(R,"#sealBtn"); await sleep(1500); await click(R,"#sealYes"); await sleep(2500);
     cap(S(),"blau","… Blau verdächtigt Marco Lenz. Nach dem Versiegeln kann niemand mehr etwas ändern."); await view(B,"akt"); await pick(B,"#sus","3"); await click(B,"#sealBtn"); await sleep(1500); await click(B,"#sealYes"); await sleep(1500); await scrollIn(B,"#blueGive"); await sleep(3500);
-    var code=(el(B,"#giveCode").textContent||"").trim();
+    var code=""; try{code=JSON.parse(localStorage.getItem("kiefernsee-spiel-demoblau")).seal[1].code}catch(e){}
     cap(S(),"rot","Mike zeigt seinen Übergabe-QR-Code, Claudia scannt ihn mit der Web-App. (In der Demo wird der Scan nur nachgestellt.)"); await scrollIn(R,"#redTake"); await sleep(1500); var sbt=el(R,"#scanBtn"); into(R,sbt); await sleep(500); flash(sbt); await sleep(1200); R.contentWindow.__kgame.importCode(code,"Mike"); await sleep(1200); await scrollIn(R,"#teamSum"); await sleep(3000);
     cap(S(),"rot","Fertig! Das Handy von Akte Rot zeigt die Punkte nach Akt 1: 10 − 2 (Fehlversuch von Claudia) − 1 (Hinweis von Mike) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
   }
