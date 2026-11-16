@@ -45,15 +45,15 @@ iframe{width:100%;height:100%;border:0;display:block}
 </div>
 <div class="cap"><span id="stepno" class="stepno"></span><span id="who" class="who beide">DEMO</span><span id="capTxt">Links das Handy von Akte Rot, rechts das von Akte Blau, in der Mitte das aufgeschlagene Buch. Tippt auf „Ablauf vorspielen“ – oder spielt selbst mit beiden Handys.</span></div>
 <main>
-<div class="phone rot"><div class="lab">◆ HANDY AKTE ROT</div><div class="frame"><iframe id="fRot" src="index.html?slot=demorot&v=6" title="Handy Akte Rot"></iframe></div></div>
+<div class="phone rot"><div class="lab">◆ HANDY AKTE ROT</div><div class="frame"><iframe id="fRot" src="index.html?slot=demorot&v=9" title="Handy Akte Rot"></iframe></div></div>
 <div class="book"><div class="lab" id="bookLab">Das Buch · Titel</div><div class="img"><img id="bookImg" src="demo/s-01.jpg" alt="Aufgeschlagene Doppelseite des Buchs"></div></div>
-<div class="phone blau"><div class="lab">● HANDY AKTE BLAU</div><div class="frame"><iframe id="fBlau" src="index.html?slot=demoblau&v=6" title="Handy Akte Blau"></iframe></div></div>
+<div class="phone blau"><div class="lab">● HANDY AKTE BLAU</div><div class="frame"><iframe id="fBlau" src="index.html?slot=demoblau&v=9" title="Handy Akte Blau"></iframe></div></div>
 </main>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)};
   var R=$("fRot"), B=$("fBlau"), running=false, paused=false, stopFlag=false;
-  var SHEETS={1:"Titel",2:"Seiten 2 | 3",3:"Seiten 4 | 5",4:"Seiten 6 | 7",5:"Seiten 8 | 9",6:"Seiten 10 | 11",7:"Seiten 12 | 13",8:"Seiten 14 | 15",9:"Seiten 16 | 17",10:"Seiten 18 | 19",11:"Seiten 20 | 21",12:"Seite 22"};
+  var SHEETS={1:"Titel",2:"Seiten 2 | 3",3:"Seiten 4 | 5",4:"Seiten 6 | 7",5:"Seiten 8 | 9",6:"Seiten 10 | 11",7:"Seiten 12 | 13",8:"Seiten 14 | 15",9:"Seiten 16 | 17",10:"Seiten 18 | 19",11:"Seiten 20 | 21",12:"Seiten 22 | 23",13:"Seite 24"};
   function speed(){return +$("speed").value}
   function sleep(ms){ms*=speed();return new Promise(function(res,rej){var t=0;(function tick(){if(stopFlag)return rej("stop");if(!paused)t+=100;if(t>=ms)return res();setTimeout(tick,100)})()})}
   function cap(n,who,txt){$("stepno").textContent=n?("Schritt "+n):"";var w=$("who");w.className="who "+who;w.textContent={rot:"AKTE ROT",blau:"AKTE BLAU",beide:"BEIDE"}[who];$("capTxt").textContent=txt}
@@ -81,28 +81,29 @@ iframe{width:100%;height:100%;border:0;display:block}
   async function run(){
     var n=0; function S(){return ++n}
     cap(S(),"beide","Die beiden schlagen das Buch auf. Seite 2 erklärt die Regeln, auf Seite 3 steht der Brief der Kommissarin – mit dem Kennwort ganz unten."); book(2); await sleep(5000);
+    cap(S(),"beide","Seite 4 und 5 erklären die Web-App mit Bildern: einrichten, Akten öffnen, Punkte, Hinweise."); book(3); await sleep(5000);
     cap(S(),"beide","Jeder scannt den QR-Code im Brief und gibt das Kennwort TRETBOOT ein.");
     await type(R,"#pw","TRETBOOT"); await submit(R,"#loginForm"); await type(B,"#pw","TRETBOOT"); await submit(B,"#loginForm"); await sleep(1200);
     cap(S(),"beide","Jeder trägt seinen Vornamen ein – hier Claudia (Akte Rot) und Mike (Akte Blau) – und wählt seine Farbe. Ab jetzt sieht jedes Handy nur die eigene Akte und die gemeinsamen Seiten.");
     await type(R,"#pname","Claudia"); await type(B,"#pname","Mike"); await click(R,'[data-role="rot"]'); await click(B,'[data-role="blau"]'); await sleep(2200);
-    cap(S(),"beide","Seite 4: der Auftrag. Drei Fragen – Wo? Wann? Was fehlt? Daneben das Personenregister."); book(3); await sleep(5000);
-    cap(S(),"beide","Seite 6: der Lageplan. Seite 7 zeigt, wie man sitzt: gegenüber, das Buch dazwischen. Die blauen Seiten stehen für Rot auf dem Kopf."); book(4); await sleep(5500);
-    cap(S(),"rot","Seite 8, Akte R-1. Rot liest vor: „In der Kopfwunde stecken Holzsplitter – Lärche, mit grauer Lasur.“"); book(5); await view(R,"r1"); await sleep(2000); await scrollIn(R,"#v-r1 dd:nth-of-type(7)"); await sleep(4000);
-    cap(S(),"blau","Seite 9, Akte B-1. Blau erzählt: Bei der Versammlung hatte Brandner eine rote Ledermappe mit dem Vorvertrag dabei."); await view(B,"b1"); await sleep(5000);
-    cap(S(),"blau","Seite 11, Akte B-2, der Chat der Dauercamper: Marco hat am Donnerstag den Steg grau lasiert. Frage 1 klärt sich – die Splitter stammen vom Bootssteg!"); book(6); await view(B,"b2"); await sleep(6000);
-    cap(S(),"rot","Seite 10, Akte R-2: Auf der Fundliste fehlt die rote Mappe. Brieftasche mit 240 € und Handy sind noch da. Das ist Frage 3."); await view(R,"r2"); await sleep(5500);
-    cap(S(),"rot","Seite 12, Akte R-3, Rundgangsprotokoll: Um 23:30 waren beide Tretboote angekettet, um 0:30 fehlte die „Chantal“."); book(7); await view(R,"r3"); await sleep(5500);
-    cap(S(),"blau","Seite 13, Akte B-3: Blau spielt die Sprachnachricht vom Handy des Opfers ab. 23:41 Uhr – da lebte Brandner also noch."); await view(B,"b3"); await sleep(1200); await audio(B,"b3"); await sleep(1500);
-    cap(S(),"rot","Seite 14, Akte R-4: Rita hat um 1:30 Uhr ein lautes Platschen gehört. War das die Tat?"); book(8); await view(R,"r4"); await sleep(5000);
-    cap(S(),"blau","Seite 15, Akte B-4: Novas Story um 1:28 Uhr – ihr Hund Pepper springt vom Steg ins Wasser. Das Platschen war eine falsche Fährte!"); await view(B,"b4"); await sleep(1500); await scrollIn(B,"#v-b4 .frame:nth-of-type(2)"); await sleep(5000);
-    cap(S(),"rot","Seite 16, Akte R-5: Wetterdaten und der Notruf von Rita um 6:44 Uhr. Der Südwestwind trieb das Boot ins Schilf."); book(9); await view(R,"r5"); await sleep(1500); await audio(R,"r5"); await sleep(1200);
-    cap(S(),"beide","Seite 19: Die beiden einigen sich und prüfen in der Web-App. Erster Versuch – bei Frage 3 tippen sie auf die Brieftasche."); book(10); await view(R,"code");
+    cap(S(),"beide","Seite 6: der Auftrag. Drei Fragen – Wo? Wann? Was fehlt? Daneben das Personenregister."); book(4); await sleep(5000);
+    cap(S(),"beide","Seite 8: der Lageplan. Seite 9 zeigt, wie man sitzt: gegenüber, das Buch dazwischen. Die blauen Seiten stehen für Rot auf dem Kopf."); book(5); await sleep(5500);
+    cap(S(),"rot","Seite 10, Akte R-1. Rot liest vor: „In der Kopfwunde stecken Holzsplitter – Lärche, mit grauer Lasur.“"); book(6); await view(R,"r1"); await sleep(2000); await scrollIn(R,"#v-r1 dd:nth-of-type(7)"); await sleep(4000);
+    cap(S(),"blau","Seite 11, Akte B-1. Blau erzählt: Bei der Versammlung hatte Brandner eine rote Ledermappe mit dem Vorvertrag dabei."); await view(B,"b1"); await sleep(5000);
+    cap(S(),"blau","Seite 13, Akte B-2, der Chat der Dauercamper: Marco hat am Donnerstag den Steg grau lasiert. Frage 1 klärt sich – die Splitter stammen vom Bootssteg!"); book(7); await view(B,"b2"); await sleep(6000);
+    cap(S(),"rot","Seite 12, Akte R-2: Auf der Fundliste fehlt die rote Mappe. Brieftasche mit 240 € und Handy sind noch da. Das ist Frage 3."); await view(R,"r2"); await sleep(5500);
+    cap(S(),"rot","Seite 14, Akte R-3, Rundgangsprotokoll: Um 23:30 waren beide Tretboote angekettet, um 0:30 fehlte die „Chantal“."); book(8); await view(R,"r3"); await sleep(5500);
+    cap(S(),"blau","Seite 15, Akte B-3: Blau spielt die Sprachnachricht vom Handy des Opfers ab. 23:41 Uhr – da lebte Brandner also noch."); await view(B,"b3"); await sleep(1200); await audio(B,"b3"); await sleep(1500);
+    cap(S(),"rot","Seite 16, Akte R-4: Rita hat um 1:30 Uhr ein lautes Platschen gehört. War das die Tat?"); book(9); await view(R,"r4"); await sleep(5000);
+    cap(S(),"blau","Seite 17, Akte B-4: Novas Story um 1:28 Uhr – ihr Hund Pepper springt vom Steg ins Wasser. Das Platschen war eine falsche Fährte!"); await view(B,"b4"); await sleep(1500); await scrollIn(B,"#v-b4 .frame:nth-of-type(2)"); await sleep(5000);
+    cap(S(),"rot","Seite 18, Akte R-5: Wetterdaten und der Notruf von Rita um 6:44 Uhr. Der Südwestwind trieb das Boot ins Schilf."); book(10); await view(R,"r5"); await sleep(1500); await audio(R,"r5"); await sleep(1200);
+    cap(S(),"beide","Seite 21: Die beiden einigen sich und prüfen in der Web-App. Erster Versuch – bei Frage 3 tippen sie auf die Brieftasche."); book(11); await view(R,"code");
     await pick(R,"#q1","2"); await pick(R,"#q2","2"); await pick(R,"#q3","2"); await submit(R,"#codeForm"); await sleep(1000); await scrollIn(R,"#codeMsg"); await sleep(5500);
-    cap(S(),"blau","Falsch, 2 Punkte weg. Blau holt sich auf Seite 20 einen kleinen Tipp zu Frage 3 – das kostet 1 Punkt. Nur einer öffnet ihn und liest vor."); book(11); await view(B,"hints"); await sleep(800);
+    cap(S(),"blau","Falsch, 2 Punkte weg. Blau holt sich auf Seite 22 einen kleinen Tipp zu Frage 3 – das kostet 1 Punkt. Nur einer öffnet ihn und liest vor."); book(12); await view(B,"hints"); await sleep(800);
     var hb=doc(B).querySelectorAll("#hintBox button"); if(hb[6]){ into(B,hb[6]); await sleep(600); flash(hb[6]); await sleep(400); hb[6].click() } await sleep(5500);
     cap(S(),"beide","„Vergleicht, was Brandner dabeihatte, mit der Fundliste.“ Klar: die rote Mappe! Zweiter Versuch …"); await pick(R,"#q3","3"); await submit(R,"#codeForm"); await sleep(1000); await scrollIn(R,"#codeMsg"); await sleep(5000);
-    cap(S(),"beide","Richtig! Die Web-App zeigt es an. Seite 21 warnt mit STOPP – jetzt dürfen sie umblättern."); await sleep(4000);
-    cap(S(),"beide","Seite 22: die Auflösung von Akt 1. Ganz unten: Verdacht versiegeln."); book(12); await sleep(5000);
+    cap(S(),"beide","Richtig! Die Web-App zeigt es an. Seite 23 warnt mit STOPP – jetzt dürfen sie umblättern."); await sleep(4000);
+    cap(S(),"beide","Seite 24: die Auflösung von Akt 1. Ganz unten: Verdacht versiegeln."); book(13); await sleep(5000);
     cap(S(),"rot","Jeder versiegelt geheim seinen Hauptverdacht. Rot tippt auf Siggi Kowalski …"); await view(R,"akt"); await pick(R,"#sus","2"); await click(R,"#sealBtn"); await sleep(1500); await click(R,"#sealYes"); await sleep(2500);
     cap(S(),"blau","… Blau verdächtigt Marco Lenz. Nach dem Versiegeln kann niemand mehr etwas ändern."); await view(B,"akt"); await pick(B,"#sus","3"); await click(B,"#sealBtn"); await sleep(1500); await click(B,"#sealYes"); await sleep(1500); await scrollIn(B,"#blueGive"); await sleep(3500);
     var code=""; try{code=JSON.parse(localStorage.getItem("kiefernsee-spiel-demoblau")).seal[1].code}catch(e){}

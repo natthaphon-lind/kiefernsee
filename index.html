@@ -369,9 +369,9 @@ button:disabled{opacity:.45;cursor:not-allowed}
     if(!a[0]||!a[1]||!a[2]){ m.className="msg bad"; m.textContent="Bitte alle drei Fragen beantworten."; return }
     if(window.__kgame&&window.__kgame.sealed()){ m.className="msg"; m.textContent="Akt 1 ist schon versiegelt."; return }
     var code=(a[0]-1)*16+(a[1]-1)*4+a[2];
-    for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ if(window.__kgame) window.__kgame.wrong(); m.className="msg bad"; m.textContent="Abschnitt "+code+": Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]+" (−2 Punkte)"; return } }
+    for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ if(window.__kgame) window.__kgame.wrong(); m.className="msg bad"; m.textContent="Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]+" (−2 Punkte)"; return } }
     if(window.__kgame) window.__kgame.right();
-    m.className="msg ok"; m.textContent="Abschnitt "+code+": Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 22). Danach versiegelt jeder unter „Akt 1 abschließen“ seinen Hauptverdacht.";
+    m.className="msg ok"; m.textContent="Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 24). Danach versiegelt jeder unter „Akt 1 abschließen“ seinen Hauptverdacht.";
   });
   var H=[
     ["Frage 1 · Der Ort","Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?","Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.","Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],

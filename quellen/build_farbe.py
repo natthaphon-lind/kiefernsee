@@ -25,7 +25,7 @@ for n, p in [("Sans", "Poppins-Regular.ttf"), ("SansM", "Poppins-Medium.ttf"),
              ("Form", "LiberationSans-Regular.ttf"), ("FormB", "LiberationSans-Bold.ttf"),
              ("Sym", "DejaVuSans-Bold.ttf")]:
     pdfmetrics.registerFont(TTFont(n, F + p))
-SYMS = set("◆●✓→✕")
+SYMS = set("◆●✓→✕▶")
 
 
 class SymCanvas(canvas.Canvas):
@@ -215,7 +215,7 @@ RULES = [
     ("Ihr seid zwei Ermittler",
      "Einer übernimmt Akte Rot, der andere Akte Blau. Zu dritt oder zu viert bildet ihr zwei Teams."),
     ("So sitzt ihr",
-     "Setzt euch gegenüber, das Buch liegt aufgeschlagen zwischen euch. Ab Seite 8 gehört jede linke "
+     "Setzt euch gegenüber, das Buch liegt aufgeschlagen zwischen euch. Ab Seite 10 gehört jede linke "
      "Seite Akte Rot, jede rechte Seite Akte Blau. Die blauen Seiten stehen für Rot auf dem Kopf – für "
      "Blau stehen sie richtig herum. So lest ihr beide gleichzeitig und blättert gemeinsam weiter."),
     ("Die goldene Regel",
@@ -226,7 +226,7 @@ RULES = [
      "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Prüfung eurer Antworten. Scannt dafür die QR-Codes "
      "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin. Jeder braucht dafür sein eigenes Handy."),
     ("Fragen und Hilfe",
-     "Jeder Akt endet mit drei Fragen. Einigt euch auf die Antworten und prüft sie im Portal (Seite 19). "
+     "Jeder Akt endet mit drei Fragen. Einigt euch auf die Antworten und prüft sie im Portal (Seite 21). "
      "Hängt ihr fest, helfen Hinweise in drei Stufen: kleiner Tipp, großer Tipp, Lösung."),
     ("Das Duell",
      "Euer Team startet mit 10 Punkten. Jeder Fehlversuch beim Prüfen kostet 2 Punkte, jede Hinweisstufe 1 Punkt – das "
@@ -308,7 +308,7 @@ def task_page():
                  "Euer Auftrag von Hauptkommissarin Wendland")
     y = text(ML, y, W - ML - MR,
              "So geht ihr vor: Schaut euch zuerst gemeinsam den Lageplan an. Dann blättert ihr durch die fünf "
-             "Akten-Doppelseiten (Seite 8 bis 17): links Rot, rechts Blau. Jeder liest seine Seite und erzählt, was er gefunden hat. "
+             "Akten-Doppelseiten (Seite 10 bis 19): links Rot, rechts Blau. Jeder liest seine Seite und erzählt, was er gefunden hat. "
              "Achtung: Einige Spuren sehen wichtig aus und sind es nicht. Andere sehen harmlos aus und sind "
              "der Schlüssel.", "Serif", 10.6, 15) - 6
     for (k, qq, opts) in Q:
@@ -325,7 +325,7 @@ def task_page():
         y -= bh + 14
     text(ML, y - 4, W - ML - MR,
          "Habt ihr euch auf alle drei Antworten geeinigt? Dann prüft sie im Ermittlerportal – "
-         "wie, steht auf Seite 19. Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
+         "wie, steht auf Seite 21. Erst danach lest ihr die Auflösung.", "SerifI", 10.4, 14.5)
     new_page()
 
 
@@ -819,7 +819,7 @@ def sheet_page():
 
 def section_short(a, b, cc):
     if (a, b, cc) == RIGHT:
-        return ("Richtig!", "Weiter: Seite 22")
+        return ("Richtig!", "Weiter: Seite 24")
     for k, (x, r) in enumerate(zip((a, b, cc), RIGHT), 1):
         if x != r:
             return ("Leider falsch.", f"Prüft Frage {k}")
@@ -859,7 +859,7 @@ def code_page():
     yy = y - 70
     for i, t in enumerate(["Kreuzt gemeinsam je eine Antwort an.",
                            "Scannt den QR-Code und wählt dort dieselben Antworten aus.",
-                           "Bei „Richtig!“ geht es auf Seite 22 weiter. Bei „Leider falsch“ zeigt euch die Web-App, "
+                           "Bei „Richtig!“ geht es auf Seite 24 weiter. Bei „Leider falsch“ zeigt euch die Web-App, "
                            "welche Frage noch nicht passt. Jeder Fehlversuch kostet 2 Punkte."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 11); c.drawString(ML + 18, yy, f"{i}.")
         yy = text(ML + 36, yy, bw - 36 - 160, t, "Serif", 11, 15, gray=1, gap=5)
@@ -965,14 +965,17 @@ def solution_page():
     new_page()
 
 
+import sys as _sys, webapp_guide as WG
+B_SELF = _sys.modules[__name__]
 title_page()                       # 1
 rules_page(); letter_page()        # 2 | 3
-task_page(); cast_page()           # 4 | 5
-map_page(); seat_page()            # 6 | 7
+WG.APP = IMG + "app/"; WG.page_start(B_SELF); WG.page_play(B_SELF)   # 4 | 5
+task_page(); cast_page()           # 6 | 7
+map_page(); seat_page()            # 8 | 9
 for r, b in [(r1, b1), (r2, b2), (r3, b3), (r4, b4), (r5, b5)]:
-    r(); b()                       # 8 | 9 … 16 | 17
-sheet_page(); code_page()          # 18 | 19
-hints_page(); notes_page()         # 20 | 21
-solution_page()                    # 22
+    r(); b()                       # 10 | 11 … 18 | 19
+sheet_page(); code_page()          # 20 | 21
+hints_page(); notes_page()         # 22 | 23
+solution_page()                    # 24
 c.save()
 print("Seiten:", PAGE[0] - 1)
