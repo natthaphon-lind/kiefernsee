@@ -407,9 +407,16 @@ def seat_page():
 
 
 def notes_page():
-    y = doc_head("FÜR BEIDE", "Notizen", "Platz für eure Gedanken – die Auflösung steht auf der nächsten Seite.")
-    for k in range(24):
+    y = doc_head("FÜR BEIDE", "Notizen", "Platz für eure Gedanken.")
+    for k in range(19):
         y -= 24; c.setStrokeGray(0.7); c.setLineWidth(0.5); c.line(ML, y, W - MR, y)
+    bh = 92; by = MB + 24
+    fc(ROT); c.roundRect(ML, by, W - ML - MR, bh, 8, fill=1, stroke=0)
+    c.setFillGray(1); c.setFont("SansB", 26); c.drawString(ML + 22, by + bh - 40, "STOPP!")
+    text(ML + 150, by + bh - 22, W - ML - MR - 172,
+         "Auf der nächsten Seite steht die Auflösung. Blättert erst um, wenn die Web-App bei der Prüfung "
+         "„Richtig!“ zeigt.", "SansB", 12, 16, gray=1, gap=0)
+    c.setFillGray(0)
     new_page()
 
 
@@ -799,28 +806,12 @@ def b5():
 # ================= Gemeinsame Seiten hinten =================
 def sheet_page():
     y = doc_head("FÜR BEIDE", "Ermittlerbogen", "Hier sammelt ihr gemeinsam. Kopieren erlaubt.")
-    c.setStrokeGray(0); c.setLineWidth(1)
-    rows = [("Was wir sicher wissen", 8), ("Offene Fragen", 5)]
+    rows = [("Was wir sicher wissen", 13), ("Offene Fragen", 11)]
     for h, n in rows:
         c.setFont("SansB", 11); c.setFillGray(0); c.drawString(ML, y, h); y -= 10
         for k in range(n):
             y -= 22; c.setStrokeGray(0.6); c.setLineWidth(0.5); c.line(ML, y, W - MR, y)
         y -= 26
-    # Kasten: Akt abschließen im Portal
-    bh = 150; bw = W - ML - MR
-    fc(NIGHT); c.rect(ML, y - bh, bw, bh, fill=1, stroke=0)
-    c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 9); c.drawString(ML + 16, y - 22, "AKT 1 ABSCHLIESSEN")
-    c.setFillGray(1); c.setFont("SansB", 13); c.drawString(ML + 16, y - 40, "Verdacht versiegeln und Punkte übergeben")
-    yy = y - 60
-    for i, t in enumerate(["Löst zuerst gemeinsam die drei Fragen (Seite 19).",
-                           "Jeder öffnet „Akt 1 abschließen“ und versiegelt geheim seinen Hauptverdacht.",
-                           "Blau zeigt seinen Übergabe-Code, Rot scannt ihn im Portal. Rots Handy zeigt eure Punkte."], 1):
-        c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
-        yy = text(ML + 32, yy, bw - 32 - 140, t, "Serif", 10, 13.6, gray=1, gap=3)
-    c.setFillGray(0)
-    qx, qy = ML + bw - 16 - 100, y - 18 - 100
-    c.setFillGray(1); c.roundRect(qx - 7, qy - 27, 114, 135, 4, fill=1, stroke=0); c.setFillGray(0)
-    qr(qx, qy, 100, PORTAL + "#akt", "portal")
     new_page()
 
 
@@ -904,6 +895,8 @@ def hints_page():
         c.setFillGray(1); c.setFont("SansB", 18); c.drawCentredString(x + bw3 / 2, y - 40, n); c.setFillGray(0)
         c.setFont("SansB", 13); c.drawCentredString(x + bw3 / 2, y - 76, f"Stufe {n}: {t}")
         text(x + 14, y - 94, bw3 - 28, d, "Serif", 10.4, 14)
+        fc(ROT); c.roundRect(x + bw3 - 62, y - 22, 52, 16, 8, fill=1, stroke=0)
+        c.setFillGray(1); c.setFont("SansB", 9); c.drawCentredString(x + bw3 - 36, y - 17, "−1 Punkt"); c.setFillGray(0)
     y -= 168
     top = y
     sw = W - ML - MR - 170
@@ -913,10 +906,11 @@ def hints_page():
         y = num_step(i, ML, y, t, sw) - 14
     qr(W - MR - 128, top - 112, 118, PORTAL + "#hints", "portal")
     y = min(y, top - 150) - 10
-    c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, y - 58, W - ML - MR, 58, 6, fill=1, stroke=0); c.setFillGray(0)
-    c.setFont("SansB", 11); c.drawString(ML + 14, y - 22, "Tipp")
-    text(ML + 14, y - 38, W - ML - MR - 28,
-         "Sprecht euch ab, wer den Hinweis öffnet. Öffnen beide Handys dieselbe Stufe, kostet sie doppelt.", "Serif", 10.5, 14)
+    c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, y - 96, W - ML - MR, 96, 6, fill=1, stroke=0); c.setFillGray(0)
+    c.setFont("SansB", 11.5); c.drawString(ML + 14, y - 22, "Wichtig: Nur einer öffnet den Hinweis!")
+    text(ML + 14, y - 40, W - ML - MR - 28,
+         "Jedes Handy zählt seine Hinweise selbst. Öffnen Rot und Blau dieselbe Stufe jeweils auf ihrem eigenen Handy, "
+         "werden 2 Punkte abgezogen statt 1. Darum: Einer öffnet den Hinweis und liest ihn laut vor.", "Serif", 10.5, 14.5)
     new_page()
 
 
@@ -953,11 +947,15 @@ def solution_page():
               "SerifI", 10.4, 14.6, gray=1) - 6
     c.setFillGray(1); c.setFont("SansB", 10.5); c.drawString(ML + 16, yy, "Bevor ihr weiterspielt")
     yy -= 18
-    for i, t in enumerate(["Jeder versiegelt im Portal geheim seinen Hauptverdacht (QR-Code auf Seite 18).",
-                           "Blau übergibt seinen Spielstand per QR-Code an Rot. Rots Handy zeigt eure Punkte nach Akt 1.",
+    qtop = yy + 12
+    for i, t in enumerate(["Scannt den QR-Code: Jeder versiegelt geheim auf seinem Handy seinen Hauptverdacht.",
+                           "Blau zeigt danach seinen Übergabe-Code, Rot scannt ihn. Rots Handy zeigt eure Punkte nach Akt 1.",
                            "Gönnt euch eine Pause. In Akt 2 „Wer lügt?“ nehmt ihr die Verdächtigen ins Verhör."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
-        yy = text(ML + 32, yy, W - ML - MR - 50, t, "Serif", 10, 13.6, gray=1, gap=4)
+        yy = text(ML + 32, yy, W - ML - MR - 50 - 130, t, "Serif", 10, 13.6, gray=1, gap=4)
+    qx, qy = W - MR - 16 - 96, qtop - 96
+    c.setFillGray(1); c.roundRect(qx - 7, qy - 27, 110, 131, 4, fill=1, stroke=0); c.setFillGray(0)
+    qr(qx, qy, 96, PORTAL + "#akt", "portal")
     c.setFillGray(0.75); c.setFont("Sans", 8.5); c.drawString(ML + 16, y - bh + 14, "Ende des Prototyps · Akt 2 folgt")
     c.setFillGray(0)
     new_page()
