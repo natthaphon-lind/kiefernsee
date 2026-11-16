@@ -205,28 +205,9 @@ def form_table(x, y, w, rows, lw=150, size=9.6, lead=13):
 
 # ================= SEITE 1: Titel =================
 def title_page():
-    # Foto randlos (3:4), oben und unten minimal beschnitten
-    ph = W * 1448 / 1086
-    c.drawImage(IMG + "cover.jpg", 0, (H - ph) / 2, W, ph)
-    # dunkler Verlauf oben für den Titel, unten für den Autor
-    for i in range(80):
-        c.setFillColorRGB(*NIGHT); c.setFillAlpha(0.85 * (1 - max(0, i - 40) / 40) ** 1.5)
-        c.rect(0, H - 5.5 * (i + 1), W, 5.5, fill=1, stroke=0)
-    for i in range(30):
-        c.setFillColorRGB(*NIGHT); c.setFillAlpha(0.75 * (1 - i / 30) ** 1.3)
-        c.rect(0, 5 * i, W, 5, fill=1, stroke=0)
-    c.setFillAlpha(1)
-    c.setFont("SansM", 11); c.setFillColorRGB(1, 0.8, 0.35); c.drawString(ML, H - 110, "EIN KRIMISPIEL ZU ZWEIT  ·  FALL 1"); c.setFillGray(1)
-    c.setFont("SansB", 46); c.drawString(ML, H - 170, "Ausverkauf")
-    c.drawString(ML, H - 222, "am Kiefernsee")
-    c.setFont("SerifI", 14)
-    c.drawString(ML, H - 262, "Zwei Akten. Eine Nacht. Ein Toter im Tretboot.")
-    c.setFont("Sans", 10.5)
-    c.drawString(ML, H - 300, "Für 2 Spürnasen (oder 2 Teams)  ·  ab 14 Jahren  ·  Akt 1: ca. 45–60 Minuten")
-    c.setFont("SansB", 12); c.setFillGray(1); c.drawString(ML, 72, "Natthaphon Lind")
-    c.setFont("SansB", 9); c.setFillGray(0.85)
-    c.drawString(ML, 50, "PROTOTYP · NUR AKT 1 · ZUM TESTEN")
-    c.setFillGray(0); c.showPage(); PAGE[0] += 1
+    # neues Cover (Variante B), randlos, Format 8,5 x 11 Zoll
+    c.drawImage(IMG + "cover_v2.jpg", 0, 0, W, H)
+    c.showPage(); PAGE[0] += 1
 
 
 # ================= SEITE 2: Spielanleitung =================
@@ -243,14 +224,15 @@ RULES = [
     ("Buch und Ermittlerportal",
      "Das Buch ist eure Hauptakte: Hier stehen alle Spuren, euer Ermittlerbogen und die Auflösung. Das "
      "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Code-Prüfung. Scannt dafür die QR-Codes "
-     "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin."),
+     "im Buch mit der Handykamera – das Kennwort steht im Brief der Kommissarin. Jeder braucht dafür sein eigenes Handy."),
     ("Fragen und Hilfe",
      "Jeder Akt endet mit Fragen. Prüft eure Antworten im Portal oder mit der Code-Prüfung hinten im Buch. "
      "Hängt ihr fest, helfen Hinweise in drei Stufen: Schubs, Richtung, Antwort."),
     ("Das Duell",
-     "Euer Team startet mit 10 Punkten. Jeder falsche Code kostet 2 Punkte, jede Hinweisstufe 1 Punkt. "
-     "Zusätzlich schreibt jeder nach jedem Akt geheim seinen Hauptverdacht auf den Ermittlerbogen. "
-     "Wer am Ende am frühesten richtig lag, gewinnt die Goldene Lupe vom Kiefernsee."),
+     "Euer Team startet mit 10 Punkten. Jeder falsche Code kostet 2 Punkte, jede Hinweisstufe 1 Punkt – das "
+     "Portal zählt automatisch mit. Nach jedem Akt versiegelt jeder im Portal geheim seinen Hauptverdacht. Akte Rot "
+     "ist die Spielleitung: Blau übergibt Verdacht und Punkte per QR-Code an Rot. Wer am Ende am frühesten richtig "
+     "lag, gewinnt die Goldene Lupe vom Kiefernsee."),
 ]
 
 
@@ -265,9 +247,9 @@ def rules_page():
     c.setFillColorRGB(1, 0.95, 0.80); c.setStrokeColorRGB(0.85, 0.7, 0.4); c.roundRect(ML, y - 78, W - ML - MR, 78, 4, fill=1, stroke=1)
     c.setFillGray(0); c.setFont("SansB", 10); c.drawString(ML + 12, y - 18, "Ihr braucht")
     text(ML + 12, y - 34, W - ML - MR - 24,
-         "Zwei Stifte, ein Handy mit Kamera und Internet, etwas Zeit – und gern ein Getränk. Lieber per Handy? "
-         "Jede Akte gibt es auch im Ermittlerportal: Kennwort eingeben, Rot oder Blau wählen. Ermittlerbogen und "
-         "Auflösung gibt es aber nur hier im Buch.", "Serif", 9.6, 13)
+         "Zwei Handys mit Kamera und Internet, einen Stift, etwas Zeit – und gern ein Getränk. Jede Akte gibt es "
+         "auch im Ermittlerportal: Kennwort eingeben, Rot oder Blau wählen. Spuren, Notizbogen und Auflösung "
+         "stehen hier im Buch.", "Serif", 9.6, 13)
     new_page()
 
 
@@ -818,30 +800,27 @@ def b5():
 def sheet_page():
     y = doc_head("FÜR BEIDE", "Ermittlerbogen", "Hier sammelt ihr gemeinsam. Kopieren erlaubt.")
     c.setStrokeGray(0); c.setLineWidth(1)
-    rows = [("Was wir sicher wissen", 6), ("Offene Fragen", 4)]
+    rows = [("Was wir sicher wissen", 8), ("Offene Fragen", 5)]
     for h, n in rows:
-        c.setFont("SansB", 11); c.drawString(ML, y, h); y -= 10
+        c.setFont("SansB", 11); c.setFillGray(0); c.drawString(ML, y, h); y -= 10
         for k in range(n):
             y -= 22; c.setStrokeGray(0.6); c.setLineWidth(0.5); c.line(ML, y, W - MR, y)
         y -= 26
-    c.setFont("SansB", 11); c.setFillGray(0); c.drawString(ML, y, "Geheimer Hauptverdacht nach Akt 1"); y -= 12
-    bw = (W - ML - MR - 20) / 2
-    for k, lab in enumerate(["◆  ROT", "●  BLAU"]):
-        x = ML + k * (bw + 20)
-        sc(ROT if k == 0 else BLAU); c.setLineWidth(1.6); c.rect(x, y - 92, bw, 92, fill=0, stroke=1)
-        fc(ROT if k == 0 else BLAU); c.setFont("SansB", 10); c.drawString(x + 10, y - 18, lab); c.setFillGray(0)
-        c.setFont("Sans", 8.5); c.setFillGray(0.4)
-        c.drawString(x + 10, y - 32, "Name aufschreiben, Ecke umknicken, nicht zeigen!")
-        c.setFillGray(0)
-        c.setStrokeGray(0.6); c.setLineWidth(0.5); c.line(x + 10, y - 66, x + bw - 10, y - 66)
-    y -= 120
-    c.setFont("SansB", 11); c.drawString(ML, y, "Punkte Akt 1"); y -= 18
-    for lab in ["Start", "falsche Codes  × (−2)", "geöffnete Hinweisstufen  × (−1)", "Punkte nach Akt 1"]:
-        c.setFont("Serif", 10.5); c.drawString(ML, y, lab)
-        c.setStrokeGray(0.4); c.rect(ML + 230, y - 5, 60, 18, fill=0, stroke=1)
-        if lab == "Start":
-            c.setFont("SansB", 10.5); c.drawCentredString(ML + 260, y, "10")
-        y -= 26
+    # Kasten: Akt abschließen im Portal
+    bh = 150; bw = W - ML - MR
+    fc(NIGHT); c.rect(ML, y - bh, bw, bh, fill=1, stroke=0)
+    c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 9); c.drawString(ML + 16, y - 22, "AKT 1 ABSCHLIESSEN")
+    c.setFillGray(1); c.setFont("SansB", 13); c.drawString(ML + 16, y - 40, "Verdacht versiegeln und Punkte übergeben")
+    yy = y - 60
+    for i, t in enumerate(["Löst zuerst die Code-Prüfung (Seite 19 oder im Portal).",
+                           "Jeder öffnet „Akt 1 abschließen“ und versiegelt geheim seinen Hauptverdacht.",
+                           "Blau zeigt seinen Übergabe-Code, Rot scannt ihn im Portal. Rots Handy zeigt eure Punkte."], 1):
+        c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
+        yy = text(ML + 32, yy, bw - 32 - 140, t, "Serif", 10, 13.6, gray=1, gap=3)
+    c.setFillGray(0)
+    qx, qy = ML + bw - 16 - 100, y - 18 - 100
+    c.setFillGray(1); c.roundRect(qx - 7, qy - 27, 114, 135, 4, fill=1, stroke=0); c.setFillGray(0)
+    qr(qx, qy, 100, PORTAL + "#akt", "portal")
     new_page()
 
 
@@ -989,8 +968,8 @@ def solution_page():
               "SerifI", 10.4, 14.6, gray=1) - 6
     c.setFillGray(1); c.setFont("SansB", 10.5); c.drawString(ML + 16, yy, "Bevor ihr weiterspielt")
     yy -= 18
-    for i, t in enumerate(["Jeder schreibt geheim seinen Hauptverdacht auf den Ermittlerbogen (Seite 18) und knickt die Ecke um.",
-                           "Tragt eure Punkte nach Akt 1 ein.",
+    for i, t in enumerate(["Jeder versiegelt im Portal geheim seinen Hauptverdacht (QR-Code auf Seite 18).",
+                           "Blau übergibt seinen Spielstand per QR-Code an Rot. Rots Handy zeigt eure Punkte nach Akt 1.",
                            "Gönnt euch eine Pause. In Akt 2 „Wer lügt?“ nehmt ihr die Verdächtigen ins Verhör."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 10); c.drawString(ML + 16, yy, f"{i}.")
         yy = text(ML + 32, yy, W - ML - MR - 50, t, "Serif", 10, 13.6, gray=1, gap=4)
