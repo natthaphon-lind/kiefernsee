@@ -44,7 +44,7 @@ R1_ROWS = [
      "Holzsplitter, Nadelholz, vermutlich Lärche, mit grauer Lasur.\nTodeszeitpunkt nach "
      "Körpertemperatur: zwischen 22:00 und 2:00 Uhr. Wegen der Wassertemperatur nicht enger bestimmbar."),
     ("Tretboot „Chantal“", "Kunststoff (PE), Baujahr 2025. Keine Beschädigungen, keine Blut- oder "
-     "Haaranhaftungen. Die Ankerkette hängt nicht am Boot."),
+     "Haaranhaftungen. Die Sicherungskette hängt nicht am Boot."),
     ("Bearbeitung", "EKHK'in J. Wendland, KK Brüggemann"),
 ]
 S["r1"] = card("r1", "R-1 · Erster Angriff, Kriminalpolizei Seebrück", "Bericht zum Leichenfund",
@@ -304,7 +304,7 @@ JS = r'''<script>
 
   var RIGHT=[2,2,3];
   var WRONG=["Frage 1 passt noch nicht. Woher stammen die Splitter in der Wunde?",
-             "Frage 1 stimmt. Frage 2 passt noch nicht. Hat das Platschen um 1:30 Uhr wirklich mit der Tat zu tun?",
+             "Frage 1 stimmt. Frage 2 passt noch nicht. Wann lebte Brandner nachweislich noch – und wann fehlte das Boot zum ersten Mal?",
              "Frage 1 und 2 stimmen. Frage 3 passt noch nicht. Was hatte Brandner bei der Versammlung in der Hand?"];
   $("codeForm").addEventListener("submit",function(e){
     e.preventDefault();

@@ -255,7 +255,7 @@ def rules_page():
 
 # ================= SEITE 3: Brief =================
 LETTER = """Liebe Kollegin, lieber Kollege,
-Samstagmorgen, 6:38 Uhr: Am Campingplatz am Kiefernsee findet die Brötchenfrau einen Toten im Schilf, direkt neben einem treibenden Tretboot. Es ist Holger Brandner, 58, Projektentwickler aus Frankfurt. Er wollte den Platz kaufen und daraus ein Glamping-Resort machen. Die Dauercamper hätten Ende 2027 gehen müssen.
+Samstagmorgen, 6:42 Uhr: Am Campingplatz am Kiefernsee findet die Brötchenfrau einen Toten im Schilf, direkt neben einem treibenden Tretboot. Es ist Holger Brandner, 58, Projektentwickler aus Frankfurt. Er wollte den Platz kaufen und daraus ein Glamping-Resort machen. Die Dauercamper hätten Ende 2027 gehen müssen.
 Am Abend vorher gab es eine Platzversammlung. Sagen wir es so: Herr Brandner hat dort keine neuen Freunde gefunden.
 Mein Revier ist unterbesetzt, und ich brauche zwei frische Augenpaare. Ich habe die Unterlagen aufgeteilt: Akte Rot enthält, was meine Leute gesichert haben. Akte Blau enthält, was wir auf dem Platz eingesammelt haben – Protokolle, Chats, Handydaten. Keiner von Ihnen hat das ganze Bild. Reden Sie miteinander.
 Für heute will ich nur wissen, was in dieser Nacht überhaupt passiert ist. Den Rest klären wir später.
@@ -341,7 +341,7 @@ CAST = [
     ("Sven Ruppert", "34", "Sicherheitsdienst. Nimmt die Nachtruhe sehr, sehr ernst."),
     ("Nova Sommer", "26", "Gast mit Van auf Stellplatz G2. Vanlife-Influencerin (@nova.on.wheels), "
      "reist mit Hund Pepper."),
-    ("Rita Schäfer", "59", "Kiosk und Brötchendienst, Parzelle 3 direkt am Steg. Hat den Toten gefunden."),
+    ("Rita Schäfer", "59", "Kiosk und Brötchendienst, Parzelle 3 gleich oberhalb vom Steg. Hat den Toten gefunden."),
 ]
 
 
@@ -400,7 +400,7 @@ def seat_page():
     y = text(ML, y, W - ML - MR - 110,
              "Linke Seite: Akte Rot, für Rot richtig herum. Rechte Seite: Akte Blau, für Blau richtig herum. "
              "Blättert immer gemeinsam um. Ihr dürft vorlesen und erzählen, so viel ihr wollt – nur nicht "
-             "rüberschauen.\nLieber am Handy? Dann scannt den Portal-Code, gebt das Kennwort ein und wählt eure Akte.",
+             "rüberschauen.\nNoch nicht in der Web-App? Dann scannt den Code, gebt das Kennwort ein und wählt eure Akte.",
              "Serif", 10.4, 14.6)
     qr(W - MR - 104, ty - 200, 100, PORTAL, "portal")
     new_page()
@@ -437,7 +437,7 @@ def r1():
          "Holzsplitter, Nadelholz, vermutlich Lärche, mit grauer Lasur.\nTodeszeitpunkt nach "
          "Körpertemperatur: zwischen 22:00 und 2:00 Uhr. Wegen der Wassertemperatur nicht enger bestimmbar."),
         ("Tretboot\n„Chantal“", "Kunststoff (PE), Baujahr 2025. Keine Beschädigungen, keine Blut- oder "
-         "Haaranhaftungen. Die Ankerkette hängt nicht am Boot."),
+         "Haaranhaftungen. Die Sicherungskette hängt nicht am Boot."),
         ("Bearbeitung", "EKHK'in J. Wendland, KK Brüggemann"),
     ]
     y = form_table(ML, y, W - ML - MR - 20, rows, lw=118, size=9.2, lead=12.4)
@@ -530,15 +530,15 @@ def r3():
 
 RITA = [
     ("F", "Frau Schäfer, Sie haben Herrn Brandner gefunden. Erzählen Sie bitte."),
-    ("A", "Um 6:38. Ich fahr jeden Morgen die Brötchen aus, mit dem Lastenrad am Ufer lang. Da seh ich die "
+    ("A", "Um 6:42. Ich fahr jeden Morgen die Brötchen aus, mit dem Lastenrad am Ufer lang. Da seh ich die "
           "Chantal im Schilf hängen. Und daneben im Wasser … den Herrn Brandner. Ich hab sofort die 110 angerufen."),
     ("F", "Ist Ihnen in der Nacht etwas aufgefallen?"),
-    ("A", "Ich wohn ja auf Parzelle 3, direkt am Steg. So gegen halb zwei hat's da unten richtig laut PLATSCH "
+    ("A", "Ich wohn ja auf Parzelle 3, gleich oberhalb vom Steg. So gegen halb zwei hat's da unten richtig laut PLATSCH "
           "gemacht. Ich hab noch gedacht: Jetzt ist einer reingefallen."),
     ("F", "Sind Sie nachsehen gegangen?"),
     ("A", "Ich hatte schon die Lockenwickler drin. Da geh ich nicht mehr raus."),
     ("F", "Und vorher, so gegen Mitternacht?"),
-    ("A", "Da hab ich geschlafen. Ich schlaf ab zehn. Außer donnerstags, da kommt „Bauer sucht Frau“."),
+    ("A", "Da hab ich geschlafen. Ich schlaf ab zehn. Außer donnerstags, da kommt mein Krimi."),
     ("F", "Hatte Herr Brandner bei Ihnen Brötchen bestellt?"),
     ("A", "Zwei Laugenbrezeln für Chalet 3. Die liegen jetzt noch in meinem Korb."),
 ]
@@ -740,15 +740,15 @@ def b4():
                  "Gesichert vom Profil von Nova Sommer, Gast auf Stellplatz G2")
     y = text(ML, y, W - ML - MR - 30,
              "Frau Sommer postet fast jeden Abend eine „Story“ – kurze Fotos, die nach 24 Stunden wieder "
-             "verschwinden. Wir haben sie vorher gesichert. Sie liegen im Ermittlerportal als Spur B-4.\n"
+             "verschwinden. Wir haben sie vorher gesichert. Die Fotos liegen im Ermittlerportal.\n"
              "Aussage Nova Sommer, Samstag, 8:15 Uhr: „Ich mach jeden Abend ein paar Storys, das ist mein Job. "
              "Was drauf ist, sehen Sie ja selbst. Den Herrn Brandner fand ich ehrlich gesagt ganz okay. "
              "Er hat mir gesagt, für Vans gibt's im Resort eine Sonderspur.“", "Serif", 10.6, 15.2) - 14
     c.setStrokeGray(0); c.setLineWidth(1); c.rect(ML, y - 210, W - ML - MR - 30, 210, fill=0, stroke=1)
-    c.setFont("SansB", 13); c.drawString(ML + 16, y - 28, "Spur B-4 im Ermittlerportal")
+    c.setFont("SansB", 13); c.drawString(ML + 16, y - 28, "Novas Story ansehen")
     text(ML + 16, y - 50, 240,
-         "1. Code scannen.\n2. Kennwort aus dem Brief eingeben.\n3. „Spur B-4“ öffnen und die beiden "
-         "Fotos genau ansehen: Uhrzeit, Ort, Licht, was passiert.\nWas ihr seht, beschreibt ihr Akte Rot.",
+         "1. Code scannen – die Web-App öffnet Novas Story direkt.\n2. Beide Fotos genau ansehen: Uhrzeit, Ort, "
+         "Licht, was passiert.\n3. Beschreibt Akte Rot, was ihr seht.",
          "Serif", 10.4, 14.6, gap=3)
     qr(W - MR - 30 - 150, y - 186, 136, PORTAL + "#b4", "portal")
     new_page()
@@ -858,7 +858,7 @@ def code_page():
     c.setFillGray(1); c.setFont("SansB", 14); c.drawString(ML + 18, y - 44, "Einigt euch – dann scannen.")
     yy = y - 70
     for i, t in enumerate(["Kreuzt gemeinsam je eine Antwort an.",
-                           "Scannt den QR-Code und wählt dort dieselben Antworten aus.",
+                           "Einer von euch scannt den QR-Code und wählt dort dieselben Antworten aus. Ein Handy reicht.",
                            "Bei „Richtig!“ geht es auf Seite 24 weiter. Bei „Leider falsch“ zeigt euch die Web-App, "
                            "welche Frage noch nicht passt. Jeder Fehlversuch kostet 2 Punkte."], 1):
         c.setFillColorRGB(1, 0.8, 0.35); c.setFont("SansB", 11); c.drawString(ML + 18, yy, f"{i}.")

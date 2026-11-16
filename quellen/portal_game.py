@@ -8,7 +8,7 @@ def game_html(suspects):
     opts = "".join(f'<option value="{i}">{E(n)}</option>' for i, n in enumerate(suspects))
     return f'''<section id="v-akt" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Abschluss</span><h2>Akt 1 abschließen</h2>
-<div id="aktLocked" class="msg">Zuerst löst ihr gemeinsam <a href="#code">Akt 1</a> und prüft eure Antworten. Danach versiegelt hier jeder seinen Hauptverdacht.</div>
+<div id="aktLocked" class="msg">Versiegelt euren Verdacht erst, wenn ihr <a href="#code">Akt 1</a> gelöst und die Auflösung im Buch (Seite 24) gelesen habt.</div>
 <div id="aktOpen" hidden style="display:flex;flex-direction:column;gap:12px">
 <p>Wer steckt eurer Meinung nach hinter allem? Jeder wählt <b>geheim auf seinem eigenen Handy</b> einen Hauptverdacht. Zeigt dem anderen nicht euren Bildschirm.</p>
 <label for="sus">Mein Hauptverdacht nach Akt 1</label>
@@ -114,7 +114,7 @@ def game_js(suspects, portal):
   function refresh(){
     score();
     var r=role(), s=G.seal[ACT];
-    $("aktLocked").hidden=!!G.solved[ACT]||!!s; $("aktOpen").hidden=!G.solved[ACT]||!!s; $("aktSealed").hidden=!s;
+    $("aktLocked").hidden=!!s; $("aktOpen").hidden=!!s; $("aktSealed").hidden=!s;
     if(s){ $("sealTime").textContent=" um "+s.t+" Uhr. "+(myName()?myName()+", dein":"Dein")+" Verdacht bleibt bis zur Auflösung geheim."; }
     $("blueGive").hidden=!(s&&r==="blau"); $("redTake").hidden=(r!=="rot");
     if(r==="rot"){ $("aktSealed").hidden=false; if(!s){ $("aktSealed").querySelector(".seal").hidden=true } else { $("aktSealed").querySelector(".seal").hidden=false } }
