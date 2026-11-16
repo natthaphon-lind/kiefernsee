@@ -590,6 +590,8 @@ def r5():
              "Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.",
              "Mono", 9.2, 13) - 18
     c.setFont("SansB", 12); c.drawString(ML, y, "Mitschnitt des Notrufs")
+    c.setFont("SerifI", 10); c.setFillGray(0.3)
+    c.drawString(ML + pdfmetrics.stringWidth("Mitschnitt des Notrufs", "SansB", 12) + 10, y, "– ihr dürft ihn Akte Blau vorspielen."); c.setFillGray(0)
     y -= 10
     bw = W - ML - MR - 30
     tw = bw - 130
@@ -906,11 +908,13 @@ def hints_page():
         y = num_step(i, ML, y, t, sw) - 14
     qr(W - MR - 128, top - 112, 118, PORTAL + "#hints", "portal")
     y = min(y, top - 150) - 10
-    c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, y - 96, W - ML - MR, 96, 6, fill=1, stroke=0); c.setFillGray(0)
+    c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, y - 112, W - ML - MR, 112, 6, fill=1, stroke=0); c.setFillGray(0)
     c.setFont("SansB", 11.5); c.drawString(ML + 14, y - 22, "Wichtig: Nur einer öffnet den Hinweis!")
-    text(ML + 14, y - 40, W - ML - MR - 28,
-         "Jedes Handy zählt seine Hinweise selbst. Öffnen Rot und Blau dieselbe Stufe jeweils auf ihrem eigenen Handy, "
-         "werden 2 Punkte abgezogen statt 1. Darum: Einer öffnet den Hinweis und liest ihn laut vor.", "Serif", 10.5, 14.5)
+    yy = text(ML + 14, y - 40, W - ML - MR - 28,
+              "Jedes Handy zählt seine Hinweise selbst. Öffnen Rot und Blau dieselbe Stufe jeweils auf ihrem eigenen Handy, "
+              "werden 2 Punkte abgezogen statt 1.", "Serif", 10.5, 14.5)
+    fc(ROT); c.rect(ML + 14, y - 100, 4, 26, fill=1, stroke=0); c.setFillGray(0)
+    c.setFont("SansB", 12.5); c.drawString(ML + 26, y - 92, "Darum: Nur einer öffnet den Hinweis und liest ihn laut vor.")
     new_page()
 
 

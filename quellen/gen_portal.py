@@ -86,6 +86,7 @@ S["r5"] = card("r5", "R-5 · Wetterstation an der Gaststätte Seeklause, Nacht 2
                f'<div class="scroll"><table class="mono"><thead><tr><th>Uhrzeit</th><th>Temp. °C</th><th>Wind aus</th><th>km/h</th></tr></thead>'
                f'<tbody>{wt}</tbody></table></div><p class="small mono">Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.</p>'
                '<h2 style="font-size:18px">Mitschnitt des Notrufs</h2>'
+               '<p>Ihr dürft ihn Akte Blau vorspielen.</p>'
                '<div class="voice"><span class="mono small">Leitstelle Seebrück · Sa 26.09. · 06:44 Uhr · 0:21</span>'
                '<audio controls preload="metadata" src="audio/notruf-r5.mp3">Euer Browser kann die Aufnahme nicht abspielen.</audio></div>'
                f'<details class="voice"><summary>Abschrift anzeigen</summary><div class="mono" style="font-size:14px;display:flex;flex-direction:column;gap:6px">{notruf}</div></details>', "rot")
