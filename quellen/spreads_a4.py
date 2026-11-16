@@ -27,6 +27,6 @@ for k,(L,R) in enumerate(pairs):
         src=r.pages[idx]
         pg.merge_transformed_page(src,Transformation().scale(s).translate(x0+off,y0))
     w.add_page(pg)
-w.add_metadata({"/Title":"Ausverkauf am Kiefernsee – Akt 1 – Testdruck A4 (Doppelseiten)","/Author":"Natthaphon Lind"})
+w.add_metadata({"/Title":"Ermittlungsfall Campingplatz – Akt 1 – Testdruck A4 (Doppelseiten)","/Author":"Natthaphon Lind"})
 w.write("Kiefernsee_Akt1_Testdruck_A4_Doppelseiten.pdf")
 print(len(pairs),"Blätter, Maßstab",round(s*100),"%")

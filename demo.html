@@ -75,7 +75,7 @@ iframe{width:100%;height:100%;border:0;display:block}
       if(a.ended||stopFlag){clearInterval(t);if(stopFlag)a.pause();res();return}
       if(paused&&!a.paused)a.pause(); else if(!paused&&a.paused)a.play().catch(function(){});
     },200)})}
-  function clearSlots(){["demorot","demoblau"].forEach(function(s){["kiefernsee-fall1","kiefernsee-rolle","kiefernsee-spiel"].forEach(function(k){try{localStorage.removeItem(k+"-"+s)}catch(e){}})})}
+  function clearSlots(){["demorot","demoblau"].forEach(function(s){["kiefernsee-fall1","kiefernsee-rolle","kiefernsee-spiel","kiefernsee-name"].forEach(function(k){try{localStorage.removeItem(k+"-"+s)}catch(e){}})})}
   function reload(){return Promise.all([R,B].map(function(f){return new Promise(function(res){f.onload=function(){f.onload=null;res()};f.src=f.src.split("#")[0]})}))}
 
   async function run(){
@@ -83,8 +83,8 @@ iframe{width:100%;height:100%;border:0;display:block}
     cap(S(),"beide","Die beiden schlagen das Buch auf. Seite 2 erklärt die Regeln, auf Seite 3 steht der Brief der Kommissarin – mit dem Kennwort ganz unten."); book(2); await sleep(5000);
     cap(S(),"beide","Jeder scannt den QR-Code im Brief und gibt das Kennwort TRETBOOT ein.");
     await type(R,"#pw","TRETBOOT"); await submit(R,"#loginForm"); await type(B,"#pw","TRETBOOT"); await submit(B,"#loginForm"); await sleep(1200);
-    cap(S(),"beide","Jeder wählt seine Farbe. Ab jetzt sieht jedes Handy nur die eigene Akte und die gemeinsamen Seiten.");
-    await click(R,'[data-role="rot"]'); await click(B,'[data-role="blau"]'); await sleep(2200);
+    cap(S(),"beide","Jeder trägt seinen Vornamen ein – hier Tom und Lisa – und wählt seine Farbe. Ab jetzt sieht jedes Handy nur die eigene Akte und die gemeinsamen Seiten.");
+    await type(R,"#pname","Tom"); await type(B,"#pname","Lisa"); await click(R,'[data-role="rot"]'); await click(B,'[data-role="blau"]'); await sleep(2200);
     cap(S(),"beide","Seite 4: der Auftrag. Drei Fragen – Wo? Wann? Was fehlt? Daneben das Personenregister."); book(3); await sleep(5000);
     cap(S(),"beide","Seite 6: der Lageplan. Seite 7 zeigt, wie man sitzt: gegenüber, das Buch dazwischen. Die blauen Seiten stehen für Rot auf dem Kopf."); book(4); await sleep(5500);
     cap(S(),"rot","Seite 8, Akte R-1. Rot liest vor: „In der Kopfwunde stecken Holzsplitter – Lärche, mit grauer Lasur.“"); book(5); await view(R,"r1"); await sleep(2000); await scrollIn(R,"#v-r1 dd:nth-of-type(7)"); await sleep(4000);
@@ -107,7 +107,7 @@ iframe{width:100%;height:100%;border:0;display:block}
     cap(S(),"blau","… Blau verdächtigt Marco Lenz. Nach dem Versiegeln kann niemand mehr etwas ändern."); await view(B,"akt"); await pick(B,"#sus","3"); await click(B,"#sealBtn"); await sleep(1500); await click(B,"#sealYes"); await sleep(1500); await scrollIn(B,"#blueGive"); await sleep(3500);
     var code=(el(B,"#giveCode").textContent||"").trim();
     cap(S(),"rot","Akte Blau zeigt den Übergabe-Code. Am echten Handy scannt Akte Rot den QR-Code – hier in der Demo tippen wir ihn ab: "+code); await scrollIn(R,"#redTake"); await sleep(1500); await type(R,"#codeIn",code); await click(R,"#codeTake"); await sleep(1200); await scrollIn(R,"#teamSum"); await sleep(3000);
-    cap(S(),"rot","Fertig! Das Handy von Akte Rot zeigt die Punkte nach Akt 1: 10 − 2 (falsche Prüfung) − 1 (Hinweis von Akte Blau) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
+    cap(S(),"rot","Fertig! Das Handy von Akte Rot zeigt die Punkte nach Akt 1: 10 − 2 (Fehlversuch von Tom) − 1 (Hinweis von Lisa) = 7. Beide Verdachte bleiben bis zur großen Auflösung versiegelt.");
   }
   $("play").addEventListener("click",async function(){
     if(running)return; running=true; stopFlag=false; paused=false; $("play").disabled=true; $("pause").disabled=false;

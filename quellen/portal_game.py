@@ -39,7 +39,7 @@ def game_html(suspects):
 </section>
 <section id="v-neu" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Einstellungen</span><h2>Neues Spiel starten</h2>
-<p>Löscht auf diesem Handy alle Punkte, versiegelten Verdachte und die gewählte Akte. Das Kennwort bleibt gespeichert.</p>
+<p>Löscht auf diesem Handy alle Punkte, versiegelten Verdachte, die gewählte Akte und deinen Namen. Das Kennwort bleibt gespeichert.</p>
 <p class="small">Spielt ihr zu zweit von vorn, macht das bitte auf beiden Handys.</p>
 <button id="resetBtn" type="button" class="ghost">Spielstand löschen</button>
 <div id="resetAsk" class="confirm" hidden><span><b>Wirklich alles löschen?</b> Das lässt sich nicht rückgängig machen.</span>
@@ -69,12 +69,15 @@ def game_js(suspects, portal):
 (function(){
   var SUS=''' + json.dumps(suspects, ensure_ascii=False) + r''', PORTAL=''' + json.dumps(portal) + r''';
   var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
-  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, ACT=1, START=10;
+  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, NKEY="kiefernsee-name"+SFX, ACT=1, START=10;
   var $=function(id){return document.getElementById(id)};
   function load(){try{var s=JSON.parse(localStorage.getItem(GKEY)||"null");if(s&&s.v===1)return s}catch(e){}return {v:1,ded:{},hints:{},solved:{},seal:{},blue:{}}}
   var G=load();
   function save(){try{localStorage.setItem(GKEY,JSON.stringify(G))}catch(e){}}
   function role(){try{return localStorage.getItem(RKEY)}catch(e){return null}}
+  function myName(){try{return localStorage.getItem(NKEY)||""}catch(e){return ""}}
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function who(kind,n){return "Akte "+kind+(n?" ("+n+")":"")}
   function ded(a){var d=G.ded[a]||{c:0,h:0};return d.c*2+d.h}
   function sealed(a){return !!G.seal[a]}
 
@@ -93,7 +96,7 @@ def game_js(suspects, portal):
   function score(){
     var r=role(), el=$("scoreTxt"), sub=$("scoreSub"); if(!el) return;
     if(r==="rot"){ var b=G.blue[ACT]; var t=START-ded(ACT)-(b?b.d:0);
-      el.textContent=t+" Punkte"; sub.textContent=b?"Teamstand, Akte Blau ist eingerechnet":"Teamstand · Abzüge von Akte Blau kommen am Ende des Akts dazu"; }
+      el.textContent=t+" Punkte"; sub.textContent=b?"Teamstand, "+who("Blau",b.n)+" ist eingerechnet":"Teamstand · Abzüge von Akte Blau kommen am Ende des Akts dazu"; }
     else { el.textContent=(ded(ACT)?"−"+ded(ACT):"0")+" Punkte"; sub.textContent="Eure Abzüge auf diesem Handy · gehen am Ende an Akte Rot"; }
   }
 
@@ -106,7 +109,7 @@ def game_js(suspects, portal):
     sealed:function(){ return sealed(ACT) },
     solved:function(){ return !!G.solved[ACT] },
     refresh:function(){ refresh() },
-    importCode:function(c){ return take(c) }
+    importCode:function(c,n){ return take(c,n) }
   };
 
   function hhmm(){var d=new Date();return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)}
@@ -115,18 +118,18 @@ def game_js(suspects, portal):
     score();
     var r=role(), s=G.seal[ACT];
     $("aktLocked").hidden=!!G.solved[ACT]||!!s; $("aktOpen").hidden=!G.solved[ACT]||!!s; $("aktSealed").hidden=!s;
-    if(s){ $("sealTime").textContent=" um "+s.t+" Uhr. Dein Verdacht bleibt bis zur Auflösung geheim."; }
+    if(s){ $("sealTime").textContent=" um "+s.t+" Uhr. "+(myName()?myName()+", dein":"Dein")+" Verdacht bleibt bis zur Auflösung geheim."; }
     $("blueGive").hidden=!(s&&r==="blau"); $("redTake").hidden=(r!=="rot");
     if(r==="rot"){ $("aktSealed").hidden=false; if(!s){ $("aktSealed").querySelector(".seal").hidden=true } else { $("aktSealed").querySelector(".seal").hidden=false } }
     if(s&&r==="blau"){
       if(!s.code){ s.code=enc(ACT,s.s,ded(ACT)); save() }
       $("giveCode").textContent=s.code.slice(0,3)+"-"+s.code.slice(3);
       $("giveDed").textContent="Übergeben werden: euer versiegelter Verdacht und eure Abzüge ("+(ded(ACT)?"−"+ded(ACT):"0")+" Punkte).";
-      try{var q=qrcode(0,"M");q.addData(PORTAL+"#k="+s.code);q.make();$("giveQr").innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){$("giveQr").textContent=""}
+      try{var q=qrcode(0,"M");q.addData(PORTAL+"#k="+s.code+(myName()?"&n="+encodeURIComponent(myName()):""));q.make();$("giveQr").innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){$("giveQr").textContent=""}
     }
     var b=G.blue[ACT], ts=$("teamSum");
     if(r==="rot"&&b){ ts.hidden=false;
-      ts.innerHTML="🔒 Verdacht von Akte Blau für Akt 1 gespeichert.<br>Punkte nach Akt 1: "+START+" − Rot "+ded(ACT)+" − Blau "+b.d+" = <b>"+(START-ded(ACT)-b.d)+" Punkte</b>"+
+      ts.innerHTML="🔒 Verdacht von "+esc(who("Blau",b.n))+" für Akt 1 gespeichert.<br>Punkte nach Akt 1: "+START+" − "+esc(myName()||"Rot")+" "+ded(ACT)+" − "+esc(b.n||"Blau")+" "+b.d+" = <b>"+(START-ded(ACT)-b.d)+" Punkte</b>"+
         (s?"<br>Beide Verdachte sind versiegelt. Die Siegel öffnen sich bei der großen Auflösung im letzten Akt. Akt 2 „Wer lügt?“ folgt im fertigen Buch.":"<br>Jetzt noch deinen eigenen Verdacht oben versiegeln.");
     } else ts.hidden=true;
     // Code-Prüfung und Hinweise nach dem Versiegeln sperren
@@ -141,12 +144,12 @@ def game_js(suspects, portal):
 
   // ---------- Einlesen bei Rot ----------
   function msg(ok,t){var m=$("takeMsg");m.hidden=false;m.className="msg "+(ok?"ok":"bad");m.textContent=t}
-  function take(c){
+  function take(c,n){
     if(role()!=="rot"){ return false }
     var p=dec(c); if(!p){ msg(false,"Dieser Code ist ungültig. Bitte noch einmal scannen oder genau abtippen."); return false }
     if(p.a!==ACT){ msg(false,"Dieser Code gehört zu Akt "+p.a+", nicht zu Akt "+ACT+"."); return false }
     if(G.blue[ACT]){ msg(true,"Der Spielstand von Akte Blau für Akt "+ACT+" ist schon gespeichert."); return true }
-    G.blue[ACT]={s:p.s,d:p.d}; save(); $("takeMsg").hidden=true; refresh(); return true
+    G.blue[ACT]={s:p.s,d:p.d,n:(n||"").slice(0,20)}; save(); $("takeMsg").hidden=true; refresh(); return true
   }
   $("codeTake").addEventListener("click",function(){ take($("codeIn").value); $("codeIn").value="" });
 
@@ -162,7 +165,7 @@ def game_js(suspects, portal):
         (function tick(){ if(!stream) return;
           if(v.readyState===v.HAVE_ENOUGH_DATA){ var w=v.videoWidth,h=v.videoHeight,sc=Math.min(1,640/Math.max(w,h)); cv.width=w*sc; cv.height=h*sc; cx.drawImage(v,0,0,cv.width,cv.height);
             var r=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height,{inversionAttempts:"dontInvert"});
-            if(r&&r.data){ var m=r.data.match(/#k=([A-Z0-9]{6})/i); var c=m?m[1]:r.data; stopScan(); take(c); return } }
+            if(r&&r.data){ var m=r.data.match(/#k=([A-Z0-9]{6})(?:&n=([^&#]*))?/i); var c=m?m[1]:r.data, nn=""; try{nn=m&&m[2]?decodeURIComponent(m[2]):""}catch(e){} stopScan(); take(c,nn); return } }
           raf=requestAnimationFrame(tick) })();
       }).catch(function(){ msg(false,"Kein Zugriff auf die Kamera. Bitte erlauben oder den Code eintippen.") });
     });
@@ -172,11 +175,12 @@ def game_js(suspects, portal):
   // ---------- Neues Spiel ----------
   $("resetBtn").addEventListener("click",function(){ $("resetAsk").hidden=false });
   $("resetNo").addEventListener("click",function(){ $("resetAsk").hidden=true });
-  $("resetYes").addEventListener("click",function(){ try{localStorage.removeItem(GKEY);localStorage.removeItem(RKEY)}catch(e){} location.hash=""; location.reload() });
+  $("resetYes").addEventListener("click",function(){ try{localStorage.removeItem(GKEY);localStorage.removeItem(RKEY);localStorage.removeItem(NKEY)}catch(e){} location.hash=""; location.reload() });
 
   // Link aus Blaus QR-Code mit der normalen Kamera geöffnet
-  function hashImport(){ var m=(location.hash||"").match(/^#k=([A-Z0-9]{6})$/i); if(!m) return;
-    if(role()==="rot"&&!$("app").hidden){ take(m[1]); history.replaceState(null,"",location.pathname+location.search+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
+  function hashImport(){ var m=(location.hash||"").match(/^#k=([A-Z0-9]{6})(?:&n=([^&#]*))?$/i); if(!m) return;
+    var nn=""; try{nn=m[2]?decodeURIComponent(m[2]):""}catch(e){}
+    if(role()==="rot"&&!$("app").hidden){ take(m[1],nn); history.replaceState(null,"",location.pathname+location.search+"#akt"); window.dispatchEvent(new HashChangeEvent("hashchange")) } }
   window.addEventListener("hashchange",hashImport);
   window.__kgame.hashImport=hashImport;
   refresh();

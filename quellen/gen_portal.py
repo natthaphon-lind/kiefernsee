@@ -259,7 +259,7 @@ CODE = '''<section id="v-code" class="card alle" hidden>
 JS = r'''<script>
 (function(){
   var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
-  var KEY="kiefernsee-fall1"+SFX, RKEY="kiefernsee-rolle"+SFX;
+  var KEY="kiefernsee-fall1"+SFX, RKEY="kiefernsee-rolle"+SFX, NKEY="kiefernsee-name"+SFX;
   var $=function(id){return document.getElementById(id)};
   function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
   function set(k,v){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
@@ -273,8 +273,10 @@ JS = r'''<script>
     if(!quiet){ $("v-"+v).scrollIntoView({behavior:"smooth",block:"start"}) }
   }
   function setRole(r){
+    var nm=($("pname").value||"").trim().slice(0,20); if(nm) set(NKEY,nm);
     set(RKEY,r); $("role").hidden=true; $("app").hidden=false; $("confirm").hidden=true;
-    var b=$("badge"); b.className="badge "+r; $("badgeTxt").textContent= r==="rot" ? "◆ AKTE ROT" : "● AKTE BLAU";
+    var b=$("badge"); b.className="badge "+r; var who=get(NKEY);
+    $("badgeTxt").textContent= (r==="rot" ? "◆ AKTE ROT" : "● AKTE BLAU") + (who ? " · "+who : "");
     $("navRot").hidden = r!=="rot"; $("navBlau").hidden = r!=="blau";
     show(r==="rot"?"r1":"b1",true);
     if(window.__kgame) window.__kgame.refresh();
@@ -297,7 +299,7 @@ JS = r'''<script>
   document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ setRole(b.getAttribute("data-role")) }) });
   $("switch").addEventListener("click",function(){ $("confirm").hidden=false });
   $("noSwitch").addEventListener("click",function(){ $("confirm").hidden=true });
-  $("yesSwitch").addEventListener("click",function(){ set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
+  $("yesSwitch").addEventListener("click",function(){ $("pname").value=get(NKEY)||""; set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
   document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
 
   var RIGHT=[2,2,3];
@@ -363,6 +365,8 @@ page = f'''<!doctype html>
 
 <section id="role" class="card" hidden><h2>Welche Akte habt ihr?</h2>
 <p>Jeder wählt auf seinem eigenen Handy seine Farbe. Ihr seht dann nur eure eigene Akte – und die gemeinsamen Seiten.</p>
+<label for="pname">Dein Vorname <span class="small">(freiwillig – dann spricht euch die Web-App mit Namen an)</span></label>
+<input id="pname" type="text" maxlength="20" autocomplete="given-name" placeholder="z. B. Lisa">
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
 <p class="small">Spielt einer mit dem Buch? Dann wählt der andere hier die Farbe, die im Buch frei bleibt.</p>
@@ -382,7 +386,7 @@ page = f'''<!doctype html>
 {CODE}
 {PG.game_html(SUSPECTS)}
 </div>
-<footer>Ein Spiel zum Buch „Ausverkauf am Kiefernsee“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
+<footer>Ein Spiel zum Buch „Ermittlungsfall Campingplatz – Das Krimispiel zu zweit“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
 </div>
 <script src="js/qrcode.js"></script>
 {PG.game_js(SUSPECTS, B.PORTAL)}

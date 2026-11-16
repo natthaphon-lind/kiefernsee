@@ -73,7 +73,7 @@ GRASS=(0.87,0.93,0.82); SAND=(0.96,0.89,0.70); INK=(0.10,0.20,0.55); CUR=[None]
 def fc(col): c.setFillColorRGB(*col)
 def sc(col): c.setStrokeColorRGB(*col)
 c = SymCanvas(OUT, pagesize=(W, H))
-c.setTitle("Ausverkauf am Kiefernsee – Akt 1 (Prototyp)")
+c.setTitle("Ermittlungsfall Campingplatz – Akt 1 (Prototyp)")
 c.setAuthor("Natthaphon Lind")
 PAGE = [1]
 FLIP = [False]
@@ -108,7 +108,7 @@ def lines_h(s, font, size, w, lead):
 def footer():
     c.setFont("Sans", 8); c.setFillGray(0.45)
     c.drawCentredString(W / 2, 30, f"– {PAGE[0]} –")
-    c.drawString(ML, 30, "Ausverkauf am Kiefernsee · Akt 1 · Prototyp")
+    c.drawString(ML, 30, "Ermittlungsfall Campingplatz · Akt 1 · Prototyp")
     c.setFillGray(0)
 
 
