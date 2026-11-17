@@ -118,7 +118,7 @@ S["b4"] = card("b4", "B-4 · Gesichert vom Profil @nova.on.wheels, Gast auf Stel
                'Den Herrn Brandner fand ich ehrlich gesagt ganz okay. Er hat mir gesagt, für Vans gibt\'s im Resort eine Sonderspur.“</p>'
                '<div class="story">'
                '<figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div>'
-               '<a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor einem dunklen Holzgebäude steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a>'
+               '<a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor der Rezeption – weißes Haus mit rotem Ziegeldach, links die geschlossene Schranke – steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a>'
                '<figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption></figure>'
                '<figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div>'
                '<a href="bilder/nova-0128.jpg" target="_blank" rel="noopener"><img src="bilder/nova-0128.jpg" loading="lazy" alt="Nachtaufnahme am See: Ein kleiner weiß-brauner Hund springt durchs flache Wasser, es spritzt. Rechts unten der Rand des grauen Holzstegs."></a>'
