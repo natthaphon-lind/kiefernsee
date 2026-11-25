@@ -77,16 +77,16 @@ def page_start(B):
                    "Jeder nimmt sein eigenes Handy. Das dauert nur eine Minute.")
     gap = 18
     cw = (W - ML - MR - gap) / 2
-    ch = 258
+    ch = 252
     steps = [
         (1, "Scannen", "Öffnet die Kamera-App eures Handys und haltet sie über den QR-Code im Brief (Seite 3). "
                        "Tippt dann auf den Link, der erscheint."),
         (2, "Kennwort eingeben", "Das Kennwort steht ganz unten im Brief. Tippt es ein und dann auf "
                                  "„Akte öffnen“."),
-        (3, "Namen eintragen", "Tragt euren Vornamen ein. Dann spricht euch die Web-App mit Namen an."),
+        (3, "Namen eintragen", "Vornamen eintragen, „Kommissarin“ oder „Kommissar“ wählen. Schon einen Ermittlerausweis? Dann hier die Dienstnummer eingeben."),
         (4, "Farbe wählen", "Einer tippt auf Akte Rot, der andere auf Akte Blau – jeder auf seinem Handy."),
     ]
-    imgs = [None, _crop("1_login.png", 470, 960), _crop("2_rolle.png", 640, 870), _crop("2_rolle.png", 870, 1230)]
+    imgs = [None, _crop("1_login.png", 470, 960), _crop("2_rolle.png", 20, 245), _crop("2_rolle.png", 255, 455)]
     for i, (n, verb, txt) in enumerate(steps):
         col, row = i % 2, i // 2
         x = ML + col * (cw + gap)
@@ -108,11 +108,11 @@ def page_start(B):
             phone_img(B, im, x + 20 + (aw - iw) / 2, area_bot + (ah - ih) / 2, iw, ih, radius=6, border=4)
     # Hinweis Namen
     by = y - 2 * ch - gap - 14
-    bh = 54
+    bh = 64
     c.setFillColorRGB(0.99, 0.95, 0.85); c.roundRect(ML, by - bh, W - ML - MR, bh, 6, fill=1, stroke=0); c.setFillGray(0)
     c.setFont("SansB", 11); c.drawString(ML + 14, by - 20, "Gut zu wissen")
     B.text(ML + 14, by - 36, W - ML - MR - 28,
-           "Eure Namen kennt nur die Web-App. Im Buch heißt ihr einfach Akte Rot und Akte Blau.", "Serif", 10.6, 14)
+           "Eure Namen kennt nur die Web-App – im Buch heißt ihr Akte Rot und Akte Blau. Euer Dienstgrad bleibt auf eurem Handy gespeichert und läuft in jedem neuen Fall der Reihe weiter.", "Serif", 10.6, 14)
     B.new_page()
 
 
@@ -120,48 +120,50 @@ def page_play(B):
     c, W, H, ML, MR = B.c, B.W, B.H, B.ML, B.MR
     y = B.doc_head("SO FUNKTIONIERT DIE WEB-APP", "Während des Spiels",
                    "Alles Wichtige auf einen Blick. Die Nummern findet ihr im Bild wieder.")
-    pw = 168
+    pw = 150
     # --- Bild 1: Kopf, Akten, Punkte
-    im1 = _crop("3_menu.png", 40, 1070)
+    im1 = _crop("3_menu.png", 20, 625)
     h1 = pw * im1.height / im1.width
     x1 = ML + 6; y1 = y - h1 - 4
     phone_img(B, im1, x1, y1, pw, h1, radius=8, border=5)
 
     def at(im, h, px, py, x0, y0):  # Pixel im Ausschnitt -> PDF-Koordinate
         return x0 + px / im.width * pw, y0 + h - py / im.height * h
-    marks1 = [(1, 735, 80), (2, 735, 420), (3, 735, 865)]
+    marks1 = [(1, 368, 40), (2, 368, 112), (3, 368, 330), (4, 368, 553)]
     for n, px, py in marks1:
         bx, byy = at(im1, h1, px, py, x1, y1); badge(B, bx, byy, n)
     items1 = [(1, "Eure Farbe und euer Name", "Oben seht ihr immer, welche Akte ihr habt."),
-              (2, "Eure Akten", "Tippt auf R-1, R-2 … bzw. B-1, B-2 … Es sind dieselben Akten wie im Buch – "
+              (2, "Euer Dienstgrad", "Antippen öffnet euren Ermittlerausweis mit Dienstnummer."),
+              (3, "Eure Akten", "Tippt auf R-1, R-2 … bzw. B-1, B-2 … Es sind dieselben Akten wie im Buch – "
                                 "dazu Fotos und Tonaufnahmen. Bei Tonaufnahmen tippt ihr auf ▶."),
-              (3, "Eure Punkte", "Ihr startet mit 10 Punkten. Die Web-App zieht automatisch ab: 2 Punkte für "
+              (4, "Eure Punkte", "Ihr startet mit 10 Punkten. Die Web-App zieht automatisch ab: 2 Punkte für "
                                  "jeden Fehlversuch, 1 Punkt für jeden Hinweis.")]
     lx = x1 + pw + 26; lw = W - MR - lx
     ly = y - 10
     for n, t, d in items1:
         badge(B, lx + 11, ly - 4, n)
         c.setFont("SansB", 11.5); c.drawString(lx + 30, ly - 8, t)
-        ly = B.text(lx + 30, ly - 24, lw - 30, d, "Serif", 10, 13.6, gap=0) - 12
+        ly = B.text(lx + 30, ly - 22, lw - 30, d, "Serif", 9.8, 13, gap=0) - 9
     # --- Bild 2: Für beide
-    im2 = _crop("4_beide.png", 0, 590)
+    im2 = _crop("4_beide.png", 0, 392)
     h2 = pw * im2.height / im2.width
-    y2 = min(y1, ly + 10) - 26 - h2
+    y2 = min(y1, ly + 10) - 18 - h2
     phone_img(B, im2, x1, y2, pw, h2, radius=8, border=5)
-    marks2 = [(4, 345, 330), (5, 712, 330), (6, 345, 502), (7, 712, 502)]
+    marks2 = [(5, 172, 150), (6, 348, 150), (7, 172, 236), (8, 348, 236), (9, 172, 340)]
     for n, px, py in marks2:
         bx, byy = at(im2, h2, px, py, x1, y2); badge(B, bx, byy, n)
-    items2 = [(4, "Akt 1 lösen", "Hier prüft ihr eure drei Antworten."),
-              (5, "Hinweise", "Kleiner Tipp, großer Tipp, Lösung. Nur einer öffnet den Hinweis!"),
-              (6, "Akt 1 abschließen", "Verdacht versiegeln. Akte Blau übergibt per QR-Code an Akte Rot."),
-              (7, "Neues Spiel", "Löscht den Spielstand – mit Sicherheitsabfrage.")]
+    items2 = [(5, "Akt 1 lösen", "Hier prüft ihr eure drei Antworten."),
+              (6, "Hinweise", "Kleiner Tipp, großer Tipp, Lösung. Nur einer öffnet!"),
+              (7, "Akt 1 abschließen", "Verdacht versiegeln, Akte Blau übergibt an Akte Rot."),
+              (8, "Mein Ausweis", "Dienstgrad, Sterne und Dienstnummer – als Bild speichern."),
+              (9, "Neues Spiel", "Löscht den Spielstand. Euer Dienstgrad bleibt.")]
     ly = y2 + h2 + 6
     for n, t, d in items2:
         badge(B, lx + 11, ly - 4, n)
         c.setFont("SansB", 11.5); c.drawString(lx + 30, ly - 8, t)
-        ly = B.text(lx + 30, ly - 24, lw - 30, d, "Serif", 10, 13.6, gap=0) - 10
+        ly = B.text(lx + 30, ly - 22, lw - 30, d, "Serif", 9.8, 13, gap=0) - 7
     # --- Wenn etwas nicht klappt
-    by = min(y2, ly) - 22
+    by = min(y2, ly) - 14
     tips = ["Falsche Farbe gewählt? Oben auf „Akte wechseln“ tippen.",
             "Web-App aus Versehen geschlossen? Einfach wieder einen QR-Code im Buch scannen – alles bleibt gespeichert.",
             "Scannen in der Web-App klappt nicht? Den Code mit der normalen Kamera-App scannen."]
