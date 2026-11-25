@@ -105,6 +105,26 @@ h3{font-family:var(--f-display);font-size:18px;margin:4px 0 0}
 .scanbox{display:flex;flex-direction:column;gap:8px}
 .scanbox video{width:100%;max-height:60vh;background:#000;border-radius:6px;object-fit:cover}
 button:disabled{opacity:.45;cursor:not-allowed}
+
+.anrede{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.anrede legend{font-weight:600;margin-bottom:6px;font-size:14px}
+.anrede label{display:flex;gap:6px;align-items:center;font-size:15px}
+details#dnBox summary{cursor:pointer;font-size:14px;color:var(--ink-soft, #445)}
+details#dnBox{display:flex;flex-direction:column;gap:8px}
+.idc{background:#fbf7ec;color:#2c2c2a;border:1px solid #c9b98f;border-radius:12px;overflow:hidden;max-width:420px}
+.idc .h{background:#15233a;color:#f3ead2;padding:9px 14px;font-size:12px;letter-spacing:.12em;font-weight:600;display:flex;justify-content:space-between}
+.idc .b{padding:14px;display:grid;grid-template-columns:64px 1fr;gap:12px;font-size:13px;line-height:1.45}
+.idc .ph{width:64px;height:80px;border-radius:6px;background:#e8dfc6;border:1px solid #c9b98f;display:flex;align-items:center;justify-content:center;font-size:30px}
+.idc .k{font-size:11px;color:#6b6248}
+.idc .n{font-size:18px;font-weight:700}
+.idc .r{font-weight:700;color:#a83228}
+.idc .f{padding:0 14px 10px;font-size:12px;line-height:1.6}
+.idc .f div{display:flex;justify-content:space-between;gap:8px}
+.idc .sig{font-style:italic;font-family:Georgia,serif;color:#15233a;font-size:14px}
+.idc .ft{background:#e8dfc6;color:#6b6248;font-size:11px;text-align:center;padding:5px}
+.rankchip{text-align:left;font-size:14px;padding:8px 12px;background:#fbf7ec;color:#7a2a22;border:1px solid #c9b98f;border-radius:4px;cursor:pointer;font-weight:600}
+.rankrow{display:flex;justify-content:space-between;padding:5px 8px;border-bottom:1px solid #d8d2c4}
+.rankrow.me{background:#f6e3df;color:#a83228;font-weight:700}
 </style>
 </head>
 <body>
@@ -122,6 +142,14 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <p>Jeder wählt auf seinem eigenen Handy seine Farbe. Ihr seht dann nur eure eigene Akte – und die gemeinsamen Seiten.</p>
 <label for="pname">Dein Vorname <span class="small">(freiwillig – dann spricht euch die Web-App mit Namen an)</span></label>
 <input id="pname" type="text" maxlength="20" autocomplete="given-name" placeholder="z. B. Lisa">
+<div id="welcomeBack" class="msg ok" hidden></div>
+<fieldset class="anrede"><legend>Wie soll euch die Web-App ansprechen?</legend>
+<label><input type="radio" name="anrede" value="w"> Kommissarin</label>
+<label><input type="radio" name="anrede" value="m"> Kommissar</label></fieldset>
+<details id="dnBox"><summary>Schon einen Ermittlerausweis aus einem anderen Fall? Dienstnummer eingeben</summary>
+<p class="small">Die Dienstnummer steht auf eurem Ausweis und hinten im Buch eures letzten Falls.</p>
+<input id="dnIn" type="text" autocomplete="off" autocapitalize="characters" placeholder="DN-XXXX-XXXX" maxlength="14">
+<div id="dnMsg" class="msg" hidden></div></details>
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
 <p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Dort stehen alle Spuren, der Notizbogen und die Auflösung. Legt es beim Spielen immer mit auf den Tisch. Euren geheimen Verdacht und die Punkte führt ihr hier in der Web-App.</p>
@@ -129,13 +157,14 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
 <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
 <div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>
+<button id="rankLine" type="button" data-view="ausweis" class="rankchip">Mein Ausweis</button>
 <div id="confirm" class="confirm" hidden><span>Wirklich die Akte wechseln? Dann seht ihr die Seiten der anderen Farbe.</span>
 <button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
 <div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot"><button data-view="r1" class="rot"><b>R-1</b><span class="small">Bericht zum Leichenfund</span></button><button data-view="r2" class="rot"><b>R-2</b><span class="small">Asservatenverzeichnis</span></button><button data-view="r3" class="rot"><b>R-3</b><span class="small">Rundgangsprotokoll</span></button><button data-view="r4" class="rot"><b>R-4</b><span class="small">Vernehmung Rita Schäfer</span></button><button data-view="r5" class="rot"><b>R-5</b><span class="small">Wetterdaten und Notruf</span></button></nav></div>
 <div id="navBlau" hidden><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Blau"><button data-view="b1" class="blau"><b>B-1</b><span class="small">Protokoll der Versammlung</span></button><button data-view="b2" class="blau"><b>B-2</b><span class="small">Chat der Dauercamper</span></button><button data-view="b3" class="blau"><b>B-3</b><span class="small">Sprachnachricht</span></button><button data-view="b4" class="blau"><b>B-4</b><span class="small">Novas Story</span></button><button data-view="b5" class="blau"><b>B-5</b><span class="small">Schwarzes Brett</span></button></nav></div>
 <div class="score"><div><b id="scoreTxt">10 Punkte</b><div id="scoreSub" class="small"></div></div><span aria-hidden="true">🔍</span></div>
 <p class="small" style="margin:0">📖 Notizbogen und Auflösung findet ihr im Buch.</p>
-<div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam"><button data-view="plan" class="alle"><b>Lageplan</b><span class="small">Luftbild</span></button><button data-view="cast" class="alle"><b>Personen</b><span class="small">Wer ist wer</span></button><button data-view="code" class="alle"><b>Akt 1 lösen</b><span class="small">Antworten prüfen</span></button><button data-view="hints" class="alle"><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button><button data-view="akt" class="alle"><b>Akt 1 abschließen</b><span class="small">Verdacht versiegeln</span></button><button data-view="neu" class="alle"><b>Neues Spiel</b><span class="small">Spielstand löschen</span></button></nav></div>
+<div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam"><button data-view="plan" class="alle"><b>Lageplan</b><span class="small">Luftbild</span></button><button data-view="cast" class="alle"><b>Personen</b><span class="small">Wer ist wer</span></button><button data-view="code" class="alle"><b>Akt 1 lösen</b><span class="small">Antworten prüfen</span></button><button data-view="hints" class="alle"><b>Hinweise</b><span class="small">Hilfe in drei Stufen</span></button><button data-view="akt" class="alle"><b>Akt 1 abschließen</b><span class="small">Verdacht versiegeln</span></button><button data-view="ausweis" class="alle"><b>Mein Ausweis</b><span class="small">Dienstgrad und Dienstnummer</span></button><button data-view="neu" class="alle"><b>Neues Spiel</b><span class="small">Spielstand löschen</span></button></nav></div>
 <section id="v-r1" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-1 · Erster Angriff, Kriminalpolizei Seebrück</span><h2>Bericht zum Leichenfund</h2><dl class="form"><dt>Aktenzeichen</dt><dd><p>31 Js 0926/BR</p></dd><dt>Meldung</dt><dd><p>Samstag, 26.09., 06:44 Uhr, Notruf über Leitstelle (Anruferin: Rita Schäfer)</p></dd><dt>Fundort</dt><dd><p>Campingplatz am Kiefernsee, Nordostufer, Schilfgürtel. Wassertiefe ca. 60 cm.</p></dd><dt>Person</dt><dd><p>Holger Brandner, 58 J., wohnhaft Frankfurt am Main. Gast in Mietchalet 3.</p></dd><dt>Auffindesituation</dt><dd><p>Leiche in Bauchlage im Flachwasser, unmittelbar neben dem treibenden Tretboot „Chantal“. Bekleidung: Jeans, Hemd, Sakko, Lederslipper.</p></dd><dt>Verletzungen</dt><dd><p>Platzwunde am Hinterkopf, ca. 4 cm. Keine Abwehrverletzungen.</p></dd><dt>Rechtsmedizin (vorläufig)</dt><dd><p>Dr. A. Okonkwo: Tod durch Ertrinken. Die Kopfverletzung entstand vor dem Eintritt ins Wasser, das Opfer war vermutlich bewusstlos. In der Wunde: mehrere kleine Holzsplitter, Nadelholz, vermutlich Lärche, mit grauer Lasur.</p><p>Todeszeitpunkt nach Körpertemperatur: zwischen 22:00 und 2:00 Uhr. Wegen der Wassertemperatur nicht enger bestimmbar.</p></dd><dt>Tretboot „Chantal“</dt><dd><p>Kunststoff (PE), Baujahr 2025. Keine Beschädigungen, keine Blut- oder Haaranhaftungen. Die Sicherungskette hängt nicht am Boot.</p></dd><dt>Bearbeitung</dt><dd><p>EKHK&#x27;in J. Wendland, KK Brüggemann</p></dd></dl><figure class="photo"><a href="bilder/fundort.jpg" target="_blank" rel="noopener"><img src="bilder/fundort.jpg" alt="Rosa Tretboot leer im Schilf, davor rot-weißes Absperrband" loading="lazy"></a><figcaption>Lichtbild 1: Fundort am Schilfgürtel, Sa 26.09., 07:10 Uhr (nach Bergung)</figcaption></figure></section><section id="v-r2" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-2 · Sichergestellte Gegenstände, Samstag, 26.09.</span><h2>Asservatenverzeichnis</h2><ol class="assv"><li><b class="mono">Nr. 1</b> <b>Brieftasche, Leder, schwarz</b><span>Fundort: am Körper, Innentasche Sakko</span><span>Inhalt: 240 € bar, 2 Kreditkarten, Ausweis</span></li><li><b class="mono">Nr. 2</b> <b>Ehering, Gold</b><span>Fundort: am Körper</span><span>Gravur „H. &amp; S. 1994“</span></li><li><b class="mono">Nr. 3</b> <b>Smartphone</b><span>Fundort: Tretboot, Sitzfläche</span><span>nass, aber funktionsfähig. Zur Auswertung (siehe Akte Blau)</span></li><li><b class="mono">Nr. 4</b> <b>Lesebrille</b><span>Fundort: Tretboot, Fußraum</span><span>–</span></li><li><b class="mono">Nr. 5</b> <b>Autoschlüssel (Mercedes)</b><span>Fundort: Mietchalet 3, Tisch</span><span>Fahrzeug steht auf Gästeparkplatz</span></li><li><b class="mono">Nr. 6</b> <b>Laptop</b><span>Fundort: Mietchalet 3, Reisetasche</span><span>passwortgeschützt</span></li><li><b class="mono">Nr. 7</b> <b>Reisetasche mit Kleidung</b><span>Fundort: Mietchalet 3</span><span>ordentlich gepackt</span></li><li><b class="mono">Nr. 8</b> <b>Kette mit Vorhängeschloss</b><span>Fundort: Bootssteg</span><span>gehört zum Tretboot „Chantal“. Schloss geöffnet, NICHT aufgebrochen (Lichtbild 2)</span></li></ol><p class="msg"><b>Vermerk:</b> Bargeld und Kreditkarten vollständig vorhanden. Ein Raubmord erscheint daher unwahrscheinlich. Mietchalet 3 war nicht abgeschlossen, keine Einbruchsspuren.</p><figure class="photo"><a href="bilder/asservat.jpg" target="_blank" rel="noopener"><img src="bilder/asservat.jpg" alt="Lose Kette und daneben ein geöffnetes, unbeschädigtes Vorhängeschloss auf grauen Holzbrettern, gelber Markierungsaufsteller" loading="lazy"></a><figcaption>Lichtbild 2: Asservat Nr. 8 auf dem Bootssteg, Sa 26.09., 07:25 Uhr</figcaption></figure></section><section id="v-r3" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-3 · Handschriftlich geführt von Sven Ruppert, Nacht von Freitag auf Samstag</span><h2>Rundgangsprotokoll Sicherheitsdienst</h2><p class="small mono">SICHERHEITSDIENST RUPPERT · Objekt: Camping Kiefernsee · Datum: 25./26.09.</p><ol class="log"><li><b>22:00</b><span>Schranke geschlossen. Nachtruhe beginnt.</span></li><li><b>22:47</b><span>Parzelle 14 (Kowalski): Schlagermusik deutlich zu laut. Ermahnt. Zweite Ermahnung diesen Monat!!</span></li><li><b>23:30</b><span>Bootssteg: beide Tretboote („Kevin“ + „Chantal“) angekettet. Alles in Ordnung. Steg noch leicht klebrig.</span></li><li><b>23:34</b><span>Igel bei Sanitär 1. Kein Handlungsbedarf.</span></li><li><b>0:30</b><span>Bootssteg: Boot „Chantal“ FEHLT!! Kette liegt auf dem Steg, Schloss offen, nicht beschädigt. Vermutlich vom Hausmeister nicht richtig abgeschlossen. → Meldung an Rezeption morgen früh.</span></li><li><b>1:15</b><span>Sanitär 2: Licht brennt, niemand drin. Ausgeschaltet. Stromverschwendung!!</span></li><li><b>2:00</b><span>Schranke: ohne Befund.</span></li><li><b>3:00</b><span>Rundgang beendet. Keine besonderen Vorkommnisse.</span></li></ol><p class="sig">S. Ruppert</p></section><section id="v-r4" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-4 · Samstag, 26.09., 07:30 Uhr, Rezeption. Vernehmung durch KK Brüggemann</span><h2>Vernehmung der Zeugin Rita Schäfer</h2><div class="qa mono"><p class="f"><b>F:</b> Frau Schäfer, Sie haben Herrn Brandner gefunden. Erzählen Sie bitte.</p><p class="a"><b>A:</b> Um 6:42. Ich fahr jeden Morgen die Brötchen aus, mit dem Lastenrad am Ufer lang. Da seh ich die Chantal im Schilf hängen. Und daneben im Wasser … den Herrn Brandner. Ich hab sofort die 110 angerufen.</p><p class="f"><b>F:</b> Ist Ihnen in der Nacht etwas aufgefallen?</p><p class="a"><b>A:</b> Ich wohn ja auf Parzelle 3, gleich oberhalb vom Steg. So gegen halb zwei hat&#x27;s da unten richtig laut PLATSCH gemacht. Ich hab noch gedacht: Jetzt ist einer reingefallen.</p><p class="f"><b>F:</b> Sind Sie nachsehen gegangen?</p><p class="a"><b>A:</b> Ich hatte schon die Lockenwickler drin. Da geh ich nicht mehr raus.</p><p class="f"><b>F:</b> Und vorher, so gegen Mitternacht?</p><p class="a"><b>A:</b> Da hab ich geschlafen. Ich schlaf ab zehn. Außer donnerstags, da kommt mein Krimi.</p><p class="f"><b>F:</b> Hatte Herr Brandner bei Ihnen Brötchen bestellt?</p><p class="a"><b>A:</b> Zwei Laugenbrezeln für Chalet 3. Die liegen jetzt noch in meinem Korb.</p></div><p class="small">Selbst gelesen, genehmigt, unterschrieben:</p><p class="sig">Rita Schäfer</p></section><section id="v-r5" class="card rot" hidden><span class="lab"><span class="tag rot">AKTE ROT</span> R-5 · Wetterstation an der Gaststätte Seeklause, Nacht 25./26.09.</span><h2>Wetterdaten und Notruf</h2><div class="scroll"><table class="mono"><thead><tr><th>Uhrzeit</th><th>Temp. °C</th><th>Wind aus</th><th>km/h</th></tr></thead><tbody><tr><td>22:00</td><td>11,8</td><td>SW</td><td>14</td></tr><tr><td>23:00</td><td>11,2</td><td>SW</td><td>18</td></tr><tr><td>0:00</td><td>10,6</td><td>SW</td><td>22</td></tr><tr><td>1:00</td><td>10,1</td><td>SW</td><td>20</td></tr><tr><td>2:00</td><td>9,7</td><td>SW</td><td>16</td></tr><tr><td>3:00</td><td>9,4</td><td>W</td><td>12</td></tr><tr><td>4:00</td><td>9,0</td><td>W</td><td>9</td></tr><tr><td>5:00</td><td>8,8</td><td>W</td><td>6</td></tr><tr><td>6:00</td><td>8,6</td><td>W</td><td>5</td></tr></tbody></table></div><p class="small mono">Niederschlag: 0 mm. Hinweis Wetterdienst: Ein Wind aus Südwest (SW) weht nach Nordosten.</p><h2 style="font-size:18px">Mitschnitt des Notrufs</h2><p>Ihr dürft ihn Akte Blau vorspielen.</p><div class="voice"><span class="mono small">Leitstelle Seebrück · Sa 26.09. · 06:44 Uhr · 0:21</span><audio controls preload="metadata" src="audio/notruf-r5.mp3">Euer Browser kann die Aufnahme nicht abspielen.</audio></div><details class="voice"><summary>Abschrift anzeigen</summary><div class="mono" style="font-size:14px;display:flex;flex-direction:column;gap:6px"><p class="small">LEITSTELLE SEEBRÜCK · Notruf Sa 26.09., 06:44:12 Uhr · Anruferin: Rita Schäfer · Dauer 0:21</p><p><b>Leitstelle:</b> Notruf Leitstelle Seebrück. Wo genau ist der Notfallort?</p><p><b>Anruferin:</b> Hier ist die Rita vom Kiefernsee! Da liegt einer im Wasser, beim Schilf, das ist der Herr Brandner. Der bewegt sich nicht! Das Tretboot ist auch da, die Chantal. Bitte kommen Sie schnell!</p><p><b>Leitstelle:</b> Bleiben Sie, wo Sie sind, und gehen Sie nicht ins Wasser. Rettungswagen und Polizei sind unterwegs.</p><p class="small">06:45 Uhr: Rettungswagen und Streife alarmiert.</p></div></details></section><section id="v-b1" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-1 · Interessengemeinschaft der Dauercamper am Kiefernsee e. V. (in Gründung)</span><h2>Protokoll der Platzversammlung</h2><dl class="form"><dt>Ort / Zeit</dt><dd><p>Gaststätte Seeklause, Freitag, 25.09., 19:00 bis 21:30 Uhr</p></dd><dt>Anwesend</dt><dd><p>31 Dauercamper, Platzbetreiber Mark Böttcher, Herr Holger Brandner (Brandner Freizeit &amp; Resort GmbH), Hausmeister Marco Lenz, Sicherheitsdienst Sven Ruppert (am Eingang), Frau Nova Sommer (Gast)</p></dd><dt>TOP 1</dt><dd><p>Begrüßung durch Herrn Böttcher. Er möchte „mit 61 nicht mehr jeden Morgen Rasen mähen und Beschwerden lesen“.</p></dd><dt>TOP 2</dt><dd><p>Herr Brandner stellt das „Kiefernsee Glamping Resort“ vor: 40 Safarizelte, ein Saunafloß, die Dauerparzellen enden am 31.12.2027. Er holt den Vorvertrag aus seiner roten Ledermappe und sagt: „Hier fehlt nur noch eine Unterschrift.“</p></dd><dt>TOP 3</dt><dd><p>Aussprache, sehr lebhaft. Herr Kowalski: „Nur über meinen Grill.“ Frau Sommer fragt, ob es im Resort Steckdosen für Vans gibt. Herr Lenz fragt, ob das Personal übernommen wird. Herr Brandner: „Wir bringen unser eigenes Team mit.“ Herr Lenz verlässt kurz den Raum.</p></dd><dt>TOP 4</dt><dd><p>Abstimmung (nicht bindend): 0 dafür, 31 dagegen, 1 Enthaltung (Herr Ruppert, „aus dienstlichen Gründen neutral“).</p></dd><dt>Ende</dt><dd><p>21:30 Uhr. Herr Brandner verabschiedet sich mit der roten Mappe unter dem Arm: „Ich bin noch bis Sonntag in Chalet 3. Meine Tür steht offen.“</p></dd><dt>Sonstiges</dt><dd><p>Die Bowle war zu süß.</p></dd></dl><p class="sig">A. Wohlfahrt</p><p class="small">Angelika Wohlfahrt, Schriftführerin</p></section><section id="v-b2" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-2 · Auszug vom Handy von Angelika Wohlfahrt, Donnerstag bis Samstag</span><h2>Chat „Kiefernsee Dauercamper“</h2><div class="chat"><div class="day">DONNERSTAG, 24. SEPTEMBER</div><div class="bub"><b>Marco (Hausmeister)</b><span class="t">17:02</span><p>Steg ist frisch lasiert. Lärche, grau. Bis Freitagabend bitte NICHT betreten!! Auch nicht „nur kurz“, Siggi.</p></div><div class="bub"><b>Siggi P14</b><span class="t">17:05</span><p>Das mit den Fußspuren letztes Jahr war ich nicht.</p></div><div class="bub own"><b>Ich</b><span class="t">17:06</span><p>Doch.</p></div><div class="day">FREITAG, 25. SEPTEMBER</div><div class="bub own"><b>Ich</b><span class="t">12:30</span><p>Erinnerung: Heute 19 Uhr Versammlung in der Seeklause. Thema: Herr Brandner und seine „Glamping-Pläne“. Bitte zahlreich erscheinen!</p></div><div class="bub"><b>Siggi P14</b><span class="t">12:41</span><p>Ich bring meinen Grill mit. Als Argument.</p></div><div class="bub"><b>Siggi P14</b><span class="t">21:48</span><p>Habt ihr gesehen, wie der seine rote Mappe festhält? Wie ein Baby.</p></div><div class="bub own"><b>Ich</b><span class="t">21:49</span><p>Da ist der Vorvertrag drin. Wenn Mark unterschreibt, sind wir Ende 2027 alle weg.</p></div><div class="bub"><b>Mark (Platzbetreiber)</b><span class="t">21:52</span><p>Leute, ich hab noch nichts unterschrieben. Schlaft drüber. Ich auch.</p></div><div class="bub"><b>Sven (Security)</b><span class="t">23:05</span><p>Erinnerung: Ab 22 Uhr ist Nachtruhe. Parzelle 14, ich hör den Schlager bis zur Schranke.</p></div><div class="bub"><b>Siggi P14</b><span class="t">23:06</span><p>Das ist Kultur.</p></div><div class="day">SAMSTAG, 26. SEPTEMBER</div><div class="bub"><b>Rita P3</b><span class="t">06:52</span><p>POLIZEI IST SCHON DA. Am Schilf. Der Herr Brandner. Oh Gott.</p></div><div class="bub own"><b>Ich</b><span class="t">06:58</span><p>Was ist passiert??</p></div><div class="bub"><b>Mark (Platzbetreiber)</b><span class="t">07:03</span><p>Bitte alle auf euren Parzellen bleiben. Die Polizei will mit jedem sprechen.</p></div></div></section><section id="v-b3" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-3 · Kriminaltechnik Seebrück · Gerät aus dem Tretboot</span><h2>Sprachnachricht an Dr. Kessler</h2><p>Das Handy von Holger Brandner war nass, ließ sich aber auslesen. Die letzte Aktivität vor dem Tod ist eine Sprachnachricht an seinen Anwalt. Ihr dürft sie Akte Rot vorspielen.</p><div class="voice"><span class="mono small">Von: Holger Brandner · An: Dr. Kessler (Kanzlei) · Fr 23:41 · 0:19</span><audio controls preload="metadata" src="audio/sprachnachricht-b3.mp3">Euer Browser kann die Aufnahme nicht abspielen.</audio></div><details class="voice"><summary>Abschrift anzeigen</summary><p>„Kessler, ich bin&#x27;s. Die Versammlung war ein Zirkus, aber egal. Ich geh gleich noch runter zum Steg. Da will mir jemand was zeigen. Angeblich was über den Platz, das den Preis ordentlich drückt. Wenn das stimmt, unterschreibt Böttcher am Montag zu unseren Bedingungen. Ruf mich morgen früh an.“</p></details></section><section id="v-b4" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-4 · Gesichert vom Profil @nova.on.wheels, Gast auf Stellplatz G2</span><h2>Novas Story, Freitag, 25. September</h2><p>Frau Sommer postet fast jeden Abend eine „Story“ – kurze Fotos, die nach 24 Stunden wieder verschwinden. Wir haben sie vorher gesichert.</p><p class="msg">Aussage Nova Sommer, Samstag, 8:15 Uhr: „Ich mach jeden Abend ein paar Storys, das ist mein Job. Was drauf ist, sehen Sie ja selbst. Den Herrn Brandner fand ich ehrlich gesagt ganz okay. Er hat mir gesagt, für Vans gibt's im Resort eine Sonderspur.“</p><div class="story"><figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 23:12</span><span>🌙</span></div><a href="bilder/nova-2312.jpg" target="_blank" rel="noopener"><img src="bilder/nova-2312.jpg" loading="lazy" alt="Nachtaufnahme aus dem Van-Fenster: Vor der Rezeption – weißes Haus mit rotem Ziegeldach, links die geschlossene Schranke – steht eine Person, nur als Silhouette erkennbar, im hellen Lichtkegel einer Taschenlampe."></a><figcaption class="cap">Letzter Abend am Kiefernsee 🥲 So still hier nach der Versammlung. #vanlife #camping #seeblick</figcaption></figure><figure class="frame"><div class="bar"></div><div class="top"><span><b>nova.on.wheels</b> · 01:28</span><span>🐶</span></div><a href="bilder/nova-0128.jpg" target="_blank" rel="noopener"><img src="bilder/nova-0128.jpg" loading="lazy" alt="Nachtaufnahme am See: Ein kleiner weiß-brauner Hund springt durchs flache Wasser, es spritzt. Rechts unten der Rand des grauen Holzstegs."></a><figcaption class="cap">1:28 Uhr. Pepper muss natürlich noch mal vom Steg in den See springen. PLATSCH. 🙄🐶 Sorry an alle Nachbarn!!</figcaption></figure></div><p class="small">Schaut genau hin: Uhrzeit, Ort, Licht, was passiert. Beschreibt es Akte Rot.</p></section><section id="v-b5" class="card blau" hidden><span class="lab"><span class="tag blau">AKTE BLAU</span> B-5 · Fotografiert am Samstag, 26.09., 8:00 Uhr</span><h2>Das Schwarze Brett an der Rezeption</h2><figure class="photo"><a href="bilder/brett.jpg" target="_blank" rel="noopener"><img src="bilder/brett.jpg" alt="Korkpinnwand mit sechs Zetteln: Bootsverleih, Wichtig, Brötchenservice, Gefunden, Nachtruhe, Vermisst" loading="lazy"></a><figcaption>Lichtbild: Spurensicherung Seebrück. Tippt auf das Foto, um es groß zu sehen.</figcaption></figure><details class="voice"><summary>BOOTSVERLEIH</summary><p>Tretboote „Kevin“ und „Chantal“ (neu, Kunststoff). Schlüssel an der Rezeption. Fahrten nur 9 bis 19 Uhr. Nachts sind die Boote angekettet!<br>– Marco</p></details><details class="voice"><summary>WICHTIG</summary><p>Die Holzbank am Badestrand wurde abgebaut (morsch). Am Strand gibt es jetzt nur noch Sand und Kunststoffliegen.<br>– Die Platzleitung</p></details><details class="voice"><summary>Brötchenservice</summary><p>Bestellschluss: 18 Uhr am Vortag. Wer später kommt, bekommt Knäckebrot.<br>– Rita</p></details><details class="voice"><summary>GEFUNDEN</summary><p>1 Grillzange. Abzuholen bei Siggi, Parzelle 14.<br>(Ist wahrscheinlich meine.)</p></details><details class="voice"><summary>NACHTRUHE 22–7 UHR</summary><p>Wird kontrolliert!!!<br>– Sicherheitsdienst S. Ruppert</p></details><details class="voice"><summary>VERMISST</summary><p>Wer hat meinen Gartenzwerg „Hubert“ gesehen? Rote Mütze, freundlicher Blick.<br>– Angelika, P7</p></details></section><section id="v-plan" class="card alle" hidden><span class="lab"><span class="tag alle">FÜR BEIDE</span> Luftbild der Polizeidrohne, Samstag, 26.09. · Norden ist oben</span><h2>Lageplan</h2><figure class="photo"><a href="bilder/lageplan.jpg" target="_blank" rel="noopener"><img src="bilder/lageplan.jpg" alt="Beschriftetes Luftbild des Campingplatzes am Kiefernsee" loading="lazy"></a><figcaption>Tippt auf den Plan, um ihn groß zu sehen.</figcaption></figure><p class="small">Rita Schäfer wohnt auf Parzelle 3, gleich oberhalb vom Steg. Nova Sommer steht mit ihrem Van auf G2. Die Wetterstation hängt an der Gaststätte Seeklause.</p></section><section id="v-cast" class="card alle" hidden><span class="lab"><span class="tag alle">FÜR BEIDE</span> Personenregister zum Fall</span><h2>Wer ist wer am Kiefernsee?</h2><ul class="cast"><li><b>Holger Brandner</b> <span class="small">58 Jahre</span><p>Das Opfer. Projektentwickler, „Brandner Freizeit &amp; Resort GmbH“. Wollte den Platz kaufen. Wohnte übers Wochenende in Mietchalet 3.</p></li><li><b>Mark Böttcher</b> <span class="small">61 Jahre</span><p>Platzbetreiber. Will verkaufen: „Ich mäh seit 30 Jahren Rasen und lese Beschwerden.“</p></li><li><b>Angelika Wohlfahrt</b> <span class="small">67 Jahre</span><p>Dauercamperin seit 1998, Parzelle 7. Sprecherin der Dauercamper und Schriftführerin. Weiß alles über jeden.</p></li><li><b>Siggi Kowalski</b> <span class="small">64 Jahre</span><p>Dauercamper, Parzelle 14. Grillmeister, Schlagerfan, Gegner jeder Veränderung.</p></li><li><b>Marco Lenz</b> <span class="small">45 Jahre</span><p>Hausmeister. Repariert alles, streicht alles, hat Schlüssel für alles.</p></li><li><b>Sven Ruppert</b> <span class="small">34 Jahre</span><p>Sicherheitsdienst. Nimmt die Nachtruhe sehr, sehr ernst.</p></li><li><b>Nova Sommer</b> <span class="small">26 Jahre</span><p>Gast mit Van auf Stellplatz G2. Vanlife-Influencerin (@nova.on.wheels), reist mit Hund Pepper.</p></li><li><b>Rita Schäfer</b> <span class="small">59 Jahre</span><p>Kiosk und Brötchendienst, Parzelle 3 gleich oberhalb vom Steg. Hat den Toten gefunden.</p></li></ul></section>
 <section id="v-code" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Was ist passiert?</span><h2>Antworten prüfen</h2>
@@ -184,16 +213,140 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </section>
 <section id="v-neu" class="card alle" hidden>
 <span class="lab"><span class="tag alle">FÜR BEIDE</span> Einstellungen</span><h2>Neues Spiel starten</h2>
-<p>Löscht auf diesem Handy alle Punkte, versiegelten Verdachte, die gewählte Akte und deinen Namen. Das Kennwort bleibt gespeichert.</p>
+<p>Löscht auf diesem Handy alle Punkte, versiegelten Verdachte und die gewählte Akte. Kennwort, Dienstgrad und Ausweis bleiben gespeichert.</p>
 <p class="small">Spielt ihr zu zweit von vorn, macht das bitte auf beiden Handys.</p>
 <button id="resetBtn" type="button" class="ghost">Spielstand löschen</button>
-<div id="resetAsk" class="confirm" hidden><span><b>Wirklich ein neues Spiel starten?</b> Dann werden auf diesem Handy alle Punkte, alle versiegelten Verdachte, die gewählte Akte und dein Name gelöscht. Das lässt sich nicht rückgängig machen.</span>
+<div id="resetAsk" class="confirm" hidden><span><b>Wirklich ein neues Spiel starten?</b> Dann werden auf diesem Handy alle Punkte, alle versiegelten Verdachte und die gewählte Akte gelöscht. Das lässt sich nicht rückgängig machen. Dein Dienstgrad und dein Ausweis bleiben erhalten.</span>
 <button id="resetYes" type="button">Ja, löschen</button><button id="resetNo" type="button" class="ghost">Abbrechen</button></div>
+</section>
+<section id="v-ausweis" class="card alle" hidden>
+<span class="lab"><span class="tag alle">PERSÖNLICH</span> Eure Laufbahn</span><h2>Mein Ermittlerausweis</h2>
+<p>Mit jedem gelösten Fall der Reihe sammelt ihr Sterne und werdet befördert. Die Beförderungen gibt es am Ende des Falls – nach Akt 3.</p>
+<div id="idCard"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button id="idSave" type="button">Ausweis als Bild speichern</button>
+<button id="idCopy" type="button" class="ghost">Dienstnummer kopieren</button></div>
+<div id="idMsg" class="msg" hidden></div>
+<h3>So steigt ihr auf</h3>
+<ul class="small" style="margin:0;padding-left:18px;line-height:1.7">
+<li>Euer Verdacht stimmt schon nach Akt 1: 3 Sterne · nach Akt 2: 2 Sterne · nach Akt 3: 1 Stern</li>
+<li>Fall gelöst: +1 Stern · Team hat am Ende noch mindestens 7 Punkte: +1 Stern</li>
+<li>Jeder Fall zählt einmal. Neues Handy? Einfach die Dienstnummer eingeben.</li></ul>
+<div id="rankList" class="small"></div>
 </section>
 </div>
 <footer>Ein Spiel zum Buch „Ermittlungsfall Campingplatz – Das Krimispiel zu zweit“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
 </div>
 <script src="js/qrcode.js"></script>
+<script>
+(function(){
+  var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
+  var PKEY="ermittler-profil"+SFX, NKEY="kiefernsee-name"+SFX;
+  var CASES={"0": "Kiefernsee"}, CASE_ID=0;
+  var $=function(id){return document.getElementById(id)};
+  var RANKS=[[0,"Kommissaranwärter","Kommissaranwärterin"],[3,"Kriminalkommissar","Kriminalkommissarin"],
+    [6,"Kriminaloberkommissar","Kriminaloberkommissarin"],[10,"Kriminalhauptkommissar","Kriminalhauptkommissarin"],
+    [15,"Erster Kriminalhauptkommissar","Erste Kriminalhauptkommissarin"],[21,"Kriminalrat","Kriminalrätin"]];
+  function load(){try{var p=JSON.parse(localStorage.getItem(PKEY)||"null");if(p&&p.v===1)return p}catch(e){}return null}
+  function save(p){try{localStorage.setItem(PKEY,JSON.stringify(p))}catch(e){}}
+  function rankIdx(st){var i=0;for(var k=0;k<RANKS.length;k++)if(st>=RANKS[k][0])i=k;return i}
+  function title(i,form){var r=RANKS[i];return form==="w"?r[2]:form==="m"?r[1]:r[1]+"/in"}
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+  // ---------- Dienstnummer: 40 Bit, 8 Zeichen ----------
+  var AB="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", M40=(1n<<40n)-1n, MUL=0x9e3779b97n, INV=0xe54e4c9427n, XK=0x5A3C96E1B7n;
+  function chk(x){var h=2166136261>>>0;for(var i=0;i<4;i++){h^=Number((x>>BigInt(i*7))&127n);h=Math.imul(h,16777619)>>>0}return BigInt((h^(h>>>14))&0x3FFF)}
+  function enc(p){var f=p.form==="w"?1n:p.form==="m"?2n:0n;
+    var x=(1n<<24n)|(f<<22n)|(BigInt(Math.min(p.stars,63))<<16n)|BigInt(p.cases&0xFFFF);
+    var v=(x<<14n)|chk(x); v=((v*MUL)&M40)^XK; var o="";for(var i=0;i<8;i++){o=AB[Number(v&31n)]+o;v>>=5n}
+    return "DN-"+o.slice(0,4)+"-"+o.slice(4)}
+  function dec(s){s=(s||"").toUpperCase().replace(/^DN/,"").replace(/[^A-Z0-9]/g,"").replace(/O/g,"0").replace(/I/g,"1");
+    if(s.length!==8)return null;var v=0n;for(var i=0;i<8;i++){var k=AB.indexOf(s[i]);if(k<0)return null;v=v*32n+BigInt(k)}
+    v=((v^XK)*INV)&M40;var x=v>>14n;if(chk(x)!==(v&0x3FFFn))return null;if((x>>24n)!==1n)return null;
+    var f=Number((x>>22n)&3n);return {form:f===1?"w":f===2?"m":"",stars:Number((x>>16n)&63n),cases:Number(x&0xFFFFn)}}
+  window.__dn={enc:enc,dec:dec};
+
+  // ---------- Einrichtung ----------
+  function fill(){
+    var p=load(); if(!p) return;
+    if(p.name&&!$("pname").value) $("pname").value=p.name;
+    document.querySelectorAll('input[name=anrede]').forEach(function(r){r.checked=(r.value===p.form)});
+    var w=$("welcomeBack"); w.hidden=false; w.textContent="Willkommen zurück, "+title(rankIdx(p.stars),p.form)+(p.name?" "+p.name:"")+"! Euer Dienstgrad ist gespeichert.";
+    $("dnBox").hidden=true;
+  }
+  function fromSetup(){
+    var p=load()||{v:1,name:"",form:"",stars:0,cases:0};
+    var dn=($("dnIn").value||"").trim(), m=$("dnMsg");
+    if(dn){ var d=dec(dn); if(!d){ m.hidden=false; m.className="msg bad"; m.textContent="Diese Dienstnummer stimmt nicht. Bitte genau abschreiben – sie beginnt mit DN-."; $("dnBox").open=true; return false }
+      p.stars=Math.max(p.stars,d.stars); p.cases=p.cases|d.cases; if(d.form) p.form=d.form; m.hidden=true; $("dnIn").value="" }
+    var nm=($("pname").value||"").trim().slice(0,20); if(nm) p.name=nm;
+    var a=document.querySelector('input[name=anrede]:checked'); if(a) p.form=a.value;
+    save(p); try{ if(p.name) localStorage.setItem(NKEY,p.name) }catch(e){}
+    return true
+  }
+
+  // ---------- Ausweis ----------
+  function caseList(c){var o=[];for(var k in CASES){if(c&(1<<+k))o.push(CASES[k])}return o}
+  function render(){
+    var p=load()||{v:1,name:"",form:"",stars:0,cases:0}, i=rankIdx(p.stars), cs=caseList(p.cases);
+    $("idCard").innerHTML='<div class="idc"><div class="h"><span>KRIPO SEEBRÜCK · ERMITTLERAUSWEIS</span><span>★</span></div>'+
+      '<div class="b"><div class="ph" aria-hidden="true">🕵</div><div><div class="k">Name</div><div class="n">'+esc(p.name||"ohne Namen")+'</div>'+
+      '<div class="k">Dienstgrad</div><div class="r">'+esc(title(i,p.form))+'</div><div>'+"★".repeat(Math.min(p.stars,10))+' <span class="k">'+p.stars+' Sterne</span></div></div></div>'+
+      '<div class="f"><div><span class="k">Gelöste Fälle</span><span>'+esc(cs.length?cs.join(", "):"noch keiner")+'</span></div>'+
+      '<div><span class="k">Dienstnummer</span><b style="font-family:monospace">'+enc(p)+'</b></div>'+
+      '<div style="align-items:end"><span class="sig">J. Wendland, EKHK’in</span><span class="k">Spielausweis</span></div></div>'+
+      '<div class="ft">Spielausweis · Ermittlungsfall-Reihe von Natthaphon Lind · kein amtliches Dokument</div></div>';
+    var h="";for(var k=RANKS.length-1;k>=0;k--){h+='<div class="rankrow'+(k===i?" me":"")+'"><span>'+esc(title(k,p.form))+'</span><span>ab '+RANKS[k][0]+' Sternen</span></div>'}
+    $("rankList").innerHTML=h;
+    var s=$("rankLine"); if(s) s.textContent=title(i,p.form)+(p.name?" "+p.name:"")+" · "+p.stars+" Sterne · Mein Ausweis";
+  }
+  function toImage(){
+    var p=load()||{v:1,name:"",form:"",stars:0,cases:0}, i=rankIdx(p.stars), cs=caseList(p.cases);
+    var W=900,H=560,c=document.createElement("canvas");c.width=W;c.height=H;var x=c.getContext("2d");
+    x.fillStyle="#fbf7ec";x.fillRect(0,0,W,H);x.strokeStyle="#c9b98f";x.lineWidth=4;x.strokeRect(2,2,W-4,H-4);
+    x.fillStyle="#15233a";x.fillRect(0,0,W,70);x.fillStyle="#f3ead2";x.font="bold 26px sans-serif";x.fillText("KRIPO SEEBRÜCK · ERMITTLERAUSWEIS",30,45);
+    x.fillStyle="#f2c14e";x.fillText("★",W-60,45);
+    x.fillStyle="#e8dfc6";x.fillRect(30,100,140,175);x.strokeStyle="#c9b98f";x.lineWidth=2;x.strokeRect(30,100,140,175);
+    x.font="80px sans-serif";x.fillText("🕵",55,215);
+    function lab(t,y){x.fillStyle="#6b6248";x.font="20px sans-serif";x.fillText(t,200,y)}
+    lab("Name",120);x.fillStyle="#2c2c2a";x.font="bold 40px sans-serif";x.fillText(p.name||"ohne Namen",200,162);
+    lab("Dienstgrad",200);x.fillStyle="#a83228";x.font="bold 32px sans-serif";x.fillText(title(i,p.form),200,238);
+    x.fillStyle="#b8860b";x.font="30px sans-serif";x.fillText("★".repeat(Math.min(p.stars,10))+"  ",200,282);
+    x.fillStyle="#6b6248";x.font="20px sans-serif";x.fillText(p.stars+" Sterne",200+Math.min(p.stars,10)*30+(p.stars?10:0),280);
+    x.strokeStyle="#c9b98f";x.setLineDash([8,6]);x.beginPath();x.moveTo(30,310);x.lineTo(W-30,310);x.stroke();x.setLineDash([]);
+    function row(k,v,y,mono){x.fillStyle="#6b6248";x.font="22px sans-serif";x.fillText(k,30,y);x.fillStyle="#2c2c2a";x.font=(mono?"bold 26px monospace":"24px sans-serif");var w=x.measureText(v).width;x.fillText(v,W-30-w,y)}
+    row("Gelöste Fälle",cs.length?cs.join(", "):"noch keiner",350);row("Dienstnummer",enc(p),395,true);
+    x.fillStyle="#15233a";x.font="italic 28px Georgia, serif";x.fillText("J. Wendland, EKHK’in",30,455);
+    x.fillStyle="#a83228";x.beginPath();x.arc(W-70,440,38,0,7);x.fill();x.fillStyle="#fbf7ec";x.font="bold 30px sans-serif";x.fillText("★",W-82,451);
+    x.fillStyle="#e8dfc6";x.fillRect(0,H-60,W,60);x.fillStyle="#6b6248";x.font="20px sans-serif";
+    var t="Spielausweis · Ermittlungsfall-Reihe von Natthaphon Lind · kein amtliches Dokument";x.fillText(t,(W-x.measureText(t).width)/2,H-24);
+    return c;
+  }
+  $("idSave").addEventListener("click",function(){
+    var c=toImage(), m=$("idMsg");
+    c.toBlob(function(b){
+      var f=null; try{ f=new File([b],"ermittlerausweis.png",{type:"image/png"}) }catch(e){}
+      if(f&&navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],title:"Mein Ermittlerausweis"}).catch(function(){}) ; return }
+      var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="ermittlerausweis.png"; document.body.appendChild(a); a.click(); a.remove();
+      m.hidden=false; m.className="msg ok"; m.textContent="Der Ausweis wurde als Bild gespeichert.";
+    },"image/png");
+  });
+  $("idCopy").addEventListener("click",function(){
+    var p=load()||{v:1,name:"",form:"",stars:0,cases:0}, t=enc(p), m=$("idMsg"); m.hidden=false;
+    if(navigator.clipboard){ navigator.clipboard.writeText(t).then(function(){ m.className="msg ok"; m.textContent="Kopiert: "+t }).catch(function(){ m.className="msg"; m.textContent="Eure Dienstnummer: "+t }) }
+    else { m.className="msg"; m.textContent="Eure Dienstnummer: "+t }
+  });
+
+  // ---------- Beförderung am Ende eines Falls (wird ab Akt 3 aufgerufen) ----------
+  function award(stars){
+    var p=load()||{v:1,name:"",form:"",stars:0,cases:0}, bit=1<<CASE_ID, before=rankIdx(p.stars);
+    if(p.cases&bit) return {already:true,before:before,after:before,stars:0};
+    p.stars=Math.min(63,p.stars+stars); p.cases|=bit; save(p); render();
+    return {already:false,before:before,after:rankIdx(p.stars),stars:stars,title:title(rankIdx(p.stars),p.form),name:p.name};
+  }
+  window.__career={fromSetup:fromSetup,fill:fill,render:render,award:award,profile:load,title:function(){var p=load();return p?title(rankIdx(p.stars),p.form):title(0,"")}};
+  fill(); render();
+})();
+</script>
 <script>
 (function(){
   var SUS=["Mark Böttcher", "Angelika Wohlfahrt", "Siggi Kowalski", "Marco Lenz", "Sven Ruppert", "Nova Sommer", "Rita Schäfer"], PORTAL="https://natthaphon-lind.github.io/kiefernsee/";
@@ -353,10 +506,10 @@ button:disabled{opacity:.45;cursor:not-allowed}
     if(sum(norm($("pw").value))===PW){ set(KEY,"1"); afterLogin() }
     else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
   });
-  document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ setRole(b.getAttribute("data-role")) }) });
+  document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ if(window.__career&&!window.__career.fromSetup()) return; setRole(b.getAttribute("data-role")); if(window.__career) window.__career.render() }) });
   $("switch").addEventListener("click",function(){ $("confirm").hidden=false });
   $("noSwitch").addEventListener("click",function(){ $("confirm").hidden=true });
-  $("yesSwitch").addEventListener("click",function(){ $("pname").value=get(NKEY)||""; set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
+  $("yesSwitch").addEventListener("click",function(){ $("pname").value=get(NKEY)||""; if(window.__career) window.__career.fill(); set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
   document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
 
   var RIGHT=[2,2,3];

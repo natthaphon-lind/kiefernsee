@@ -45,9 +45,9 @@ iframe{width:100%;height:100%;border:0;display:block}
 </div>
 <div class="cap"><span id="stepno" class="stepno"></span><span id="who" class="who beide">DEMO</span><span id="capTxt">Links das Handy von Akte Rot, rechts das von Akte Blau, in der Mitte das aufgeschlagene Buch. Tippt auf „Ablauf vorspielen“ – oder spielt selbst mit beiden Handys.</span></div>
 <main>
-<div class="phone rot"><div class="lab">◆ HANDY AKTE ROT</div><div class="frame"><iframe id="fRot" src="index.html?slot=demorot&v=11" title="Handy Akte Rot"></iframe></div></div>
+<div class="phone rot"><div class="lab">◆ HANDY AKTE ROT</div><div class="frame"><iframe id="fRot" src="index.html?slot=demorot&v=12" title="Handy Akte Rot"></iframe></div></div>
 <div class="book"><div class="lab" id="bookLab">Das Buch · Titel</div><div class="img"><img id="bookImg" src="demo/s-01.jpg" alt="Aufgeschlagene Doppelseite des Buchs"></div></div>
-<div class="phone blau"><div class="lab">● HANDY AKTE BLAU</div><div class="frame"><iframe id="fBlau" src="index.html?slot=demoblau&v=11" title="Handy Akte Blau"></iframe></div></div>
+<div class="phone blau"><div class="lab">● HANDY AKTE BLAU</div><div class="frame"><iframe id="fBlau" src="index.html?slot=demoblau&v=12" title="Handy Akte Blau"></iframe></div></div>
 </main>
 <script>
 (function(){
@@ -75,7 +75,7 @@ iframe{width:100%;height:100%;border:0;display:block}
       if(a.ended||stopFlag){clearInterval(t);if(stopFlag)a.pause();res();return}
       if(paused&&!a.paused)a.pause(); else if(!paused&&a.paused)a.play().catch(function(){});
     },200)})}
-  function clearSlots(){["demorot","demoblau"].forEach(function(s){["kiefernsee-fall1","kiefernsee-rolle","kiefernsee-spiel","kiefernsee-name"].forEach(function(k){try{localStorage.removeItem(k+"-"+s)}catch(e){}})})}
+  function clearSlots(){["demorot","demoblau"].forEach(function(s){["kiefernsee-fall1","kiefernsee-rolle","kiefernsee-spiel","kiefernsee-name","ermittler-profil"].forEach(function(k){try{localStorage.removeItem(k+"-"+s)}catch(e){}})})}
   function reload(){return Promise.all([R,B].map(function(f){return new Promise(function(res){f.onload=function(){f.onload=null;res()};f.src=f.src.split("#")[0]})}))}
 
   async function run(){

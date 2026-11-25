@@ -3,6 +3,7 @@ import sys, html, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_farbe as B  # baut nebenbei das PDF neu
 import portal_game as PG
+import portal_career as PC
 
 E = html.escape
 OUT = "/home/claude/kiefernsee/index.html"
@@ -144,7 +145,7 @@ BLAU_NAV = [("b1", "B-1", "Protokoll der Versammlung"), ("b2", "B-2", "Chat der 
             ("b4", "B-4", "Novas Story"), ("b5", "B-5", "Schwarzes Brett")]
 ALL_NAV = [("plan", "Lageplan", "Luftbild"), ("cast", "Personen", "Wer ist wer"), ("code", "Akt 1 lösen", "Antworten prüfen"),
            ("hints", "Hinweise", "Hilfe in drei Stufen"), ("akt", "Akt 1 abschließen", "Verdacht versiegeln"),
-           ("neu", "Neues Spiel", "Spielstand löschen")]
+           ("ausweis", "Mein Ausweis", "Dienstgrad und Dienstnummer"), ("neu", "Neues Spiel", "Spielstand löschen")]
 SUSPECTS = [n for n, _a, _d in B.CAST if n != "Holger Brandner"]
 
 
@@ -296,10 +297,10 @@ JS = r'''<script>
     if(sum(norm($("pw").value))===PW){ set(KEY,"1"); afterLogin() }
     else { var m=$("loginMsg"); m.hidden=false; m.textContent="Das Kennwort stimmt nicht. Es steht im Brief der Kommissarin auf der letzten Zeile." }
   });
-  document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ setRole(b.getAttribute("data-role")) }) });
+  document.querySelectorAll("[data-role]").forEach(function(b){ b.addEventListener("click",function(){ if(window.__career&&!window.__career.fromSetup()) return; setRole(b.getAttribute("data-role")); if(window.__career) window.__career.render() }) });
   $("switch").addEventListener("click",function(){ $("confirm").hidden=false });
   $("noSwitch").addEventListener("click",function(){ $("confirm").hidden=true });
-  $("yesSwitch").addEventListener("click",function(){ $("pname").value=get(NKEY)||""; set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
+  $("yesSwitch").addEventListener("click",function(){ $("pname").value=get(NKEY)||""; if(window.__career) window.__career.fill(); set(RKEY,null); $("app").hidden=true; $("role").hidden=false; $("confirm").hidden=true; window.scrollTo(0,0) });
   document.querySelectorAll("[data-view]").forEach(function(b){ b.addEventListener("click",function(){ show(b.getAttribute("data-view")) }) });
 
   var RIGHT=[2,2,3];
@@ -350,7 +351,7 @@ page = f'''<!doctype html>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
-<style>{CSS}{PG.GAME_CSS}</style>
+<style>{CSS}{PG.GAME_CSS}{PC.CSS}</style>
 </head>
 <body>
 <div class="wrap">
@@ -367,6 +368,7 @@ page = f'''<!doctype html>
 <p>Jeder wählt auf seinem eigenen Handy seine Farbe. Ihr seht dann nur eure eigene Akte – und die gemeinsamen Seiten.</p>
 <label for="pname">Dein Vorname <span class="small">(freiwillig – dann spricht euch die Web-App mit Namen an)</span></label>
 <input id="pname" type="text" maxlength="20" autocomplete="given-name" placeholder="z. B. Lisa">
+{PC.SETUP_HTML}
 <div class="roles"><button class="rot" data-role="rot">◆ AKTE ROT<span>Spurensicherung, Protokolle der Polizei</span></button>
 <button class="blau" data-role="blau">● AKTE BLAU<span>Chats, Handy, Social Media</span></button></div>
 <p class="msg"><b>Das Buch bleibt eure Hauptakte.</b> Dort stehen alle Spuren, der Notizbogen und die Auflösung. Legt es beim Spielen immer mit auf den Tisch. Euren geheimen Verdacht und die Punkte führt ihr hier in der Web-App.</p>
@@ -374,6 +376,7 @@ page = f'''<!doctype html>
 
 <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
 <div id="badge" class="badge rot"><span id="badgeTxt">◆ AKTE ROT</span><button id="switch" type="button">Akte wechseln</button></div>
+<button id="rankLine" type="button" data-view="ausweis" class="rankchip">Mein Ausweis</button>
 <div id="confirm" class="confirm" hidden><span>Wirklich die Akte wechseln? Dann seht ihr die Seiten der anderen Farbe.</span>
 <button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
 <div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot">{nav(ROT_NAV, "rot")}</nav></div>
@@ -384,10 +387,12 @@ page = f'''<!doctype html>
 {"".join(S[k] for k in ["r1","r2","r3","r4","r5","b1","b2","b3","b4","b5","plan","cast"])}
 {CODE}
 {PG.game_html(SUSPECTS)}
+{PC.VIEW_HTML}
 </div>
 <footer>Ein Spiel zum Buch „Ermittlungsfall Campingplatz – Das Krimispiel zu zweit“ von Natthaphon Lind. Alle Personen, Orte und Behörden sind frei erfunden.</footer>
 </div>
 <script src="js/qrcode.js"></script>
+{PC.js(B.PORTAL)}
 {PG.game_js(SUSPECTS, B.PORTAL)}
 {JS}
 </body>
