@@ -220,7 +220,9 @@ RULES = [
      "Blau stehen sie richtig herum. So lest ihr beide gleichzeitig und blättert gemeinsam weiter."),
     ("Die goldene Regel",
      "Jeder liest nur seine eigene Seite. Ihr dürft euch alles vorlesen, beschreiben und erzählen – aber "
-     "ihr schaut nicht auf die Seite des anderen. Die Lösung entsteht erst, wenn ihr redet."),
+     "ihr schaut nicht auf die Seite des anderen. Was der andere wissen will, verratet ihr ehrlich – Spuren "
+     "zurückhalten ist nicht erlaubt. Eure eigene Theorie dürft ihr aber für euch behalten. Die Lösung entsteht erst, "
+     "wenn ihr redet."),
     ("Buch und Ermittlerportal",
      "Das Buch ist eure Hauptakte: Hier stehen alle Spuren, euer Ermittlerbogen und die Auflösung. Das "
      "Ermittlerportal ergänzt es mit Tonaufnahmen, Fotos und der Prüfung eurer Antworten. Scannt dafür die QR-Codes "
