@@ -7,21 +7,21 @@ E = html.escape
 def game_html(suspects):
     opts = "".join(f'<option value="{i}">{E(n)}</option>' for i, n in enumerate(suspects))
     return f'''<section id="v-akt" class="card alle" hidden>
-<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt 1 · Abschluss</span><h2>Akt 1 abschließen</h2>
-<div id="aktLocked" class="msg">Versiegelt euren Verdacht erst, wenn ihr <a href="#code">Akt 1</a> gelöst und die Auflösung im Buch (Seite 24) gelesen habt.</div>
+<span class="lab"><span class="tag alle">FÜR BEIDE</span> Akt <span class="actN">1</span> · Abschluss</span><h2>Akt <span class="actN">1</span> abschließen</h2>
+<div id="aktLocked" class="msg">Versiegelt euren Verdacht erst, wenn ihr <a id="aktLink" href="#code">Akt <span class="actN">1</span></a> gelöst und die Auflösung im Buch (Seite <span id="actPage">24</span>) gelesen habt.</div>
 <div id="aktOpen" hidden style="display:flex;flex-direction:column;gap:12px">
 <p>Wer steckt eurer Meinung nach hinter allem? Jeder wählt <b>geheim auf seinem eigenen Handy</b> einen Hauptverdacht. Zeigt dem anderen nicht euren Bildschirm.</p>
-<label for="sus">Mein Hauptverdacht nach Akt 1</label>
+<label for="sus">Mein Hauptverdacht nach Akt <span class="actN">1</span></label>
 <select id="sus"><option value="">bitte wählen</option>{opts}</select>
 <button id="sealBtn" type="button">Verdacht versiegeln</button>
-<div id="sealAsk" class="confirm" hidden><span><b>Sicher?</b> Nach dem Versiegeln kannst du deinen Verdacht für Akt 1 nicht mehr ändern. Auch Prüfen und Hinweise für Akt 1 sind danach geschlossen.</span>
+<div id="sealAsk" class="confirm" hidden><span><b>Sicher?</b> Nach dem Versiegeln kannst du deinen Verdacht für Akt <span class="actN">1</span> nicht mehr ändern. Auch Prüfen und Hinweise für Akt <span class="actN">1</span> sind danach geschlossen.</span>
 <button id="sealYes" type="button">Ja, versiegeln</button><button id="sealNo" type="button" class="ghost">Abbrechen</button></div>
 </div>
 <div id="aktSealed" hidden style="display:flex;flex-direction:column;gap:12px">
-<div class="seal"><span class="sealIcon" aria-hidden="true">🔒</span><div><b>Verdacht für Akt 1 versiegelt</b><span id="sealTime" class="small"></span></div></div>
+<div class="seal"><span class="sealIcon" aria-hidden="true">🔒</span><div><b>Verdacht für Akt <span class="actN">1</span> versiegelt</b><span id="sealTime" class="small"></span></div></div>
 <div id="blueGive" hidden style="display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
 <h3>An die Spielleitung übergeben</h3>
-<p class="small">Akte Rot ist die Spielleitung. Akte Rot öffnet in der eigenen Web-App „Akt 1 abschließen“ und tippt auf „QR-Code scannen“. Der Code verrät euren Verdacht nicht.</p>
+<p class="small">Akte Rot ist die Spielleitung. Akte Rot öffnet in der eigenen Web-App „Akt abschließen“ und tippt auf „QR-Code scannen“. Der Code verrät euren Verdacht nicht.</p>
 <div id="giveQr" class="qrbox"></div>
 <p class="small" id="giveDed"></p></div>
 <div id="redTake" hidden style="display:flex;flex-direction:column;gap:10px">
@@ -66,7 +66,7 @@ def game_js(suspects, portal):
 (function(){
   var SUS=''' + json.dumps(suspects, ensure_ascii=False) + r''', PORTAL=''' + json.dumps(portal) + r''';
   var SFX=((location.search.match(/[?&]slot=(\w+)/)||[])[1]||""); SFX=SFX?"-"+SFX:"";
-  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, NKEY="kiefernsee-name"+SFX, ACT=1, START=10;
+  var GKEY="kiefernsee-spiel"+SFX, RKEY="kiefernsee-rolle"+SFX, NKEY="kiefernsee-name"+SFX, MAXACT=2, START=10, PAGES={1:24,2:44};
   var $=function(id){return document.getElementById(id)};
   function load(){try{var s=JSON.parse(localStorage.getItem(GKEY)||"null");if(s&&s.v===1)return s}catch(e){}return {v:1,ded:{},hints:{},solved:{},seal:{},blue:{}}}
   var G=load();
@@ -77,6 +77,10 @@ def game_js(suspects, portal):
   function who(kind,n){return "Akte "+kind+(n?" ("+n+")":"")}
   function ded(a){var d=G.ded[a]||{c:0,h:0};return d.c*2+d.h}
   function sealed(a){return !!G.seal[a]}
+  function unlocked(){var a=1;while(a<MAXACT&&G.seal[a])a++;return a}
+  function cur(){var a=1;while(a<MAXACT&&G.seal[a]&&G.solved[a+1])a++;return a}
+  function dedAll(){var t=0;for(var a=1;a<=MAXACT;a++)t+=ded(a);return t}
+  function blueAll(){var t=0;for(var a=1;a<=MAXACT;a++)if(G.blue[a])t+=G.blue[a].d;return t}
 
   // ---------- Übergabe-Code: 6 Zeichen, nicht lesbar ----------
   var AB="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", M=0x3FFFFFFF, MUL=0x2f1b3a7, INV=0x26fbc417, XK=0x15A3C96E&M;
@@ -92,19 +96,22 @@ def game_js(suspects, portal):
   // ---------- Punkteanzeige ----------
   function score(){
     var r=role(), el=$("scoreTxt"), sub=$("scoreSub"); if(!el) return;
-    if(r==="rot"){ var b=G.blue[ACT]; var t=START-ded(ACT)-(b?b.d:0);
-      el.textContent=t+" Punkte"; sub.textContent=b?"Teamstand, "+who("Blau",b.n)+" ist eingerechnet":"Teamstand · Abzüge von Akte Blau kommen am Ende des Akts dazu"; }
-    else { el.textContent=(ded(ACT)?"−"+ded(ACT):"0")+" Punkte"; sub.textContent="Eure Abzüge auf diesem Handy · gehen am Ende an Akte Rot"; }
+    var u=unlocked();
+    if(r==="rot"){ var t=START*u-dedAll()-blueAll(), parts=[];
+      for(var a=1;a<=u;a++){ parts.push("Akt "+a+": "+(START-ded(a)-(G.blue[a]?G.blue[a].d:0))+(G.blue[a]?"":(a===u?" (läuft)":" (Akte Blau fehlt noch)"))) }
+      el.textContent=t+" Punkte"; sub.textContent="Teamstand · "+parts.join(" · ")+(u>1?"":" · Abzüge von Akte Blau kommen am Ende des Akts dazu"); }
+    else { var d=dedAll(); el.textContent=(d?"−"+d:"0")+" Punkte"; sub.textContent="Eure Abzüge auf diesem Handy · gehen am Ende jedes Akts an Akte Rot"; }
   }
 
   // ---------- Code-Prüfung und Hinweise anbinden ----------
   window.__kgame={
-    wrong:function(){ if(sealed(ACT)) return; G.ded[ACT]=G.ded[ACT]||{c:0,h:0}; G.ded[ACT].c++; save(); score() },
-    right:function(){ G.solved[ACT]=1; save(); refresh() },
+    wrong:function(a){ a=a||1; if(sealed(a)) return; G.ded[a]=G.ded[a]||{c:0,h:0}; G.ded[a].c++; save(); score() },
+    right:function(a){ a=a||1; G.solved[a]=1; save(); refresh() },
     hintOpened:function(id){ return !!G.hints[id] },
-    openHint:function(id){ if(G.hints[id]||sealed(ACT)) return false; G.hints[id]=1; G.ded[ACT]=G.ded[ACT]||{c:0,h:0}; G.ded[ACT].h++; save(); score(); return true },
-    sealed:function(){ return sealed(ACT) },
-    solved:function(){ return !!G.solved[ACT] },
+    openHint:function(id,a){ a=a||1; if(G.hints[id]||sealed(a)) return false; G.hints[id]=1; G.ded[a]=G.ded[a]||{c:0,h:0}; G.ded[a].h++; save(); score(); return true },
+    sealed:function(a){ return sealed(a||1) },
+    solved:function(a){ return !!G.solved[a||1] },
+    unlocked:function(a){ return unlocked()>=a },
     refresh:function(){ refresh() },
     importCode:function(c,n){ return take(c,n) }
   };
@@ -113,7 +120,9 @@ def game_js(suspects, portal):
 
   function refresh(){
     score();
-    var r=role(), s=G.seal[ACT];
+    var r=role(), ACT=cur(), s=G.seal[ACT];
+    document.querySelectorAll(".actN").forEach(function(e){ e.textContent=ACT }); $("actPage").textContent=PAGES[ACT]; $("aktLink").href=ACT>1?"#code"+ACT:"#code";
+    var nav2=document.querySelectorAll("[data-akt2]"); nav2.forEach(function(e){ e.hidden=unlocked()<2 });
     $("aktLocked").hidden=!!s; $("aktOpen").hidden=!!s; $("aktSealed").hidden=!s;
     if(s){ $("sealTime").textContent=" um "+s.t+" Uhr. "+(myName()?myName()+", dein":"Dein")+" Verdacht bleibt bis zur Auflösung geheim."; }
     $("blueGive").hidden=!(s&&r==="blau"); $("redTake").hidden=(r!=="rot");
@@ -123,29 +132,32 @@ def game_js(suspects, portal):
       $("giveDed").textContent="Übergeben werden: euer versiegelter Verdacht und eure Abzüge ("+(ded(ACT)?"−"+ded(ACT):"0")+" Punkte).";
       try{var q=qrcode(0,"M");q.addData(PORTAL+"#k="+s.code+(myName()?"&n="+encodeURIComponent(myName()):""));q.make();$("giveQr").innerHTML=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){$("giveQr").textContent=""}
     }
-    var b=G.blue[ACT], ts=$("teamSum");
-    if(r==="rot"&&b){ ts.hidden=false;
-      ts.innerHTML="🔒 Verdacht von "+esc(who("Blau",b.n))+" für Akt 1 gespeichert.<br>Punkte nach Akt 1: "+START+" − "+esc(myName()||"Rot")+" "+ded(ACT)+" − "+esc(b.n||"Blau")+" "+b.d+" = <b>"+(START-ded(ACT)-b.d)+" Punkte</b>"+
-        (s?"<br>Beide Verdachte sind versiegelt. Die Siegel öffnen sich bei der großen Auflösung im letzten Akt. Akt 2 „Wer lügt?“ folgt im fertigen Buch.":"<br>Jetzt noch deinen eigenen Verdacht oben versiegeln.");
-    } else ts.hidden=true;
+    var ts=$("teamSum"), lines=[], run=0;
+    if(r==="rot"){
+      for(var a=1;a<=MAXACT;a++){ var b=G.blue[a]; if(!b) continue; var p=START-ded(a)-b.d; run+=p;
+        lines.push("🔒 Akt "+a+": Verdacht von "+esc(who("Blau",b.n))+" gespeichert. "+START+" − "+esc(myName()||"Rot")+" "+ded(a)+" − "+esc(b.n||"Blau")+" "+b.d+" = <b>"+p+" Punkte</b>") }
+      if(G.blue[ACT]) lines.push(s?(ACT<MAXACT?"Beide Verdachte für Akt "+ACT+" sind versiegelt. Weiter geht es mit Akt "+(ACT+1)+" – die neuen Akten sind jetzt offen.":"Beide Verdachte sind versiegelt. Die Siegel öffnen sich bei der großen Auflösung. Akt 3 „Die Wahrheit am Steg“ folgt im fertigen Buch."):"Jetzt noch deinen eigenen Verdacht oben versiegeln.");
+      else if(s) lines.push("Jetzt den QR-Code von Akte Blau für Akt "+ACT+" scannen.");
+    }
+    if(lines.length){ ts.hidden=false; ts.innerHTML=lines.join("<br>") } else ts.hidden=true;
     // Code-Prüfung und Hinweise nach dem Versiegeln sperren
-    var lock=sealed(ACT); document.querySelectorAll("#codeForm select,#codeForm button,#hintBox button").forEach(function(el){ if(lock) el.disabled=true });
-    var cl=$("codeLock"); if(cl) cl.hidden=!lock;
+    [["",1],["2",2]].forEach(function(x){ var lock=sealed(x[1]); document.querySelectorAll("#codeForm"+x[0]+" select,#codeForm"+x[0]+" button,#hintBox"+x[0]+" button").forEach(function(el){ if(lock) el.disabled=true });
+      var cl=$("codeLock"+x[0]); if(cl) cl.hidden=!lock; });
   }
 
   // ---------- Versiegeln ----------
   $("sealBtn").addEventListener("click",function(){ if($("sus").value===""){ $("sus").focus(); return } $("sealAsk").hidden=false });
   $("sealNo").addEventListener("click",function(){ $("sealAsk").hidden=true });
-  $("sealYes").addEventListener("click",function(){ var v=+$("sus").value; G.seal[ACT]={s:v,t:hhmm()}; save(); $("sealAsk").hidden=true; $("sus").value=""; refresh(); $("v-akt").scrollIntoView({block:"start"}) });
+  $("sealYes").addEventListener("click",function(){ var v=+$("sus").value; G.seal[cur()]={s:v,t:hhmm()}; save(); $("sealAsk").hidden=true; $("sus").value=""; refresh(); $("v-akt").scrollIntoView({block:"start"}) });
 
   // ---------- Einlesen bei Rot ----------
   function msg(ok,t){var m=$("takeMsg");m.hidden=false;m.className="msg "+(ok?"ok":"bad");m.textContent=t}
   function take(c,n){
     if(role()!=="rot"){ return false }
     var p=dec(c); if(!p){ msg(false,"Dieser QR-Code gehört nicht zum Spiel. Bitte den Code von Akte Blau scannen."); return false }
-    if(p.a!==ACT){ msg(false,"Dieser Code gehört zu Akt "+p.a+", nicht zu Akt "+ACT+"."); return false }
-    if(G.blue[ACT]){ msg(true,"Der Spielstand von Akte Blau für Akt "+ACT+" ist schon gespeichert."); return true }
-    G.blue[ACT]={s:p.s,d:p.d,n:(n||"").slice(0,20)}; save(); $("takeMsg").hidden=true; refresh(); return true
+    if(p.a<1||p.a>MAXACT){ msg(false,"Dieser Code gehört zu Akt "+p.a+". Den gibt es in diesem Spiel noch nicht."); return false }
+    if(G.blue[p.a]){ msg(true,"Der Spielstand von Akte Blau für Akt "+p.a+" ist schon gespeichert."); return true }
+    G.blue[p.a]={s:p.s,d:p.d,n:(n||"").slice(0,20)}; save(); msg(true,"Spielstand von Akte Blau für Akt "+p.a+" übernommen."); refresh(); return true
   }
 
   var stream=null, raf=0;
@@ -170,7 +182,7 @@ def game_js(suspects, portal):
   // ---------- Neues Spiel ----------
   $("resetBtn").addEventListener("click",function(){ $("resetAsk").hidden=false });
   $("resetNo").addEventListener("click",function(){ $("resetAsk").hidden=true });
-  $("resetYes").addEventListener("click",function(){ try{localStorage.removeItem(GKEY);localStorage.removeItem(RKEY);localStorage.removeItem(NKEY)}catch(e){} location.hash=""; location.reload() });
+  $("resetYes").addEventListener("click",function(){ try{localStorage.removeItem(GKEY);localStorage.removeItem(RKEY);localStorage.removeItem(NKEY);localStorage.removeItem("kiefernsee-raetsel"+SFX)}catch(e){} location.hash=""; location.reload() });
 
   // Link aus Blaus QR-Code mit der normalen Kamera geöffnet
   function hashImport(){ var m=(location.hash||"").match(/^#k=([A-Z0-9]{6})(?:&n=([^&#]*))?$/i); if(!m) return;

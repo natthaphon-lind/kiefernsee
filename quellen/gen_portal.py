@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_farbe as B  # baut nebenbei das PDF neu
 import portal_game as PG
 import portal_career as PC
+import portal_akt2 as PA2
 
 E = html.escape
 OUT = "/home/claude/kiefernsee/index.html"
@@ -144,7 +145,7 @@ ROT_NAV = [("r1", "R-1", "Bericht zum Leichenfund"), ("r2", "R-2", "Asservatenve
 BLAU_NAV = [("b1", "B-1", "Protokoll der Versammlung"), ("b2", "B-2", "Chat der Dauercamper"), ("b3", "B-3", "Sprachnachricht"),
             ("b4", "B-4", "Novas Story"), ("b5", "B-5", "Schwarzes Brett")]
 ALL_NAV = [("plan", "Lageplan", "Luftbild"), ("cast", "Personen", "Wer ist wer"), ("code", "Akt 1 lösen", "Antworten prüfen"),
-           ("hints", "Hinweise", "Hilfe in drei Stufen"), ("akt", "Akt 1 abschließen", "Verdacht versiegeln"),
+           ("hints", "Hinweise Akt 1", "Hilfe in drei Stufen"), ("akt", "Akt abschließen", "Verdacht versiegeln"),
            ("ausweis", "Mein Ausweis", "Dienstgrad und Dienstnummer"), ("neu", "Neues Spiel", "Spielstand löschen")]
 SUSPECTS = [n for n, _a, _d in B.CAST if n != "Holger Brandner"]
 
@@ -268,7 +269,9 @@ JS = r'''<script>
   function sum(s){var h=7;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))%1000003}return h}
   var PW=sum("TRETBOOT");
   var VIEWS=Array.prototype.map.call(document.querySelectorAll("section[id^='v-']"),function(s){return s.id.slice(2)});
+  var V2=["r6", "r7", "r8", "r9", "r10", "r11", "b6", "b7", "b8", "b9", "b10", "b11", "code2", "hints2"];
   function show(v,quiet){
+    if(V2.indexOf(v)>=0 && !(window.__kgame&&window.__kgame.unlocked(2))) v="lock2";
     VIEWS.forEach(function(n){ $("v-"+n).hidden=(n!==v) });
     document.querySelectorAll("[data-view]").forEach(function(b){ b.setAttribute("aria-current", b.getAttribute("data-view")===v ? "true":"false") });
     if(!quiet){ $("v-"+v).scrollIntoView({behavior:"smooth",block:"start"}) }
@@ -315,7 +318,7 @@ JS = r'''<script>
     var code=(a[0]-1)*16+(a[1]-1)*4+a[2];
     for(var i=0;i<3;i++){ if(a[i]!==RIGHT[i]){ if(window.__kgame) window.__kgame.wrong(); m.className="msg bad"; m.textContent="Hauptkommissarin Wendland schüttelt den Kopf. "+WRONG[i]+" (−2 Punkte)"; return } }
     if(window.__kgame) window.__kgame.right();
-    m.className="msg ok"; m.textContent="Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 24). Danach versiegelt jeder unter „Akt 1 abschließen“ seinen Hauptverdacht.";
+    m.className="msg ok"; m.textContent="Richtig! Brandner wurde zwischen 23:30 und 0:30 Uhr am Bootssteg niedergeschlagen. Die rote Mappe ist verschwunden. Lest jetzt die Auflösung von Akt 1 im Buch (Seite 24). Danach versiegelt jeder unter „Akt abschließen“ seinen Hauptverdacht.";
   });
   var H=[
     ["Frage 1 · Der Ort","Schaut genau, was in der Kopfwunde gefunden wurde. Wo auf dem Platz gibt es genau dieses Material?","Das Tretboot ist aus Kunststoff. Akte Blau weiß, welches Holz in dieser Woche grau gestrichen wurde.","Antwort 2: der Bootssteg. Die grau lasierten Lärchensplitter stammen vom frisch gestrichenen Steg."],
@@ -351,7 +354,7 @@ page = f'''<!doctype html>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
-<style>{CSS}{PG.GAME_CSS}{PC.CSS}</style>
+<style>{CSS}{PG.GAME_CSS}{PC.CSS}{PA2.CSS}</style>
 </head>
 <body>
 <div class="wrap">
@@ -379,13 +382,18 @@ page = f'''<!doctype html>
 <button id="rankLine" type="button" data-view="ausweis" class="rankchip">Mein Ausweis</button>
 <div id="confirm" class="confirm" hidden><span>Wirklich die Akte wechseln? Dann seht ihr die Seiten der anderen Farbe.</span>
 <button id="yesSwitch" type="button">Ja, wechseln</button><button id="noSwitch" type="button" class="ghost">Abbrechen</button></div>
-<div id="navRot"><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Rot">{nav(ROT_NAV, "rot")}</nav></div>
-<div id="navBlau" hidden><div class="navlab">Eure Akte</div><nav class="menu" aria-label="Akte Blau">{nav(BLAU_NAV, "blau")}</nav></div>
+<div id="navRot"><div class="navlab">Eure Akte · Akt 1</div><nav class="menu" aria-label="Akte Rot, Akt 1">{nav(ROT_NAV, "rot")}</nav>
+<div data-akt2 hidden><div class="navlab">Akt 2 · Wer lügt?</div><nav class="menu" aria-label="Akte Rot, Akt 2">{nav(PA2.ROT_NAV2, "rot")}</nav></div></div>
+<div id="navBlau" hidden><div class="navlab">Eure Akte · Akt 1</div><nav class="menu" aria-label="Akte Blau, Akt 1">{nav(BLAU_NAV, "blau")}</nav>
+<div data-akt2 hidden><div class="navlab">Akt 2 · Wer lügt?</div><nav class="menu" aria-label="Akte Blau, Akt 2">{nav(PA2.BLAU_NAV2, "blau")}</nav></div></div>
 <div class="score"><div><b id="scoreTxt">10 Punkte</b><div id="scoreSub" class="small"></div></div><span aria-hidden="true">🔍</span></div>
 <p class="small" style="margin:0">📖 Notizbogen und Auflösung findet ihr im Buch.</p>
-<div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam">{nav(ALL_NAV, "alle")}</nav></div>
+<div><div class="navlab">Für beide</div><nav class="menu" aria-label="Gemeinsam">{nav(ALL_NAV, "alle")}</nav>
+<div data-akt2 hidden><div class="navlab">Für beide · Akt 2</div><nav class="menu" aria-label="Gemeinsam, Akt 2">{nav(PA2.ALL_NAV2, "alle")}</nav></div></div>
 {"".join(S[k] for k in ["r1","r2","r3","r4","r5","b1","b2","b3","b4","b5","plan","cast"])}
 {CODE}
+{"".join(PA2.S.values())}
+{PA2.CODE2}
 {PG.game_html(SUSPECTS)}
 {PC.VIEW_HTML}
 </div>
@@ -395,6 +403,7 @@ page = f'''<!doctype html>
 {PC.js(B.PORTAL)}
 {PG.game_js(SUSPECTS, B.PORTAL)}
 {JS}
+{PA2.JS}
 </body>
 </html>
 '''

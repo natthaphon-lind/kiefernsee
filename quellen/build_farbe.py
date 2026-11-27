@@ -73,9 +73,10 @@ GRASS=(0.87,0.93,0.82); SAND=(0.96,0.89,0.70); INK=(0.10,0.20,0.55); CUR=[None]
 def fc(col): c.setFillColorRGB(*col)
 def sc(col): c.setStrokeColorRGB(*col)
 c = SymCanvas(OUT, pagesize=(W, H))
-c.setTitle("Ermittlungsfall Campingplatz – Akt 1 (Prototyp)")
+c.setTitle("Ermittlungsfall Campingplatz – Akt 1 und 2 (Prototyp)")
 c.setAuthor("Natthaphon Lind")
 PAGE = [1]
+ACTLABEL = ["Akt 1"]
 FLIP = [False]
 
 
@@ -101,6 +102,15 @@ def text(x, y, w, s, font="Serif", size=10.5, lead=None, gray=0, gap=None):
     return y
 
 
+def noemo(s):
+    """Emojis entfernen (die Buchschriften haben keine)."""
+    import re
+    E = r"[\U0001F000-\U0001FFFF\u2600-\u27BF\uFE0F\u200D]+"
+    s = re.sub(r"(\w)\s*" + E + r"\s+(?=[A-ZÄÖÜ])", r"\1. ", s)
+    s = re.sub(r"([“\"])\s*" + E + r"\s+(?=[A-ZÄÖÜ])", r"\1. ", s)
+    return re.sub(E, "", s).replace("  ", " ").strip()
+
+
 def lines_h(s, font, size, w, lead):
     return sum(len(simpleSplit(p, font, size, w)) for p in s.split("\n") if p.strip()) * lead
 
@@ -108,7 +118,7 @@ def lines_h(s, font, size, w, lead):
 def footer():
     c.setFont("Sans", 8); c.setFillGray(0.45)
     c.drawCentredString(W / 2, 30, f"– {PAGE[0]} –")
-    c.drawString(ML, 30, "Ermittlungsfall Campingplatz · Akt 1 · Prototyp")
+    c.drawString(ML, 30, "Ermittlungsfall Campingplatz · " + ACTLABEL[0] + " · Prototyp")
     c.setFillGray(0)
 
 
@@ -656,6 +666,7 @@ CHAT = [
     ("Mark (Platzbetreiber)", "21:52", "Leute, ich hab noch nichts unterschrieben. Schlaft drüber. Ich auch."),
     ("Sven (Security)", "23:05", "Erinnerung: Ab 22 Uhr ist Nachtruhe. Parzelle 14, ich hör den Schlager bis zur Schranke."),
     ("Siggi P14", "23:06", "Das ist Kultur."),
+    ("Angelika P7", "23:47", "Bin nochmal kurz raus, Hubert suchen 🙂 Gute Nacht zusammen!"),
     ("SAMSTAG, 26. SEPTEMBER", None, None),
     ("Rita P3", "06:52", "POLIZEI IST SCHON DA. Am Schilf. Der Herr Brandner. Oh Gott."),
     ("Angelika P7", "06:58", "Was ist passiert??"),
@@ -676,6 +687,7 @@ def b2():
             y -= 15; continue
         own = who.startswith("Angelika")
         bw = w0 * 0.84
+        msg = noemo(msg)
         ls = simpleSplit(msg, "Sans", 8.8, bw - 18)
         bh = 19 + len(ls) * 10.8
         bx = x0 + (w0 - bw if own else 0)
@@ -965,7 +977,7 @@ def solution_page():
     qx, qy = W - MR - 16 - 96, qtop - 96
     c.setFillGray(1); c.roundRect(qx - 7, qy - 27, 110, 131, 4, fill=1, stroke=0); c.setFillGray(0)
     qr(qx, qy, 96, PORTAL + "#akt", "portal")
-    c.setFillGray(0.75); c.setFont("Sans", 8.5); c.drawString(ML + 16, y - bh + 14, "Ende des Prototyps · Akt 2 folgt")
+    c.setFillGray(0.75); c.setFont("Sans", 8.5); c.drawString(ML + 16, y - bh + 14, "Weiter mit Akt 2 auf der nächsten Seite")
     c.setFillGray(0)
     new_page()
 
@@ -982,5 +994,7 @@ for r, b in [(r1, b1), (r2, b2), (r3, b3), (r4, b4), (r5, b5)]:
 sheet_page(); code_page()          # 20 | 21
 hints_page(); notes_page()         # 22 | 23
 solution_page()                    # 24
+import akt2_book as A2B
+A2B.build(B_SELF)                  # 25 … 44
 c.save()
 print("Seiten:", PAGE[0] - 1)
