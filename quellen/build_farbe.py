@@ -247,7 +247,7 @@ def rules_page():
         fc(NIGHT); c.circle(ML + 11, y + 4, 11, fill=1, stroke=0)
         c.setFillGray(1); c.setFont("SansB", 11); c.drawCentredString(ML + 11, y, str(i)); c.setFillGray(0)
         c.setFont("SansB", 12); c.drawString(ML + 32, y, h)
-        y = text(ML + 32, y - 17, W - MR - ML - 32, t, "Serif", 10.4, 14.6) - 8
+        y = text(ML + 32, y - 17, W - MR - ML - 32, t, "Serif", 10.2, 14.1) - 6
     y -= 4
     c.setFillColorRGB(1, 0.95, 0.80); c.setStrokeColorRGB(0.85, 0.7, 0.4); c.roundRect(ML, y - 78, W - ML - MR, 78, 4, fill=1, stroke=1)
     c.setFillGray(0); c.setFont("SansB", 10); c.drawString(ML + 12, y - 18, "Ihr braucht")
